@@ -1,6 +1,17 @@
 import Axios from "axios";
 import {getTokens, logout, saveTokensToLocalStorage} from "../services/auth/utils";
 
+const apiUrl = process.env.REACT_APP_BASE_URL;
+
+const axios = Axios.create({
+  baseURL: apiUrl,
+  defaults: {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }
+});
+
 export const SkipAuthHeader = ["/token/", "/token/refresh/", "/signup/"];
 
 export async function tryRefreshTokens(refreshToken) {
@@ -42,11 +53,6 @@ export const errorInterceptor = async (error) => {
   }
 }
 
-const apiUrl = process.env.REACT_APP_BASE_URL;
-
-const axios = Axios.create({
-  baseURL: apiUrl,
-});
 
 axios.interceptors.request.use(requestInterceptor);
 axios.interceptors.response.use(undefined, errorInterceptor);
