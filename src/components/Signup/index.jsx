@@ -3,6 +3,7 @@ import {DivTxtField} from "../shared/styles.js";
 import SignupFormContainer, {DivCenter, DivFileField, DivPass, FileFormInput,} from "../Signup/Signup.styles";
 import {Form, FormInput, HeadLogIn, InputSubmit, SignupNow, SignupNowAccount, TitleLogin,} from "../Login/login.styles";
 import * as AuthApi from "../../services/auth/api";
+import {useNavigate} from "react-router-dom";
 
 function Signup() {
   const [username, setUsername] = useState("");
@@ -17,6 +18,7 @@ function Signup() {
   const [showErrorMessageMatch, setShowErrorMessageMatch] = useState(false);
   const [isValidUserName, setValidUserName] = useState(true);
   const [photo, setPhoto] = useState(null);
+  const navigate = useNavigate();
   // const [accessCode, setAccessCode] = useState("");
   // const [contestName, setContestName] = useState("");
   // const [activeParticipantButton, setActiveParticipantButton] =
@@ -120,17 +122,15 @@ function Signup() {
 
     try {
       const res = await AuthApi.signup(formData, false);
+      setClassColor("green");
+      setMessages(["Successfully signed up"]);
 
-      if (res && res.status === 201) {
-        setClassColor("green");
-        setMessages(["Successfully signed up"]);
-
-        setTimeout(() => {
-          setClassColor("");
-          setMessages([]);
-          form.target.reset();
-        }, 2000);
-      }
+      setTimeout(() => {
+        setClassColor("");
+        setMessages([]);
+        form.target.reset();
+        navigate("/login")
+      }, 2000);
     } catch (err) {
       let errMessages = [];
       errMessages.push(["Sign up was not completed successfully"]);

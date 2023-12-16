@@ -16,6 +16,9 @@ import StudentsPoints from "./components/studentsPoints";
 import {isLogged, saveUserToLocalStorage} from "./services/auth/utils";
 import {isSuperAdmin} from "./util/ContestPeople_Role";
 import * as AuthApi from "./services/auth/api";
+import Signup from "./components/Signup";
+import ResetPassword from "./components/ResetPassword";
+import ForgotPassword from "./components/ForgotPassword";
 
 export const router = createBrowserRouter([
   {
@@ -35,6 +38,18 @@ export const router = createBrowserRouter([
           return null;
         },
         element: <Login/>,
+      },
+      {
+        path: "signup",
+        element: <Signup/>,
+      },
+      {
+        path: "reset-password",
+        element: <ResetPassword/>,
+      },
+      {
+        path: "forgot-password",
+        element: <ForgotPassword/>,
       },
       {
         id: "dashboard",
