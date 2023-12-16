@@ -44,47 +44,47 @@ function Sidebar({setIsSideBarCollapsed}) {
           </WirdLogoContainer>
 
           <MenuContainer>
-            <MenuLink onClick={() => setIsSideBarCollapsed()} to="/dashboard/">
+            <MenuLink onClick={() => setIsSideBarCollapsed?.()} to="/dashboard/">
               <HomeIcon/>
               <MenuItem>{t("home-page")}</MenuItem>
             </MenuLink>
             {/* { hasPermission && */}
-            <MenuLink onClick={() => setIsSideBarCollapsed()} to="/dashboard/competition">
+            <MenuLink onClick={() => setIsSideBarCollapsed?.()} to="/dashboard/competition">
               <CompInfoIcon/>
               <MenuItem>{t("contest-information")}</MenuItem>
             </MenuLink>
             {/* } */}
             <MenuLink
-              onClick={() => setIsSideBarCollapsed()}
+              onClick={() => setIsSideBarCollapsed?.()}
               to="/dashboard/top-students"
             >
               <LeaderBoard/>
               <MenuItem>{t("leaders-board")}</MenuItem>
             </MenuLink>
-            <MenuLink onClick={() => setIsSideBarCollapsed()} to="/dashboard/admins">
+            <MenuLink onClick={() => setIsSideBarCollapsed?.()} to="/dashboard/admins">
               <ContestModeratorsIcon/>
               <MenuItem>{t("admins")}</MenuItem>
             </MenuLink>
-            <MenuLink onClick={() => setIsSideBarCollapsed()} to="/dashboard/students">
+            <MenuLink onClick={() => setIsSideBarCollapsed?.()} to="/dashboard/students">
               <ParticipantsIcon/>
               <MenuItem>{t("students")}</MenuItem>
             </MenuLink>
             <MenuLink
-              onClick={() => setIsSideBarCollapsed()}
+              onClick={() => setIsSideBarCollapsed?.()}
               to="/dashboard/contest-criteria"
             >
               <CriteriaIcon/>
               <MenuItem>{t("criterias")}</MenuItem>
             </MenuLink>
             <MenuLink
-              onClick={() => setIsSideBarCollapsed()}
+              onClick={() => setIsSideBarCollapsed?.()}
               to="/dashboard/review-other-points"
             >
               <FileTxtIcon/>
               <MenuItem>{t("text-inputs")}</MenuItem>
             </MenuLink>
             <MenuLink
-              onClick={() => setIsSideBarCollapsed()}
+              onClick={() => setIsSideBarCollapsed?.()}
               to="/dashboard/students-points"
             >
               <ResultsIcon/>
@@ -92,14 +92,14 @@ function Sidebar({setIsSideBarCollapsed}) {
             </MenuLink>
             {hasPermission && (
               <MenuLink
-                onClick={() => setIsSideBarCollapsed()}
+                onClick={() => setIsSideBarCollapsed?.()}
                 to="/dashboard/export-points"
               >
                 <FileDownload/>
                 <MenuItem>{t("extract-results")}</MenuItem>
               </MenuLink>
             )}
-            <MenuLink onClick={() => setIsSideBarCollapsed()} to="/dashboard/groups">
+            <MenuLink onClick={() => setIsSideBarCollapsed?.()} to="/dashboard/groups">
               <GroupsIcon/>
               <MenuItem>{t("groups-page")}</MenuItem>
             </MenuLink>
