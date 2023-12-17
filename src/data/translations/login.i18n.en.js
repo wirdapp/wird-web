@@ -1,5 +1,16 @@
 export default {
-  "test-this-text": "this is a TEST",
   login: "Login",
-  "sign-up": "Sign up",
+  signUp: "Sign up",
+  alreadyHaveAccount: "Already have an account?",
+  loginNow: "Login now!",
+  userNameKey: "Username",
+  userNameDisclimar: "Username can contain Letters, digits and @/./+/-/_ only.",
+  passwordKey: "Password",
+  passwordDisclimar: "These passwords didn't match. Try again.",
+  retypePassword: "Re-type password",
+  firstName: "First Name",
+  lastName: "Last Name",
+  emailAddress: "Email address",
+  phoneNumber: "Phone Number",
+  profilePhoto: " Profile photo",
 };

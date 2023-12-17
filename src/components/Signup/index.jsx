@@ -4,6 +4,7 @@ import SignupFormContainer, {DivCenter, DivFileField, DivPass, FileFormInput,} f
 import {Form, FormInput, HeadLogIn, InputSubmit, SignupNow, SignupNowAccount, TitleLogin,} from "../Login/login.styles";
 import * as AuthApi from "../../services/auth/api";
 import {useNavigate} from "react-router-dom";
+import i18n from "i18n.js";
 
 function Signup() {
   const [username, setUsername] = useState("");
@@ -19,6 +20,7 @@ function Signup() {
   const [isValidUserName, setValidUserName] = useState(true);
   const [photo, setPhoto] = useState(null);
   const navigate = useNavigate();
+  const {t:translate}=i18n
   // const [accessCode, setAccessCode] = useState("");
   // const [contestName, setContestName] = useState("");
   // const [activeParticipantButton, setActiveParticipantButton] =
@@ -149,10 +151,10 @@ function Signup() {
     <SignupFormContainer>
       <DivCenter>
         <HeadLogIn>
-          <TitleLogin>Signup</TitleLogin>
+          <TitleLogin>{translate("signUp")}</TitleLogin>
           <SignupNowAccount>
-            Already have an account?{" "}
-            <SignupNow href="/Login">Login now!</SignupNow>
+           {translate("alreadyHaveAccount")}
+            <SignupNow href="/Login">{translate("loginNow")}</SignupNow>
           </SignupNowAccount>
         </HeadLogIn>
 
@@ -211,13 +213,13 @@ function Signup() {
             <FormInput
               onChange={handleChangeUsername}
               type="text"
-              placeholder="Username"
+              placeholder={translate("userNameKey")}
               required
             />
           </DivTxtField>
           {!isValidUserName && (
             <DivPass className={classColor}>
-              Username can contain Letters, digits and @/./+/-/_ only.
+             {translate("userNameDisclimar")}
             </DivPass>
           )}
 
@@ -244,7 +246,7 @@ function Signup() {
           <DivTxtField>
             <FormInput
               onChange={handleChangePassword}
-              placeholder="Password"
+              placeholder={translate("passwordKey")}
               type="password"
               required
             />
@@ -253,21 +255,21 @@ function Signup() {
           <DivTxtField>
             <FormInput
               onChange={handleRetypePassword}
-              placeholder="Re-type password"
+              placeholder={translate("retypePassword")}
               type="password"
               required
             />
           </DivTxtField>
           {showErrorMessageMatch && (
             <DivPass className="red">
-              These passwords didn't match. Try again.
+          {translate("passwordDisclimar")}
             </DivPass>
           )}
 
           <DivTxtField>
             <FormInput
               onChange={handleChangeFirstName}
-              placeholder="First Name"
+              placeholder={translate("firstName")}
               type="text"
               required
             />
@@ -276,7 +278,7 @@ function Signup() {
           <DivTxtField>
             <FormInput
               onChange={handleChangeLastName}
-              placeholder="Last Name"
+              placeholder={translate("lastName")}
               type="text"
               required
             />
@@ -286,7 +288,7 @@ function Signup() {
             <FormInput
               onChange={handleChangeEmail}
               type="text"
-              placeholder="Email address"
+              placeholder={translate("emailAddress")}
             />
           </DivTxtField>
 
@@ -294,12 +296,12 @@ function Signup() {
             <FormInput
               onChange={handlePhoneNumberChange}
               type="text"
-              placeholder="Phone Number"
+              placeholder={translate("phoneNumber")}
             />
           </DivTxtField>
 
           <DivFileField>
-            Profile photo
+           {translate("profilePhoto")}
             <FileFormInput type="file" onChange={handlePhotoChange}/>
           </DivFileField>
           <br/>
@@ -316,7 +318,7 @@ function Signup() {
               );
             })}
           <InputSubmit type="submit" value="login">
-            Signup
+            {translate("signUp")}
           </InputSubmit>
         </Form>
       </DivCenter>
