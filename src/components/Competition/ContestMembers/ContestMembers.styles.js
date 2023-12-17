@@ -64,7 +64,7 @@ export const ParticipantsTitels = styled.div`
   height: 1.25rem;
   display: flex;
   justify-content: space-between;
-  flex-direction: var(--flex-direction);
+  flex-direction: row;
   @media (max-width: 37.5625rem) {
   }
 `;
@@ -126,7 +126,7 @@ export const ParticipantsTitelsAtHome = styled.div`
 export const SeeAll = styled.a`
   text-decoration: none;
   display: flex;
-  flex-direction: var(--flex-direction);
+  flex-direction: row;
   align-items: flex-start;
   padding: 0rem;
   gap: 0.375rem;

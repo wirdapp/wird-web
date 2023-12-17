@@ -2,9 +2,7 @@ import styled from "@emotion/styled";
 
 export const Container = styled.div`
     display: flex;
-    flex-direction: var(
-            --flex-direction
-    ); // TODO: Make it as var(--flex-direction)
+    flex-direction: row;
     height: 100vh;
 `;
 

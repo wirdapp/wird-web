@@ -32,11 +32,11 @@ import {ReactComponent as MyAccountIcon} from "assets/icons/myAccount.svg";
 import {ReactComponent as HelpIcon} from "assets/icons/help.svg";
 import {ReactComponent as LogoutIcon} from "assets/icons/logout.svg";
 import Sidebar from "../Sidebar";
-import {arabicTheme, englishTheme} from "styles";
 import {useDashboardData} from "../../../util/routes-data";
-import {logout} from "../../../services/auth/utils";
+import {deleteSession} from "../../../services/auth/utils";
 
-function Nav({changeTheme, theme}) {
+function Nav() {
+  const {i18n} = useTranslation();
   const {currentUser} = useDashboardData();
   const {t} = useTranslation();
   const [hasPermission, setPermission] = useState(false);
@@ -62,12 +62,6 @@ function Nav({changeTheme, theme}) {
       currentUser && isSuperAdmin(currentUser)
     );
   }, [currentUser]);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 300);
-  }, [theme]);
 
   if (loading) {
     return (
@@ -108,7 +102,7 @@ function Nav({changeTheme, theme}) {
                 </NavItem>
                 <>
                   {showUserInfo && (
-                    <PopupListWrapper isArabicTheme={theme?.name === "ar"}>
+                    <PopupListWrapper>
                       <UserInfoWrapper>
                         <ProfileInfo>
                           <ProfilePicture
@@ -150,13 +144,8 @@ function Nav({changeTheme, theme}) {
 
                         <ListItem
                           onClick={() => {
-                            // set the theme to the opposite of the current theme
                             setShowUserInfo(false);
-                            changeTheme(
-                              theme.name === "ar" ? englishTheme : arabicTheme
-                            );
-                            changeLanguage(theme.name === "ar" ? "en" : "ar");
-                            setLoading(true);
+                            changeLanguage(i18n.language === "ar" ? "en" : "ar");
                           }}
                         >
                           <FaLanguage/>
@@ -166,7 +155,7 @@ function Nav({changeTheme, theme}) {
                         <ListItem
                           onClick={() => {
                             setShowUserInfo(false);
-                            logout();
+                            deleteSession();
                             navigate("/login");
                           }}
                         >
@@ -181,7 +170,6 @@ function Nav({changeTheme, theme}) {
             </Navbar>
             <SidebarMenu
               className={isOpen ? "open" : ""}
-              isArabicTheme={theme?.name === "ar"}
             >
               <MenuIcon onClick={handleToggle} style={{marginTop: "1rem"}}>
                 <SidebarIcon/>
