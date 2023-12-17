@@ -1,10 +1,10 @@
 import styled from "@emotion/styled";
-import { colors } from "styles";
+import {colors} from "styles";
 
 export const Container = styled.div`
   display: flex;
   gap: 1rem;
-  flex-direction: var(--flex-direction);
+  flex-direction: row;
   justify-content: space-between;
   width: 100%;
   margin: 0.5rem 0;

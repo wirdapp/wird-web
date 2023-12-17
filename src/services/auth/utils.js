@@ -1,40 +1,41 @@
 import * as AuthApi from "./api";
 
+const SESSION_KEY = "wird.session";
+
 export function isLogged() {
-  return !!localStorage.getItem("token");
+  return !!localStorage.getItem(SESSION_KEY);
 }
 
-export function logout() {
-  localStorage.removeItem("token");
-  localStorage.removeItem("user");
-  localStorage.removeItem("refreshToken");
+export function deleteSession() {
+  localStorage.removeItem(SESSION_KEY);
 }
 
-export function saveTokensToLocalStorage(token, refreshToken) {
-  localStorage.setItem("token", token);
-  localStorage.setItem("refreshToken", refreshToken);
+export function saveSessionToLocalStorage(session) {
+  const base64 = btoa(JSON.stringify(session));
+  localStorage.setItem(SESSION_KEY, base64);
+}
+
+export function getSessionFromLocalStorage() {
+  const base64 = localStorage.getItem(SESSION_KEY);
+  if (!base64) return null;
+  return JSON.parse(atob(base64));
 }
 
 export function saveUserToLocalStorage(user) {
-  localStorage.setItem("user", JSON.stringify(user));
-}
-
-export function getTokens() {
-  return {
-    token: localStorage.getItem("token"),
-    refreshToken: localStorage.getItem("refreshToken")
-  };
+  const session = getSessionFromLocalStorage();
+  session.user = user;
+  saveSessionToLocalStorage(session);
 }
 
 export async function getUser() {
   if (!isLogged()) return null;
-  let user = JSON.parse(localStorage.getItem("user") || "null");
+  let {user} = getSessionFromLocalStorage();
   if (!user) {
     try {
       user = await AuthApi.currentUserInfo();
       saveUserToLocalStorage(user);
     } catch (e) {
-      logout();
+      deleteSession();
       return null;
     }
   }
@@ -42,9 +43,7 @@ export async function getUser() {
 }
 
 export const login = async (username, password) => {
-  const {token, refreshToken} = await AuthApi.getTokens(username, password);
-  saveTokensToLocalStorage(token, refreshToken);
-  const currentUserInfo = await AuthApi.currentUserInfo();
-  saveUserToLocalStorage(currentUserInfo);
+  const session = await AuthApi.getTokens(username, password);
+  saveSessionToLocalStorage(session);
 }
 
