@@ -118,11 +118,11 @@ export const MyOngoingContestsTitel = styled.div`
 
     font-style: normal;
     font-weight: 700;
-    font-size: 24px;
+    font-size: 20px;
     line-height: 29px;
     color: #000000;
     @media (max-width: 670px) {
-        font-size: 18px;
+        font-size: 16px;
         line-height: 22px;
     }
 `;

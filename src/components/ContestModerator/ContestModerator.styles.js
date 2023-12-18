@@ -8,7 +8,6 @@ export default styled.div`
     margin: 0 auto;
     flex-direction: column;
     gap: 3rem;
-    max-width: 59.375rem;
 `;
 
 export const ContentContainer = styled.div`

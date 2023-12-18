@@ -16,9 +16,9 @@ export default {
   "active-announcements": "الإعلانات المنشورة مسبقًا",
   save: "حفظ",
   readonly: "قراءة فقط",
-  "no-contest-yet-msg":"لم تنضم لمسابقة بعد",
-  "delete-this-announcement":"حذف هذا الإعلان",
-  "name-label":"الاسم",
-  "description-label":"الوصف",
+  "no-contest-yet-msg": "ليس لديك أي مسابقات نشطة",
+  "delete-this-announcement": "حذف هذا الإعلان",
+  "name-label": "الاسم",
+  "description-label": "الوصف",
   update: "تعديل"
 };

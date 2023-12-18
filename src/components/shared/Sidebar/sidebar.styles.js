@@ -7,29 +7,35 @@ export const SideBarContainer = styled.aside`
     background-color: ${colors.warmWheat};
     text-align: center;
     border-radius: 1.5rem;
-    width: 300px;
     margin: 8px;
-    flex-shrink: 0;
+    flex: 0 1 300px;
 
     & svg {
         min-width: 1.2rem;
     }
 
     @media (max-width: 1000px) and (min-width: 750px) {
+        width: fit-content;
+        text-align: center;
         & span {
             display: none;
         }
-
-        text-align: center;
     }
 
     @media (max-width: 750px) {
         display: none;
     }
+
+    > div {
+        padding: 16px;
+    }
 `;
 
 export const MenuContainer = styled.div`
     width: 100%;
+    gap: 8px;
+    display: flex;
+    flex-direction: column;
 `;
 
 export const WirdLogoContainer = styled.div`
@@ -44,14 +50,12 @@ export const MenuLink = styled(NavLink)`
     align-items: center;
     color: ${colors.darkGrey};
     white-space: nowrap;
-    width: 85%;
     height: 3.063rem;
     padding: 0.5rem 0.8rem;
     flex-direction: row;
     font-weight: 700;
     text-align: start;
     gap: 1rem;
-    margin: 0.5rem auto;
     font-size: 1rem;
 
     :hover {

@@ -16,9 +16,9 @@ export default {
   "active-announcements": "Active Announcements",
   save: "Save",
   readonly: "Read Only",
-  "no-contest-yet-msg":"You haven't joined a contest yet",
-  "delete-this-announcement":"Delete this announcement",
-  "name-label":"Name",
-  "description-label":"Description",
+  "no-contest-yet-msg": "You don't have any active contests",
+  "delete-this-announcement": "Delete this announcement",
+  "name-label": "Name",
+  "description-label": "Description",
   update: "Update"
 };

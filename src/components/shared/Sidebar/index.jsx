@@ -26,8 +26,6 @@ function Sidebar() {
     }
   }, [currentUser]);
 
-  const menuLinkClassName = ({isActive}) => isActive ? "active" : "";
-
   return (
     <SideBarContainer>
       <div>
@@ -36,61 +34,61 @@ function Sidebar() {
         </WirdLogoContainer>
 
         <MenuContainer>
-          <MenuLink end to="/dashboard/" className={menuLinkClassName}>
+          <MenuLink end to="/dashboard/">
             <HomeIcon/>
             <MenuItem>{t("home-page")}</MenuItem>
           </MenuLink>
           {/* { hasPermission && */}
-          <MenuLink className={menuLinkClassName} to="/dashboard/competition">
+          <MenuLink to="/dashboard/competition">
             <CompInfoIcon/>
             <MenuItem>{t("contest-information")}</MenuItem>
           </MenuLink>
           {/* } */}
-          <MenuLink className={menuLinkClassName}
+          <MenuLink
 
-                    to="/dashboard/top-students"
+            to="/dashboard/top-students"
           >
             <LeaderBoard/>
             <MenuItem>{t("leaders-board")}</MenuItem>
           </MenuLink>
-          <MenuLink className={menuLinkClassName} to="/dashboard/admins">
+          <MenuLink to="/dashboard/admins">
             <ContestModeratorsIcon/>
             <MenuItem>{t("admins")}</MenuItem>
           </MenuLink>
-          <MenuLink className={menuLinkClassName} to="/dashboard/students">
+          <MenuLink to="/dashboard/students">
             <ParticipantsIcon/>
             <MenuItem>{t("students")}</MenuItem>
           </MenuLink>
-          <MenuLink className={menuLinkClassName}
+          <MenuLink
 
-                    to="/dashboard/contest-criteria"
+            to="/dashboard/contest-criteria"
           >
             <CriteriaIcon/>
             <MenuItem>{t("criterias")}</MenuItem>
           </MenuLink>
-          <MenuLink className={menuLinkClassName}
+          <MenuLink
 
-                    to="/dashboard/review-other-points"
+            to="/dashboard/review-other-points"
           >
             <FileTxtIcon/>
             <MenuItem>{t("text-inputs")}</MenuItem>
           </MenuLink>
-          <MenuLink className={menuLinkClassName}
+          <MenuLink
 
-                    to="/dashboard/students-points"
+            to="/dashboard/students-points"
           >
             <ResultsIcon/>
             <MenuItem>{t("results-page")}</MenuItem>
           </MenuLink>
           {hasPermission && (
-            <MenuLink className={menuLinkClassName}
-                      to="/dashboard/export-points"
+            <MenuLink
+              to="/dashboard/export-points"
             >
               <FileDownload/>
               <MenuItem>{t("extract-results")}</MenuItem>
             </MenuLink>
           )}
-          <MenuLink className={menuLinkClassName} to="/dashboard/groups">
+          <MenuLink to="/dashboard/groups">
             <GroupsIcon/>
             <MenuItem>{t("groups-page")}</MenuItem>
           </MenuLink>

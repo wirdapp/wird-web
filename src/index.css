@@ -1,5 +1,6 @@
 html {
     direction: ltr;
+    font-size: 14px;
 }
 
 html[dir="rtl"] {
