@@ -23,7 +23,7 @@ export const Button = styled.button`
     ${({variant}) => {
         const styles = getButtonStyles(variant);
         return css`
-            padding: 12px;
+            padding: 12px 18px;
             background-color: ${styles.bgColor};
             color: ${styles.color};
             border-radius: 22px;

@@ -3,14 +3,14 @@ import styled from "@emotion/styled";
 export const Container = styled.div`
     display: flex;
     flex-direction: row;
-    height: 100vh;
 `;
 
 export const MainContent = styled.main`
     flex-grow: 1;
-    overflow-y: auto;
     width: 100%;
-    margin: 8px 24px;
+    @media (min-width: 768px) {
+        margin: 8px 24px;
+    }
 
     .page-content {
         padding: 24px 16px;

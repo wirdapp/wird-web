@@ -1,49 +1,22 @@
-import React, { useState, useEffect } from "react";
-import { useLocation, Link } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {useLocation} from "react-router-dom";
 
 import MyOngoingContestItem from "./MyOngoingContestItem";
-import {
-  MainContainer,
-  NormalDiv,
-  OpenIconContainer,
-  FormsContainer,
-  JoinAndCreateInputContainer,
-  DefaultForm,
-  SearchContainer,
-  ActionBtn,
-} from "./MyOngoingContestTab.styles";
-import { ReactComponent as OpenDropDown } from "../../../assets/icons/Shared/OpenDropDown.svg";
-import {
-  createContent,
-  joinContest,
-  retrieveContestsInfo,
-  retrieveCurrentContestInfo,
-} from "../../../services/competitionsServices";
+import {retrieveContestsInfo, retrieveCurrentContestInfo,} from "../../../services/competitionsServices";
+import {Collapse} from "../../../ui/collapse";
+import {css} from "@emotion/css";
+import {Button} from "../../../ui/button";
+import {useTranslation} from "react-i18next";
 
-import { DivPass } from "../../ResetPassword/ResetPassword.styles";
-
-function MyOngoingContestTab({ competition }) {
-  const [openContests, setOpenContests] = useState(false);
-  const [containerHeight, setContainerHeight] = useState("");
-  const [inputsHeight, setInputsHeight] = useState("");
+function MyOngoingContestTab({competition}) {
   const [currentContest, setCurrentContest] = useState({});
   const [otherContests, setOtherContests] = useState([]);
   const [newContestName, setNewContestName] = useState("");
   const [contestCode, setContestCode] = useState("");
-  const [createErrorMessage, setCreateErrorMessage] = useState("");
-  const [joinErrorMessage, setJoinErrorMessage] = useState("");
-  const { hash } = useLocation();
-
-  // const [selectChange, setSelectChange] = useState(false);
-
-  // const changeSelectHandler = () => {
-  //   setSelectChange((prevState) => !prevState);
-  // };
+  const {hash} = useLocation();
+  const {t} = useTranslation();
 
   useEffect(() => {
-    if (hash === "#create-contest") {
-      setOpenContests(true);
-    }
     retrieveCurrentContestInfo(
       (res) => {
         if (res && res.status === 200) {
@@ -71,154 +44,40 @@ function MyOngoingContestTab({ competition }) {
     );
   }, [currentContest]);
 
-  useEffect(() => {
-    if ([currentContest, ...otherContests].length > 0) {
-      let inputsHeight = [currentContest, ...otherContests].length * 120;
-      setInputsHeight(inputsHeight + "px");
-      setContainerHeight(inputsHeight + 250 + "px");
-    } else {
-      let inputsHeight = 120;
-      setInputsHeight(inputsHeight + "px");
-      setContainerHeight(inputsHeight + 250 + "px");
-    }
-  }, [otherContests]);
-
-  const handleNewContestNameChange = (e) => {
-    setNewContestName(e.target.value);
-  };
-
-  const handleContestCodeChange = (e) => {
-    setContestCode(e.target.value);
-  };
-
-  const togglingContestHandler = () => {
-    setOpenContests((prevState) => !prevState);
-  };
-
-  const createContestHandler = () => {
-    if (newContestName.length === 0 || newContestName.trim().length === 0) {
-      return;
-    }
-    createContent(
-      {
-        "contest-name": newContestName,
-      },
-      (res) => {
-        if (res && res.status === 200) {
-          window.location.reload(true);
-        }
-      },
-      (err) => {
-        handleCreateOrJoinError(err, setCreateErrorMessage, "crate");
-      }
-    );
-  };
-  const joinContestHandler = () => {
-    if (contestCode.length === 0 || contestCode.trim().length === 0) {
-      return;
-    }
-    joinContest(
-      {
-        "access-code": contestCode,
-      },
-      (res) => {
-        if (res && res.status === 200) {
-          window.location.reload(true);
-        }
-      },
-      (err) => {
-        handleCreateOrJoinError(err, setJoinErrorMessage, "join");
-      }
-    );
-  };
-
-  const handleCreateOrJoinError = (err, setter, action) => {
-    console.log(`Failed to ${action} contest: ${err}`);
-    if (err?.response?.data) {
-      setter(err.response.data);
-      setTimeout(() => {
-        setter("");
-      }, 3000);
-    }
-  };
 
   return (
-    <MainContainer
-      openContests={openContests}
-      containerHeight={containerHeight}
-    >
-      <OpenIconContainer
-        position="absolute"
-        top="40px"
-        right="40px"
-        openContests={openContests} // to rotate icon
-        onClick={togglingContestHandler}
-      >
-        <OpenDropDown />
-      </OpenIconContainer>
-      {[currentContest, ...otherContests].length > 0 && Object.keys(currentContest).length > 0
-      ? (
-        <NormalDiv
-          position="absolute"
-          top="25px"
-          left="24px"
-          width="83%"
-          mobileChange={true}
-        >
-          {[currentContest, ...otherContests].map((contest, index) => (
-            <MyOngoingContestItem
-              key={contest.id + index}
-              contest={contest}
-              index={index}
-            />
-          ))}
-        </NormalDiv>
-      ) : (
-        <NormalDiv position="absolute" top="25px" left="24px">
-          <MyOngoingContestItem contest="emptyContest" />
-        </NormalDiv>
-      )}
-
-      <NormalDiv
-        position="absolute"
-        top={inputsHeight}
-        left="auto"
-        width="95%"
-        competition={competition} // if open from competition ::> change the style (width)
-      >
-        <FormsContainer>
-          {/* Create Contest Form  */}
-          <JoinAndCreateInputContainer>
-            <DefaultForm>
-              <SearchContainer
-                id="create-contest"
-                placeholder="New Contest Name"
-                type="text"
-                onChange={handleNewContestNameChange}
+    <Collapse title={
+      [currentContest, ...otherContests].length > 0 && Object.keys(currentContest).length > 0
+        ? (
+          <>
+            {[currentContest, ...otherContests].map((contest, index) => (
+              <MyOngoingContestItem
+                key={contest.id + index}
+                contest={contest}
+                index={index}
               />
-            </DefaultForm>
-            <ActionBtn onClick={createContestHandler}>Create</ActionBtn>
-          </JoinAndCreateInputContainer>
-          {/* Join Contest Form  */}
-          <JoinAndCreateInputContainer>
-            <DefaultForm>
-              <SearchContainer
-                placeholder="Access code"
-                type="text"
-                onChange={handleContestCodeChange}
-              />
-            </DefaultForm>
-            <ActionBtn onClick={joinContestHandler}>Join</ActionBtn>
-          </JoinAndCreateInputContainer>
-        </FormsContainer>
-        {createErrorMessage.length > 0 && (
-          <DivPass className="red">{createErrorMessage}</DivPass>
-        )}
-        {joinErrorMessage.length > 0 && (
-          <DivPass className="red">{joinErrorMessage}</DivPass>
-        )}
-      </NormalDiv>
-    </MainContainer>
+            ))}
+          </>
+        ) : (
+          <MyOngoingContestItem contest="emptyContest"/>
+        )
+    }>
+      <div className={css`
+          display: flex;
+          gap: 24px;
+          align-items: center;
+          justify-content: center;
+          padding: 24px;
+      `}>
+        <Button variant="primary">
+          + {t('create-contest')}
+        </Button>
+        <Button>
+          {t('join-contest')}
+        </Button>
+      </div>
+    </Collapse>
   );
 }
+
 export default MyOngoingContestTab;

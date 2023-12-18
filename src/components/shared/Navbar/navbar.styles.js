@@ -157,6 +157,7 @@ export const SidebarMenu = styled.div`
         height: 100%;
         overflow-x: scroll;
         width: 75vw;
+        padding: 16px;
     }
 
     &.open {

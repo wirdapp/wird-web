@@ -48,9 +48,7 @@ function Home() {
 
   if (loading) {
     return (
-      <main>
-        <Loader/>
-      </main>
+      <Loader/>
     );
   }
 

@@ -21,8 +21,8 @@ export const MyOngoingContestIn = styled.div`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 50px;
     width: 100%;
+    gap: 16px;
 
     @media (max-width: 37.5625rem) {
     }
@@ -191,11 +191,13 @@ export const MainContainer = styled.div`
     padding: 24px;
     margin: auto;
     width: 90%;
-    height: ${(props) => (props.openContests ? props.containerHeight : "110px")};
     overflow-y: hidden;
     background: #fbf9f7;
     border-radius: 24px;
     transition: all 0.5s;
+    display: flex;
+    gap: 24px;
+    align-items: center;
 `;
 
 export const NormalDiv = styled.div`
@@ -214,13 +216,13 @@ export const ContestIconDescriptionContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 16px;
 `;
 
 export const OpenIconContainer = styled.div`
-    position: ${(props) => props.position};
-    top: ${(props) => props.top};
-    right: ${(props) => props.right};
-    left: ${(props) => props.left};
+    position: absolute;
+    top: 40px;
+    inset-inline-end: 40px;
     width: 30px;
     height: 30px;
     border-radius: 15px;
@@ -245,6 +247,7 @@ export const FormsContainer = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 16px;
     @media (max-width: 1000px) {
         flex-direction: column;
     }
@@ -257,7 +260,7 @@ export const JoinAndCreateInputContainer = styled.div`
     margin: 0 auto 20px 0;
     background: ${colors.lightGrey};
     border-radius: 20px;
-    box-shadow: 1px 5px 15px ${colors.darkGrey};
+    box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: flex-start;
     align-items: center;

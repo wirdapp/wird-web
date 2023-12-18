@@ -5,11 +5,11 @@ import {colors} from "styles";
 export const SideBarContainer = styled.aside`
     animation-duration: 0.2s;
     background-color: ${colors.warmWheat};
-    height: 100%;
     text-align: center;
     border-radius: 1.5rem;
-    width: 320px;
+    width: 300px;
     margin: 8px;
+    flex-shrink: 0;
 
     & svg {
         min-width: 1.2rem;
@@ -20,7 +20,6 @@ export const SideBarContainer = styled.aside`
             display: none;
         }
 
-        width: fit-content;
         text-align: center;
     }
 
