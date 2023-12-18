@@ -18,4 +18,8 @@ export default {
   passwordValidation: "The password must be at least 8 characters long",
   confirmPassword: "confirm password",
   matchPassword: "For an incorrect entry, make sure the password matches",
+  reassign: "Reappointment",
+  reassignMSG: "The password has been reset successfully",
+  notReassignMSG: "Password not reset",
+  modifyAdminChanged: "You must choose an administrator to reset your password",
 };

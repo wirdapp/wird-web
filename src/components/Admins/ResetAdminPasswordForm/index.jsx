@@ -9,6 +9,7 @@ import {
     InputSubmit,
     DropdownListItem
 } from "../../shared/styles";
+import i18n from 'i18n.js';
 
 export default function ResetAdminPasswordForm(props){
     const [password, setPassword] = useState("");
@@ -18,7 +19,7 @@ export default function ResetAdminPasswordForm(props){
     const [selectedAdminUsername, setSelectedAdminUsername] = useState("");
     const [messages, setMessages] = useState([]);
     const [classColor, setClassColor] = useState("");
-
+    const {t:translate}=i18n
 
     useEffect(()=>{
             setMessages([]);
@@ -44,7 +45,7 @@ export default function ResetAdminPasswordForm(props){
         }
 
         if(selectedAdminUsername === ""){
-            setMessages(['يجب عليك إختار مسؤول إعادة تعيين كلمة المرور']);
+            setMessages([translate("modifyAdminChanged")]);
             setClassColor("red");
             return;
         }
@@ -54,7 +55,7 @@ export default function ResetAdminPasswordForm(props){
                 if(res && res.status ===200){
 
                     setClassColor("green");
-                    setMessages(['تم إعادة تعيين كلمة المرور بنجاح']);
+                    setMessages([translate('reassignMSG')]);
 
                     setTimeout(()=>{
                         resetPasswordForm();
@@ -64,7 +65,7 @@ export default function ResetAdminPasswordForm(props){
                 }
             },(err)=>{
                 let errMessages = [];
-                errMessages.push(["لم يتم  إعادة تعيين كلمة المرور"]);
+                errMessages.push([translate("notReassignMSG")]);
                 if(err.response.data){
                     let obj = err.response.data;
                     Object.keys(obj).forEach(e => {
@@ -123,7 +124,7 @@ export default function ResetAdminPasswordForm(props){
                 props.admins && props.admins.length > 0 &&
                 <DropdownDiv className="DropdownDiv">
                     <DropdownList className="DropdownList_editAdmin" onChange={handleSelectedAdminChange} value={selectedAdminUsername}>
-                        <DropdownListItem>اختر المسؤول</DropdownListItem>
+                        <DropdownListItem>{translate("chooseAdmin")}</DropdownListItem>
                         {
                             props.admins.map((admin, index) => {
                                 if(admin?.first_name?.length > 0 || admin?.last_name?.length > 0){
@@ -139,20 +140,20 @@ export default function ResetAdminPasswordForm(props){
 
             <DivTxtField>
                 <Span/>
-                <FormInput onChange={handlePasswordChange} placeholder='كلمة المرور' type="password" value={password} required/>
+                <FormInput onChange={handlePasswordChange} placeholder={translate("passwordKey")} type="password" value={password} required/>
             </DivTxtField>
             {!isValidPassword &&
-                <DivPass>يجب أن تتكون كلمة المرور من 8 أحرف على الأقل</DivPass>
+                <DivPass> {translate("passwordValidation")}</DivPass>
             }
 
             <DivTxtField>
                 <Span/>
-                <FormInput onChange={handleConfirmPasswordChange} placeholder='تأكيد كلمة المرور' type="password"
+                <FormInput onChange={handleConfirmPasswordChange} placeholder={translate("retypePassword")}type="password"
                            value={confirmPassword} required/>
             </DivTxtField>
 
             {unmatchedPasswords &&
-                <DivPass>الإدخال غير صحيح، تأكد من مطابقة كلمة المرور</DivPass>
+                <DivPass>{translate("matchPassword")}</DivPass>
             }
 
             {messages.length > 0 &&
@@ -160,7 +161,7 @@ export default function ResetAdminPasswordForm(props){
                     return <DivPass className={classColor} key={index}>{message}</DivPass>
                 })
             }
-            <InputSubmit type="submit" value='login'>إعادة نعيين</InputSubmit>
+            <InputSubmit type="submit" value='login'>{translate("reassign")} </InputSubmit>
 
         </Form>
     );

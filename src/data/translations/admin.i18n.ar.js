@@ -7,4 +7,5 @@ export default {
   modifyAdmin: "تعديل المسؤول",
   notModifyAdminMSG: "لم يتم تعديل المسؤول",
   modifyAdminMSG: "تم تعديل المسؤول",
+  modifyAdminChanged: "يجب عليك إختار مسؤول إعادة تعيين كلمة المرور'",
 };

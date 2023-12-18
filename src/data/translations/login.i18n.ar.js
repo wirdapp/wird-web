@@ -19,4 +19,7 @@ export default {
   passwordValidation: "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل",
   confirmPassword: "تأكيد كلمة المرور",
   matchPassword: "لإدخال غير صحيح، تأكد من مطابقة كلمة المرور",
+  reassign: "إعادة نعيين",
+  reassignMSG: "تم إعادة تعيين كلمة المرور بنجاح",
+  notReassignMSG: "لم يتم  إعادة تعيين كلمة المرور",
 };
