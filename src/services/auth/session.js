@@ -16,7 +16,7 @@ export function saveSession(session) {
 }
 
 export function getSession() {
-  return JSON.parse(Cookies.get(SESSION_COOKIE_KEY));
+  return JSON.parse(Cookies.get(SESSION_COOKIE_KEY) ?? "null");
 }
 
 export function updateSessionToken(token) {
