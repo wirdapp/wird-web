@@ -8,7 +8,7 @@ export const SideBarContainer = styled.aside`
     height: 100%;
     text-align: center;
     border-radius: 1.5rem;
-    width: 19.0625rem;
+    width: 320px;
     margin: 8px;
 
     & svg {
