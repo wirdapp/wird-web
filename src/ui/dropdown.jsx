@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import styled from "@emotion/styled";
 import {colors} from "../styles";
 import {Button} from "./button";
@@ -28,10 +28,15 @@ const dropdownPanelClassName = css`
 
 export const Dropdown = ({children, variant, title, ...rest}) => {
   const [isOpen, setIsOpen] = useState(false);
+  const ref = useRef(null);
 
   useEffect(() => {
     // Close dropdown when clicking outside
-    const closeDropdown = () => setIsOpen(false);
+    const closeDropdown = (e) => {
+      if (!ref.current?.contains(e.target)) {
+        setIsOpen(false);
+      }
+    }
     document.addEventListener("click", closeDropdown);
 
     return () => {
@@ -41,27 +46,22 @@ export const Dropdown = ({children, variant, title, ...rest}) => {
 
   return (
     <LazyMotion features={domAnimation}>
-      <StyledDropdown className="dropdown-container">
+      <StyledDropdown className="dropdown-container" ref={ref}>
         <Button
           variant={variant}
           className="dropdown-header"
           onClick={(e) => {
-            e.stopPropagation();
             setIsOpen(!isOpen);
           }}
           {...rest}
         >
           {title}
-          <span className="dropdown-icon">
-          <i className="fas fa-chevron-down"></i>
-        </span>
         </Button>
         <AnimatePresence>
           {isOpen && <m.div className={dropdownPanelClassName}
                             initial={{opacity: 0, y: -10}}
                             animate={{opacity: 1, y: 0}}
                             exit={{opacity: 0, y: -10}}
-                            onClick={e => e.stopPropagation()}
           >{children}</m.div>}
         </AnimatePresence>
       </StyledDropdown>

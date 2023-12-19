@@ -14,15 +14,16 @@ export const SideBarContainer = styled.aside`
         min-width: 1.2rem;
     }
 
-    @media (max-width: 1000px) and (min-width: 750px) {
-        width: fit-content;
+    @media (max-width: 1000px) and (min-width: 768px) {
+        flex: 0 1 90px;
+        width: 90px;
         text-align: center;
         & span {
             display: none;
         }
     }
 
-    @media (max-width: 750px) {
+    @media (max-width: 768px) {
         display: none;
     }
 
@@ -40,6 +41,16 @@ export const MenuContainer = styled.div`
 
 export const WirdLogoContainer = styled.div`
     padding: 1rem;
+    @media (max-width: 1000px) {
+        padding: 0 0 1rem;
+    }
+
+    svg {
+        margin: auto;
+        width: 100%;
+        max-width: 50px;
+        height: auto;
+    }
 `;
 
 export const MenuLink = styled(NavLink)`

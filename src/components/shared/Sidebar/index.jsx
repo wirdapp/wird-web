@@ -34,48 +34,48 @@ function Sidebar() {
         </WirdLogoContainer>
 
         <MenuContainer>
-          <MenuLink end to="/dashboard/">
+          <MenuLink end to="/dashboard/" title={t("home-page")}>
             <HomeIcon/>
             <MenuItem>{t("home-page")}</MenuItem>
           </MenuLink>
           {/* { hasPermission && */}
-          <MenuLink to="/dashboard/competition">
+          <MenuLink to="/dashboard/competition" title={t("contest-information")}>
             <CompInfoIcon/>
             <MenuItem>{t("contest-information")}</MenuItem>
           </MenuLink>
           {/* } */}
           <MenuLink
-
             to="/dashboard/top-students"
+            title={t("leaders-board")}
           >
             <LeaderBoard/>
             <MenuItem>{t("leaders-board")}</MenuItem>
           </MenuLink>
-          <MenuLink to="/dashboard/admins">
+          <MenuLink to="/dashboard/admins" title={t("admins")}>
             <ContestModeratorsIcon/>
             <MenuItem>{t("admins")}</MenuItem>
           </MenuLink>
-          <MenuLink to="/dashboard/students">
+          <MenuLink to="/dashboard/students" title={t("students")}>
             <ParticipantsIcon/>
             <MenuItem>{t("students")}</MenuItem>
           </MenuLink>
           <MenuLink
-
             to="/dashboard/contest-criteria"
+            title={t("criterias")}
           >
             <CriteriaIcon/>
             <MenuItem>{t("criterias")}</MenuItem>
           </MenuLink>
           <MenuLink
-
             to="/dashboard/review-other-points"
+            title={t("text-inputs")}
           >
             <FileTxtIcon/>
             <MenuItem>{t("text-inputs")}</MenuItem>
           </MenuLink>
           <MenuLink
-
             to="/dashboard/students-points"
+            title={t("results-page")}
           >
             <ResultsIcon/>
             <MenuItem>{t("results-page")}</MenuItem>
@@ -83,12 +83,13 @@ function Sidebar() {
           {hasPermission && (
             <MenuLink
               to="/dashboard/export-points"
+              title={t("extract-results")}
             >
               <FileDownload/>
               <MenuItem>{t("extract-results")}</MenuItem>
             </MenuLink>
           )}
-          <MenuLink to="/dashboard/groups">
+          <MenuLink to="/dashboard/groups" title={t("groups-page")}>
             <GroupsIcon/>
             <MenuItem>{t("groups-page")}</MenuItem>
           </MenuLink>

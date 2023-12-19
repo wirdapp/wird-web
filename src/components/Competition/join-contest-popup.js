@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import {Modal} from "../../ui/modal";
 import {Button} from "../../ui/button";
 import {useTranslation} from "react-i18next";
@@ -15,8 +15,7 @@ const StyledFormItem = styled.div`
     gap: 8px;
 `;
 
-export const JoinContestPopup = () => {
-  const [open, setOpen] = useState(false);
+export const JoinContestPopup = ({visible, onClose}) => {
   const {t} = useTranslation();
 
   const handleSubmit = async (e) => {
@@ -29,35 +28,30 @@ export const JoinContestPopup = () => {
     } catch (error) {
       console.log(error);
     } finally {
-      setOpen(false);
+      onClose?.();
     }
   }
 
   return (
-    <>
-      <Button onClick={() => setOpen(true)}>
-        {t('join-contest')}
-      </Button>
-      <Modal title={t('create-contest')} onClose={() => setOpen(false)} visible={open}>
-        <form onSubmit={handleSubmit}>
-          <StyledFormItem>
-            <label htmlFor="code">{t('code-label')}</label>
-            <Input type="text" id="code" name="code" placeholder={t('code-label')}/>
-          </StyledFormItem>
+    <Modal title={t('join-contest')} onClose={onClose} visible={visible}>
+      <form onSubmit={handleSubmit}>
+        <StyledFormItem>
+          <label htmlFor="code">{t('code-label')}</label>
+          <Input type="text" id="code" name="code" placeholder={t('code-label')}/>
+        </StyledFormItem>
 
-          <div className={css`display: flex;
-              gap: 16px;
-              flex-direction: row-reverse;`}>
-            <Button variant="primary" type="submit">
-              {t('join-contest')}
-              <CheckCircleIcon/>
-            </Button>
-            <Button variant="default" onClick={() => setOpen(false)} type="button">
-              {t('cancel')}
-            </Button>
-          </div>
-        </form>
-      </Modal>
-    </>
+        <div className={css`display: flex;
+            gap: 16px;
+            flex-direction: row-reverse;`}>
+          <Button variant="primary" type="submit">
+            {t('join-contest')}
+            <CheckCircleIcon/>
+          </Button>
+          <Button variant="default" onClick={onClose} type="button">
+            {t('cancel')}
+          </Button>
+        </div>
+      </form>
+    </Modal>
   );
 }

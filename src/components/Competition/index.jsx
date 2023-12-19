@@ -12,29 +12,28 @@ import {css} from "@emotion/css";
 import {ExclamationCircleIcon} from "@heroicons/react/24/outline";
 import {CreateContestPopup} from "./create-contest-popup";
 import {JoinContestPopup} from "./join-contest-popup";
+import {Button} from "../../ui/button";
+import {PlusCircleIcon} from "@heroicons/react/20/solid";
 
 export default function Competition() {
   const [currentContest, setCurrentContest] = useState(null);
   const [loading, setLoading] = useState(false);
   const {t} = useTranslation();
+  const [createContestOpen, setCreateContestOpen] = useState(false);
+  const [joinContestOpen, setJoinContestOpen] = useState(false);
 
   useEffect(() => {
     setLoading(true);
-    retrieveCurrentContestInfo(
-      (res) => {
-        if (res && res.status === 200) {
-          setCurrentContest(res.data);
-          setLoading(false);
-        }
-      },
-      (err) => {
-        console.log(
-          "Failed to retrieve current contest: ",
-          err?.response?.data
-        );
-        setLoading(false);
-      }
-    );
+    retrieveCurrentContestInfo().then((result) => {
+      setCurrentContest(result);
+      setLoading(false);
+    }).catch((err) => {
+      console.log(
+        "Failed to retrieve current contest: ",
+        err?.response?.data
+      );
+      setLoading(false);
+    });
   }, []);
 
   if (loading) {
@@ -69,7 +68,7 @@ export default function Competition() {
         `}>
           <ExclamationCircleIcon className={css`width: 64px;
               height: 64px;`}/>
-          <h2>{t('no-contest-yet-msg')}</h2>
+          <h3>{t('no-contest-yet-msg')}</h3>
           <div className={css`
               display: flex;
               gap: 24px;
@@ -77,8 +76,15 @@ export default function Competition() {
               justify-content: center;
               padding: 24px;
           `}>
-            <CreateContestPopup/>
-            <JoinContestPopup/>
+            <Button variant="primary" onClick={() => setCreateContestOpen(true)}>
+              {t('create-contest')}
+              <PlusCircleIcon/>
+            </Button>
+            <Button onClick={() => setJoinContestOpen(true)}>
+              {t('join-contest')}
+            </Button>
+            <CreateContestPopup visible={createContestOpen} onClose={() => setCreateContestOpen(false)}/>
+            <JoinContestPopup visible={joinContestOpen} onClose={() => setJoinContestOpen(false)}/>
           </div>
 
         </div>

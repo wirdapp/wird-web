@@ -73,9 +73,9 @@ export const StudentBanner = styled.div`
     margin-right: -6rem;
     justify-content: right;
     align-items: flex-start;
-    display: flex;
-    @media (max-width: 56.25rem) {
-        display: none;
+    display: none;
+    @media (min-width: 1100px) {
+        display: flex;
     }`;
 
 export const StudentBanner1 = styled.img`
@@ -112,9 +112,6 @@ export const ContentBanner = styled.div`
     align-items: flex-start;
     padding: 0rem;
     gap: 2.25rem;
-
-    width: 19.8125rem;
-    height: 13.5rem;
 
     @media (max-width: 56.25rem) {
         margin: auto;

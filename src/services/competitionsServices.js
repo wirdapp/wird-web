@@ -13,16 +13,9 @@ export const retrieveContestsInfo = (successCallback, faiCallback) => {
     true);
 };
 
-export const retrieveCurrentContestInfo = (successCallback, faiCallback) => {
-  doRequest(null, "/contests/current/",
-    {
-      "Content-Type": "application/json",
-
-    },
-    "get",
-    successCallback,
-    faiCallback,
-    true);
+export const retrieveCurrentContestInfo = async () => {
+  const {data} = await axios.get("/contests/current/")
+  return data;
 };
 
 export const switchContest = (data, successCallback, faiCallback) => {

@@ -31,6 +31,9 @@ import {useDashboardData} from "../../../util/routes-data";
 import {destroySession} from "../../../services/auth/session";
 import {Dropdown} from "../../../ui/dropdown";
 import {Button} from "../../../ui/button";
+import {PlusCircleIcon, PlusIcon, UserPlusIcon} from "@heroicons/react/24/solid";
+import {CreateContestPopup} from "../../Competition/create-contest-popup";
+import {JoinContestPopup} from "../../Competition/join-contest-popup";
 
 function Nav() {
   const {i18n} = useTranslation();
@@ -38,13 +41,15 @@ function Nav() {
   const {t} = useTranslation();
   const [hasPermission, setPermission] = useState(false);
   const {pathname} = useLocation();
-  const [isOpen, setIsOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showUserInfo, setShowUserInfo] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [createContestOpen, setCreateContestOpen] = useState(false);
+  const [joinContestOpen, setJoinContestOpen] = useState(false);
   let navigate = useNavigate();
 
   const handleToggle = () => {
-    setIsOpen(!isOpen);
+    setSidebarOpen(!sidebarOpen);
   };
 
   useEffect(() => {
@@ -71,9 +76,20 @@ function Nav() {
             <StyledPageTitle id="dashboard-page-title"/>
           </LeftNavItems>
           <RightNavItems>
-            <Button title="Create contest">
-              +
-            </Button>
+            <Dropdown title={<PlusIcon/>}>
+              <List>
+                <ListItem onClick={() => setCreateContestOpen(true)}>
+                  <PlusCircleIcon/>
+                  <MenuTitle>{t("create-contest")}</MenuTitle>
+                </ListItem>
+                <ListItem onClick={() => setJoinContestOpen(true)}>
+                  <UserPlusIcon/>
+                  <MenuTitle>{t("join-contest")}</MenuTitle>
+                </ListItem>
+              </List>
+            </Dropdown>
+            <CreateContestPopup visible={createContestOpen} onClose={() => setCreateContestOpen(false)}/>
+            <JoinContestPopup visible={joinContestOpen} onClose={() => setJoinContestOpen(false)}/>
             <Dropdown variant="primary" title={currentUser?.username
               ? currentUser?.username[0] +
               currentUser?.username[1]
@@ -139,8 +155,8 @@ function Nav() {
           </RightNavItems>
         </Navbar>
         <SidebarMenu
-          className={isOpen ? "open" : ""}
-          onClick={() => setIsOpen(false)}
+          className={sidebarOpen ? "open" : ""}
+          onClick={() => setSidebarOpen(false)}
         >
           <Sidebar setIsSideBarCollapsed={handleToggle}/>
         </SidebarMenu>

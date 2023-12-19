@@ -20,6 +20,7 @@ import Signup from "./components/Signup";
 import ResetPassword from "./components/ResetPassword";
 import ForgotPassword from "./components/ForgotPassword";
 import {ReactComponent as WirdLogo} from "assets/icons/Shared/wirdLogo.svg";
+import {retrieveCurrentContestInfo} from "./services/competitionsServices";
 
 function ErrorBoundary() {
   let error = useRouteError();
@@ -82,20 +83,25 @@ export const router = createBrowserRouter([
           if (!isLogged()) {
             return redirect(`/login?redirectTo=${redirectTo}`);
           }
+          const data = {};
 
           try {
             // make sure session still valid
-            const user = await AuthApi.currentUserInfo();
-            updateSessionUserDetails(user);
-
-            return {
-              currentUser: user,
-              isSuperAdmin: isSuperAdmin(user)
-            };
+            data.currentUser = await AuthApi.currentUserInfo();
+            updateSessionUserDetails(data.currentUser);
+            data.isSuperAdmin = isSuperAdmin(data.currentUser);
           } catch (e) {
             destroySession();
             return redirect(`/login?redirectTo=${redirectTo}`);
           }
+
+          try {
+            data.currentContest = await retrieveCurrentContestInfo();
+          } catch (e) {
+            console.log(`Failed to get current contest: ${e}`);
+            data.currentContest = null;
+          }
+          return data;
         },
         element: <DashboardLayout/>,
         errorElement: <ErrorBoundary/>,

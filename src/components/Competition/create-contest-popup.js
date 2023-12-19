@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import {Modal} from "../../ui/modal";
 import {Button} from "../../ui/button";
 import {useTranslation} from "react-i18next";
@@ -15,8 +15,7 @@ const StyledFormItem = styled.div`
     gap: 8px;
 `;
 
-export const CreateContestPopup = () => {
-  const [open, setOpen] = useState(false);
+export const CreateContestPopup = ({visible, onClose}) => {
   const {t} = useTranslation();
 
   const handleSubmit = async (e) => {
@@ -29,36 +28,31 @@ export const CreateContestPopup = () => {
     } catch (error) {
       console.log(error);
     } finally {
-      setOpen(false);
+      onClose?.();
     }
   }
 
   return (
-    <>
-      <Button variant="primary" onClick={() => setOpen(true)}>
-        {t('create-contest')}
-        <PlusCircleIcon/>
-      </Button>
-      <Modal title={t('create-contest')} onClose={() => setOpen(false)} visible={open}>
-        <form onSubmit={handleSubmit}>
-          <StyledFormItem>
-            <label htmlFor="name">{t('name-label')}</label>
-            <Input type="text" id="name" name="name" placeholder={t('name-label')}/>
-          </StyledFormItem>
 
-          <div className={css`display: flex;
-              gap: 16px;
-              flex-direction: row-reverse;`}>
-            <Button variant="primary" type="submit">
-              {t('create-contest')}
-              <PlusCircleIcon/>
-            </Button>
-            <Button variant="default" onClick={() => setOpen(false)} type="button">
-              {t('cancel')}
-            </Button>
-          </div>
-        </form>
-      </Modal>
-    </>
+    <Modal title={t('create-contest')} onClose={onClose} visible={visible}>
+      <form onSubmit={handleSubmit}>
+        <StyledFormItem>
+          <label htmlFor="name">{t('name-label')}</label>
+          <Input type="text" id="name" name="name" placeholder={t('name-label')}/>
+        </StyledFormItem>
+
+        <div className={css`display: flex;
+            gap: 16px;
+            flex-direction: row-reverse;`}>
+          <Button variant="primary" type="submit">
+            {t('create-contest')}
+            <PlusCircleIcon/>
+          </Button>
+          <Button variant="default" onClick={onClose} type="button">
+            {t('cancel')}
+          </Button>
+        </div>
+      </form>
+    </Modal>
   );
 }

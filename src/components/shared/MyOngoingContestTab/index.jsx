@@ -17,16 +17,11 @@ function MyOngoingContestTab({competition}) {
   const {t} = useTranslation();
 
   useEffect(() => {
-    retrieveCurrentContestInfo(
-      (res) => {
-        if (res && res.status === 200) {
-          setCurrentContest(res.data);
-        }
-      },
-      (err) => {
-        console.log(`Failed to get current contest: ${err}`);
-      }
-    );
+    retrieveCurrentContestInfo().then((results) => {
+      setCurrentContest(results);
+    }).catch((err) => {
+      console.log(`Failed to get current contest: ${err}`);
+    });
   }, []);
 
   useEffect(() => {
