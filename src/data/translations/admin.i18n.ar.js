@@ -8,4 +8,10 @@ export default {
   notModifyAdminMSG: "لم يتم تعديل المسؤول",
   modifyAdminMSG: "تم تعديل المسؤول",
   modifyAdminChanged: "يجب عليك إختار مسؤول إعادة تعيين كلمة المرور'",
+  deleteAdmin: "تأكيد الحذف",
+  deleteAdminDisclimar: "هل تريد حذف هذا المسؤول؟",
+  deleteBtn: "حذف",
+  cancelBtn: "إلغاء",
+  adminsLabel: "المسؤولون",
+  notAdmins: "لا يوجد مسؤولون",
 };

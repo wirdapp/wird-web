@@ -7,8 +7,10 @@ import {H5} from "../Students/setPasswordStudent/SetPasswordStudent.styles";
 import Loader from "../Loader";
 import {isSuperAdmin} from '../../util/ContestPeople_Role';
 import {useDashboardData} from "../../util/routes-data";
-
+import i18n from 'i18n.js';
 export default function Admins() {
+  const {t:translate}=i18n
+
   const {currentUser} = useDashboardData();
 
   const [admins, setAdmins] = useState([]);
@@ -90,19 +92,19 @@ export default function Admins() {
   return (
     <AdminsDefault>
       {openModal &&
-        <Modal title="تأكيد الحذف" content="هل تريد حذف هذا المسؤول؟" deleteBtn="حذف" cancelBtn="إلغاء"
+        <Modal title= {translate("deleteAdmin")} content={translate("deleteAdminDisclimar")} deleteBtn={translate("deleteBtn")} cancelBtn={translate("cancelBtn")}
                setOpenModal={setOpenModal} deleteFunction={deleteFunction}/>
       }
 
       {adminsLabels.length === 0 && admins.length === 0 &&
-        <Tabs labels={['المسؤولون']} contents={[<H5>لا يوجد مسؤولون</H5>]}/>
+        <Tabs labels={[translate("adminsLabel")]} contents={[<H5>{translate("notAdmins")}</H5>]}/>
       }
 
       {admins && admins.length > 0 &&
         admins.filter(admin => !currentUser || currentUser.username !== admin.person.username).length > 0 &&
 
         <DropdownList className='DropdownList'>
-          <DropdownListItem className="title"><Span>المسؤولون</Span></DropdownListItem>
+          <DropdownListItem className="title"><Span>{translate("adminsLabel")}</Span></DropdownListItem>
           <div className="dropdown-scroll-container">
             {
               admins.filter(admin => !currentUser || currentUser.username !== admin.person.username)
@@ -112,7 +114,7 @@ export default function Admins() {
                       ?
                       <>
                         <Button id="deleteBtn" onClick={handleOpenModelChange}
-                                value={admin.person.username}>حذف</Button>
+                                value={admin.person.username}>{translate("deleteBtn")}</Button>
                         {admin.person.first_name?.length > 0 || admin.person.last_name?.length > 0
                           ?
                           <Span>{admin.person.first_name} {admin.person.last_name}</Span>

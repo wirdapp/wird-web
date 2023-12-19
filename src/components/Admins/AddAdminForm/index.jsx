@@ -10,7 +10,7 @@ import {
     FormInput,
     InputSubmit
 } from "../../shared/styles";
-import i18n from 'i18n';
+import i18n from 'i18n.js';
 
 
 export default function AddAdminForm(props) {
