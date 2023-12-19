@@ -5,6 +5,7 @@ export const Container = styled.div`
     flex-direction: row;
     max-width: 1600px;
     margin: auto;
+    min-height: 100vh;
 `;
 
 export const MainContent = styled.main`
