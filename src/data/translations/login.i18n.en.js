@@ -22,4 +22,9 @@ export default {
   reassignMSG: "The password has been reset successfully",
   notReassignMSG: "Password not reset",
   modifyAdminChanged: "You must choose an administrator to reset your password",
+  forgetPass: "Forgot Password",
+  checkEmail: "Check your email.",
+  resetPass: "Reset Password",
+  backLogin: "back to Login",
+  orKey: "Or",
 };
