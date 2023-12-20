@@ -15,7 +15,8 @@ import {DropdownDiv, DropdownList} from "./EditAdminForm.styles";
 import {updateAdmin} from "../../../services/adminsServices";
 import {useDashboardData} from "../../../util/routes-data";
 import {saveUserToLocalStorage} from "../../../services/auth/utils";
-import i18n from 'i18n.js';
+
+import { useTranslation } from 'react-i18next';
 
 
 
@@ -30,7 +31,7 @@ export default function EditGroupForm(props) {
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [selectedUserName, setSelectedUserName] = useState("");
-  const {t:translate}=i18n
+  const {t} = useTranslation();
   useEffect(() => {
     setMessages([]);
     setClassColor("");
@@ -64,7 +65,7 @@ export default function EditGroupForm(props) {
           resetEditAdminForm();
 
           setClassColor("green");
-          setMessages([translate("modifyAdminMSG")]);
+          setMessages([t("modifyAdminMSG")]);
 
           setTimeout(() => {
             props.setAdmins([...props.admins.filter(admin => admin.username !== selectedUserName), updatedAdmin]);
@@ -78,7 +79,7 @@ export default function EditGroupForm(props) {
       },
       (err) => {
         let errMessages = [];
-        errMessages.push([translate("notModifyAdminMSG")]);
+        errMessages.push([t("notModifyAdminMSG")]);
         if (err.response.data) {
           let obj = err.response.data;
           Object.keys(obj).forEach(e => {
@@ -145,7 +146,7 @@ export default function EditGroupForm(props) {
         <DropdownDiv className="DropdownDiv">
           <DropdownList className="DropdownList_editAdmin" onChange={handleAdminSelectChange}
                         value={selectedUserName}>
-            <DropdownListItem>{translate("chooseAdmin")}</DropdownListItem>
+            <DropdownListItem>{t("chooseAdmin")}</DropdownListItem>
             {
               props.admins.map((admin, index) => {
                 if (admin?.first_name?.length > 0 || admin?.last_name?.length > 0) {
@@ -162,30 +163,30 @@ export default function EditGroupForm(props) {
       }
       <DivTxtField>
         <Span/>
-        <FormInput onChange={handleFirstNameChange} placeholder={translate("firstName")} type="text" value={firstName}
+        <FormInput onChange={handleFirstNameChange} placeholder={t("firstName")} type="text" value={firstName}
                    required/>
       </DivTxtField>
 
       <DivTxtField>
         <Span/>
-        <FormInput onChange={handleLastNameChange} placeholder={translate("familyName")} type="text" value={lastName}
+        <FormInput onChange={handleLastNameChange} placeholder={t("familyName")} type="text" value={lastName}
                    required/>
       </DivTxtField>
 
       <DivTxtField>
         <Span/>
-        <FormInput onChange={handleEmailChange} placeholder={translate("emailAddressKey")} type="email" value={email}/>
+        <FormInput onChange={handleEmailChange} placeholder={t("emailAddressKey")} type="email" value={email}/>
       </DivTxtField>
 
       <DivTxtField>
         <Span/>
-        <FormInput onChange={handlePhoneNumberChange} placeholder={translate("phoneNumber")}  type="text" value={phoneNumber}/>
+        <FormInput onChange={handlePhoneNumberChange} placeholder={t("phoneNumber")}  type="text" value={phoneNumber}/>
       </DivTxtField>
 
       {props.hasPermission &&
         <DivTxtFieldnumber>
           <Checkboxes type="checkbox" onChange={handleSuperAdminCheckChange} checked={isSuperAdmin}/>
-          <LabelSoper>{translate("addAdmin")}</LabelSoper>
+          <LabelSoper>{t("addAdmin")}</LabelSoper>
         </DivTxtFieldnumber>
       }
 
@@ -200,7 +201,7 @@ export default function EditGroupForm(props) {
           return <DivPass className={classColor} key={index}>{message}</DivPass>
         })
       }
-      <InputSubmit type="submit" value='login'>{translate("modifyAdmin")}</InputSubmit>
+      <InputSubmit type="submit" value='login'>{t("modifyAdmin")}</InputSubmit>
 
     </Form>
 

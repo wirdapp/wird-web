@@ -10,7 +10,8 @@ import {
     FormInput,
     InputSubmit
 } from "../../shared/styles";
-import i18n from 'i18n.js';
+import { useTranslation } from 'react-i18next';
+
 
 
 export default function AddAdminForm(props) {
@@ -28,7 +29,7 @@ export default function AddAdminForm(props) {
     const [classColor, setClassColor] = useState("");
     const [isValidPassword, setValidPassword] = useState(true);
     const [isValidUserName, setValidUserName] = useState(true);
-    const {t:translate}=i18n
+    const {t} = useTranslation();
     useEffect(()=>{
             setMessages([]);
             setClassColor("");
@@ -70,7 +71,7 @@ export default function AddAdminForm(props) {
                     resetAddAdminForm();
 
                     setClassColor("green");
-                    setMessages([translate("addAdminSuccess")]);
+                    setMessages([t("addAdminSuccess")]);
 
                     setTimeout(()=>{
                         props.setAdmins([...props.admins, data]);
@@ -80,7 +81,7 @@ export default function AddAdminForm(props) {
                 }
             }, (err) => {
                 let errMessages = [];
-                errMessages.push([translate("notAddAdminMSG")]);
+                errMessages.push([t("notAddAdminMSG")]);
                 if(err.response.data){
                     let obj = err.response.data;
                     Object.keys(obj).forEach(e => {
@@ -156,48 +157,48 @@ export default function AddAdminForm(props) {
         <Form onSubmit={handleAddNewAdminSubmit}>
             <DivTxtField>
                 <Span/>
-                <FormInput onChange={handleUserNameChange} type="text" placeholder={translate("userNameKey")} value={username} required/>
+                <FormInput onChange={handleUserNameChange} type="text" placeholder={t("userNameKey")} value={username} required/>
             </DivTxtField>
             {!isValidUserName &&
-                <DivPass className={classColor}>{translate("userNameDisclimar")}</DivPass>
+                <DivPass className={classColor}>{t("userNameDisclimar")}</DivPass>
             }
 
             <DivTxtField>
                 <Span/>
-                <FormInput onChange={handleFirstNameChange} placeholder={translate("firstName")} type="text" value={firstName} required/>
+                <FormInput onChange={handleFirstNameChange} placeholder={t("firstName")} type="text" value={firstName} required/>
             </DivTxtField>
 
             <DivTxtField>
                 <Span/>
-                <FormInput onChange={handleLastNameChange} placeholder={translate("familyName")} type="text" value={lastName} required/>
+                <FormInput onChange={handleLastNameChange} placeholder={t("familyName")} type="text" value={lastName} required/>
             </DivTxtField>
 
             <DivTxtField>
               <Span />
-              <FormInput onChange={handleEmailChange} placeholder={translate("emailAddressKey")} type="email"  value={email} />
+              <FormInput onChange={handleEmailChange} placeholder={t("emailAddressKey")} type="email"  value={email} />
             </DivTxtField>
 
             <DivTxtField>
                 <Span />
-                <FormInput onChange={handlePhoneNumberChange} placeholder={translate("phoneNumber")} type="text"  value={phoneNumber} />
+                <FormInput onChange={handlePhoneNumberChange} placeholder={t("phoneNumber")} type="text"  value={phoneNumber} />
             </DivTxtField>
 
             <DivTxtField>
                 <Span/>
-                <FormInput onChange={handlePasswordChange} placeholder={translate("passwordKey")} type="password" value={password} required/>
+                <FormInput onChange={handlePasswordChange} placeholder={t("passwordKey")} type="password" value={password} required/>
             </DivTxtField>
             {!isValidPassword &&
-                <DivPass className={classColor}>{translate("passwordValidation")}</DivPass>
+                <DivPass className={classColor}>{t("passwordValidation")}</DivPass>
             }
 
             <DivTxtField>
                 <Span/>
-                <FormInput onChange={handleConfirmPasswordChange} placeholder={translate("confirmPassword")} type="password"
+                <FormInput onChange={handleConfirmPasswordChange} placeholder={t("confirmPassword")} type="password"
                            value={confirmPassword} required/>
             </DivTxtField>
 
             {unmatchedPasswords &&
-                <DivPass className={classColor}>{translate("matchPassword")}</DivPass>
+                <DivPass className={classColor}>{t("matchPassword")}</DivPass>
             }
 
             {/*TODO: Uncomment when it's supported in backend-side*/}
@@ -211,7 +212,7 @@ export default function AddAdminForm(props) {
             {/*}*/}
 
             <DivTxtFieldnumber>
-                <Checkboxes type="checkbox" onChange={handleSuperAdminCheckChange}/> <LabelSoper>{translate("addAdmin")}</LabelSoper>
+                <Checkboxes type="checkbox" onChange={handleSuperAdminCheckChange}/> <LabelSoper>{t("addAdmin")}</LabelSoper>
             </DivTxtFieldnumber>
 
             {
@@ -221,7 +222,7 @@ export default function AddAdminForm(props) {
                     })
 
             }
-            <InputSubmit type="submit" value='login'>{translate("addNewAdmin")}</InputSubmit>
+            <InputSubmit type="submit" value='login'>{t("addNewAdmin")}</InputSubmit>
 
         </Form>
 

@@ -7,8 +7,10 @@ import {
 } from "../../shared/styles";
 import {DivPass} from "../../Admins/Admins.styles";
 import {updateCompetition} from "../../../services/competitionsServices";
+import { useTranslation } from "react-i18next";
 
 export default function AddEditAnnouncementForm(props){
+    const {t} = useTranslation();
     const [selectedCompetitionId, setSelectedCompetitionId] = useState("");
     const [notes, setNotes] = useState([""]);
     const [messages, setMessages] = useState([]);
@@ -38,7 +40,7 @@ export default function AddEditAnnouncementForm(props){
         e.preventDefault();
 
         if(selectedCompetitionId === ""){
-            setMessages(['يجب عليك إختيار مسابقة']);
+            setMessages([t("contestKey")]);
             return;
         }
 
@@ -67,7 +69,7 @@ export default function AddEditAnnouncementForm(props){
                     let updatedCompetition = props.competitions.filter(competition => competition.id === selectedCompetitionId)[0];
                     updatedCompetition.announcements = data.announcements;
 
-                    setMessages(['تم تعديل الإعلانات بنجاح']);
+                    setMessages([t("acceptAds")]);
                     setClassColor("green");
 
                     setTimeout(()=>{
@@ -79,7 +81,7 @@ export default function AddEditAnnouncementForm(props){
             },
             (err)=>{
                 let errMessages = [];
-                errMessages.push(["لم يتم تعديل الإعلانات"]);
+                errMessages.push([t(notAcceptAds)]);
                 if(err.response.data){
                     let obj = err.response.data;
                     Object.keys(obj).forEach(e => {
@@ -118,7 +120,7 @@ export default function AddEditAnnouncementForm(props){
 
                         <DivTxtField key={index} style={{width: '100%'}}>
                             <Span/>
-                            <AnnouncementsFormInput placeholder='الإعلان' key={index} value={inputItem} onChange={(e) => handleAnnouncementsChange(e, index)} type="text"/>
+                            <AnnouncementsFormInput placeholder={t("ads")} key={index} value={inputItem} onChange={(e) => handleAnnouncementsChange(e, index)} type="text"/>
                             { notes.length > 1 &&
                                 <RemoveBtn onClick={(e)=>handleRemoveBtnChange(e, index)}>-</RemoveBtn>
                             }
@@ -130,14 +132,14 @@ export default function AddEditAnnouncementForm(props){
                 })
             }
             { isSemiColonExists &&
-                <DivPass className={classColor}>الإعلان يجب أن لا يحتوي على ;</DivPass>
+                <DivPass className={classColor}></DivPass>
             }
             {messages.length > 0 &&
                 messages.map((message, index) => {
                     return <DivPass className={classColor} key={index}>{message}</DivPass>
                 })
             }
-            <InputSubmit type="submit" value='login'>تعديل الإعلانات</InputSubmit>
+            <InputSubmit type="submit" value='login'>{t("editDisclimar")}</InputSubmit>
         </Form>
     );
 }

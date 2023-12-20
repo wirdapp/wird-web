@@ -9,7 +9,8 @@ import {
     InputSubmit,
     DropdownListItem
 } from "../../shared/styles";
-import i18n from 'i18n.js';
+
+import { useTranslation } from 'react-i18next';
 
 export default function ResetAdminPasswordForm(props){
     const [password, setPassword] = useState("");
@@ -19,7 +20,7 @@ export default function ResetAdminPasswordForm(props){
     const [selectedAdminUsername, setSelectedAdminUsername] = useState("");
     const [messages, setMessages] = useState([]);
     const [classColor, setClassColor] = useState("");
-    const {t:translate}=i18n
+    const {t} = useTranslation();
 
     useEffect(()=>{
             setMessages([]);
@@ -45,7 +46,7 @@ export default function ResetAdminPasswordForm(props){
         }
 
         if(selectedAdminUsername === ""){
-            setMessages([translate("modifyAdminChanged")]);
+            setMessages([t("modifyAdminChanged")]);
             setClassColor("red");
             return;
         }
@@ -55,7 +56,7 @@ export default function ResetAdminPasswordForm(props){
                 if(res && res.status ===200){
 
                     setClassColor("green");
-                    setMessages([translate('reassignMSG')]);
+                    setMessages([t('reassignMSG')]);
 
                     setTimeout(()=>{
                         resetPasswordForm();
@@ -65,7 +66,7 @@ export default function ResetAdminPasswordForm(props){
                 }
             },(err)=>{
                 let errMessages = [];
-                errMessages.push([translate("notReassignMSG")]);
+                errMessages.push([t("notReassignMSG")]);
                 if(err.response.data){
                     let obj = err.response.data;
                     Object.keys(obj).forEach(e => {
@@ -124,7 +125,7 @@ export default function ResetAdminPasswordForm(props){
                 props.admins && props.admins.length > 0 &&
                 <DropdownDiv className="DropdownDiv">
                     <DropdownList className="DropdownList_editAdmin" onChange={handleSelectedAdminChange} value={selectedAdminUsername}>
-                        <DropdownListItem>{translate("chooseAdmin")}</DropdownListItem>
+                        <DropdownListItem>{t("chooseAdmin")}</DropdownListItem>
                         {
                             props.admins.map((admin, index) => {
                                 if(admin?.first_name?.length > 0 || admin?.last_name?.length > 0){
@@ -140,20 +141,20 @@ export default function ResetAdminPasswordForm(props){
 
             <DivTxtField>
                 <Span/>
-                <FormInput onChange={handlePasswordChange} placeholder={translate("passwordKey")} type="password" value={password} required/>
+                <FormInput onChange={handlePasswordChange} placeholder={t("passwordKey")} type="password" value={password} required/>
             </DivTxtField>
             {!isValidPassword &&
-                <DivPass> {translate("passwordValidation")}</DivPass>
+                <DivPass> {t("passwordValidation")}</DivPass>
             }
 
             <DivTxtField>
                 <Span/>
-                <FormInput onChange={handleConfirmPasswordChange} placeholder={translate("retypePassword")}type="password"
+                <FormInput onChange={handleConfirmPasswordChange} placeholder={t("retypePassword")}type="password"
                            value={confirmPassword} required/>
             </DivTxtField>
 
             {unmatchedPasswords &&
-                <DivPass>{translate("matchPassword")}</DivPass>
+                <DivPass>{t("matchPassword")}</DivPass>
             }
 
             {messages.length > 0 &&
@@ -161,7 +162,7 @@ export default function ResetAdminPasswordForm(props){
                     return <DivPass className={classColor} key={index}>{message}</DivPass>
                 })
             }
-            <InputSubmit type="submit" value='login'>{translate("reassign")} </InputSubmit>
+            <InputSubmit type="submit" value='login'>{t("reassign")} </InputSubmit>
 
         </Form>
     );
