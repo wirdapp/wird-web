@@ -30,9 +30,11 @@ export default {
   "ramadan-word": "رمضان",
   "choose-section": "اختر القسم",
   "no-sections": "لا يوجد أقسام - يجب إضافة قسم",
-  "select-specific-days" : "اختر الأيام",
+  "select-specific-days": "اختر الأيام",
   "success-add-standard-msg": "تم إضافة المعييار بنجاح",
   "success-edit-standard-msg": "تم تعديل المعييار بنجاح",
   "fail-add-standard-msg": "لم يتم إضافة المعييار",
   "fail-edit-standard-msg": "لم يتم تعديل المعييار",
+  criteriaCheck: "هل أنت متأكد أنك تريد حذف هذا القسم؟",
+  criteriaQuestion: "هل أنت متأكد أنك تريد حذف هذا المعيار؟",
 };

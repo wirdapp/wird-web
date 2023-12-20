@@ -7,4 +7,13 @@ export default {
   "first-name": "الاسم الأول",
   "re-type-new-password": "كلمة المرور مرة أخرى",
   "new-password": "كلمة المرور",
+  tryAgainPassword: "كلمات المرور هذه غير متطابقة. حاول ثانية.",
+  extractResult: "استخراج النتائج",
+  fromDay: "من يوم",
+  untilDay: " إلى يوم",
+  yourResult: "يمكنك استخراج النتائج مرة واحدة يوميا",
+  extractKey: "استخراج",
+  noResult: "لم يتم استخراج النتائج",
+  succussResult: "تم استخراج النتائج بنجاح",
+  dayResult: "اختر الآبام لاستخراج النتائج",
 };

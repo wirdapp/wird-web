@@ -223,7 +223,7 @@ export default function ContestCriteria() {
                       <PopUpModal
                         key={index}
                         position={modalPosition}
-                        fixedTextFields={[<p>Are you sure you want to delete this section?</p>]}
+                        fixedTextFields={[<p>{t("criteriaCheck")}</p>]}
                         buttons={[
                           <button onClick={handleCancel}>{t("cancel")}</button>,
                           <button onClick={handleConfirmDelete}>
@@ -293,7 +293,7 @@ export default function ContestCriteria() {
                     <PopUpModal
                       key={index}
                       position={modalPosition}
-                      fixedTextFields={[<p>Are you sure you want to delete this criteria?</p>]}
+                      fixedTextFields={[<p>{t("criteriaQuestion")}</p>]}
                       buttons={[
                         <button onClick={handleCancel}>{t("cancel")}</button>,
                         <button onClick={handleConfirmStandardDelete}>
