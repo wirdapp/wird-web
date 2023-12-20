@@ -27,4 +27,11 @@ export default {
   resetPass: "إعادة تعيين كلمة المرور",
   backLogin: "العودة إلى تسجيل الدخول",
   orKey: "أو",
+  notAccount: "ليس لديك حساب؟",
+  signUpKey: "اشتراك",
+  checkPassword: "تحقق من بريدك الإلكتروني وكلمة المرور أو قم بإنشاء حساب.",
+  characterKey: "استخدم 8 أحرف أو أكثر.",
+  passwordMatch: "كلمات المرور هذه غير متطابقة. حاول ثانية.",
+  resetPassWord: "إعادة تعيين كلمة المرور الآن",
+  wirdSupport: "دعم وِرد",
 };

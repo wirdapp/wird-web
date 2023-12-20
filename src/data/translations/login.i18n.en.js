@@ -27,4 +27,12 @@ export default {
   resetPass: "Reset Password",
   backLogin: "back to Login",
   orKey: "Or",
+  notAccount: "Don’t have an account?",
+  signUpKey: "Sign up",
+  checkPassword: "Check your email and password or create an account.",
+  characterKey: "Use 8 or more characters.",
+  passwordMatch: "Those passwords didn't match. Try again.",
+  resetPassWord: "Reset Password Now",
+  wirdSupport: "Wird Support",
+  reviewText: "Review text entries",
 };

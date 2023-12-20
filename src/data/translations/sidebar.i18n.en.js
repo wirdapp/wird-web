@@ -19,4 +19,11 @@ export default {
   help: "Help",
   "my-account": "My Account",
   language: "العربية",
+  ourName: "Wird platform",
+  welcomeMsg:
+    "Welcome to the competition official website on the Ward platform. In this place you can follow the details of the contestants. For more details, please watch the user guide through the video attached below.",
+  ongingContst: "My Ongoing Contest",
+  pastContest: "My Past Contests",
+  participantsKey: "Participants",
+  loading: "Loading",
 };

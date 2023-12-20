@@ -1,0 +1,18 @@
+export default {
+  reviewText: "مراجعة المدخلات النصية",
+  selectStudent: "اختر الطالب",
+  chooseDay: "اختر اليوم",
+  selectStudentDay: "اختر الطالب واليوم",
+  studentText: "لا يوجد مدخلات نصية للطالب في هذا اليوم",
+  standardKey: "اختر المعييار",
+  textEntered: "النص المدخل من الطالب",
+  notTextEntered: "لم يقم الطالب بأي إدخال",
+  addressKey: "العنوان",
+  limitReptition: "الحد الأعلى للتكرار",
+  enterResult: "ادخل النتيجة",
+  addResult: "إضافةالنتيجة",
+  notStudent: "لا يوجد طلاب ",
+  notAddResult: "لم يتم إضافة النتيجة",
+  succussResult: "تم إضافة النتيجة بنجاح'",
+  mustEnter: "يجب عليك إدخال نتيجة لإضافتها'",
+};

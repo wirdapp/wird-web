@@ -4,8 +4,10 @@ import LoginFormContainer, {DivCenter, DivPass, TitleLogin,} from "./ResetPasswo
 import {DivTxtField} from "../shared/styles";
 import {Form, FormInput, HeadLogIn, InputSubmit, SignupNow, SignupNowAccount,} from "../Login/login.styles"
 import WirdLogo from '../../assets/Logo/WirdLogoV2.svg';
+import { useTranslation } from "react-i18next";
 
 function ForgotPassword() {
+  const {t} = useTranslation();
   let Navigate = useNavigate();
   const [password, setPassword] = useState(" ");
   const [Retypepassword, setRetypePassword] = useState(" ");
@@ -46,7 +48,7 @@ function ForgotPassword() {
       <DivCenter>
         <HeadLogIn>
           <TitleLogin>
-            Reset Password
+            {t("resetPass")}
           </TitleLogin>
         </HeadLogIn>
 
@@ -76,11 +78,11 @@ function ForgotPassword() {
 
           {/* TODO: style the error message */}
           {showErrorMessage && (
-            <DivPass className="red">Use 8 or more characters.</DivPass>
+            <DivPass className="red">{t("characterKey")}</DivPass>
           )}
 
           {showErrorMessageMatch && (
-            <DivPass className="red">Those passwords didn't match. Try again.</DivPass>
+            <DivPass className="red">{t("passwordMatch")}</DivPass>
           )}
 
           {/* <PageLink href="https://www.facebook.com/Wird.Competition/" target="_blank">
@@ -88,13 +90,13 @@ function ForgotPassword() {
           </PageLink> */}
 
           <InputSubmit type="submit" value="login">
-            Reset Password Now
+            {t("resetPassWord")}
           </InputSubmit>
         </Form>
         <SignupNowAccount>
-          <SignupNow href="https://www.facebook.com/Wird.Competition/"> Wird Support </SignupNow>
-          Or
-          <SignupNow href="/Login"> back to Login</SignupNow>
+          <SignupNow href="https://www.facebook.com/Wird.Competition/"> {t("wirdSupport")} </SignupNow>
+          {t("orKey")}
+          <SignupNow href="/Login"> {t("backLogin")}</SignupNow>
         </SignupNowAccount>
 
       </DivCenter>

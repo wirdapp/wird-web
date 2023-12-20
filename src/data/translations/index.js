@@ -20,6 +20,8 @@ import adminI18nAr from "./admin.i18n.ar";
 import adminI18nEn from "./admin.i18n.en";
 import competitionI18Ar from "./competition.i18n.ar";
 import competitionI18nEn from "./competition.i18n.en";
+import reviewI18nAr from "./review.i18n.ar";
+import reviewI18nEn from "./review.i18n.en";
 export default {
   en: {
     translation: {
@@ -34,6 +36,7 @@ export default {
       ...sharedEN,
       ...adminI18nEn,
       ...competitionI18nEn,
+      ...reviewI18nEn,
     },
   },
   ar: {
@@ -49,6 +52,7 @@ export default {
       ...sharedAR,
       ...adminI18nAr,
       ...competitionI18Ar,
+      ...reviewI18nAr,
     },
   },
 };

@@ -5,7 +5,7 @@ export default function Loader() {
   return (
     <Container>
       <DivCenter/>
-      <H1>جاري التحميل</H1>
+      <H1>{t("loading")}</H1>
     </Container>
   );
 }
