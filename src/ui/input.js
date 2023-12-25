@@ -3,7 +3,7 @@ import {colors} from "../styles";
 
 export const Input = styled.input`
     box-sizing: border-box;
-    padding: 16px 24px;
+    padding: 16px;
     width: 100%;
     height: 48px;
     background: #ffffff;

@@ -30,7 +30,7 @@ export const Button = styled.button`
     ${({variant}) => {
         const styles = getButtonStyles(variant);
         return css`
-            padding: ${styles.padding || "12px 18px"};
+            padding: ${styles.padding || "12px 14px"};
             background-color: ${styles.bgColor};
             color: ${styles.color};
             border-radius: 22px;
@@ -40,20 +40,21 @@ export const Button = styled.button`
             font-style: normal;
             text-transform: uppercase;
             transition: background-color 0.2s ease-in-out;
-            height: ${styles.height || "52px"};
-            min-width: 52px;
+            height: ${styles.height || "48px"};
+            min-width: 48px;
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 8px;
+            font-size: 12px;
 
             &:hover {
                 background-color: ${styles.hoverBgColor};
             }
 
             svg {
-                width: 20px;
-                height: 20px;
+                width: 16px;
+                height: 16px;
             }
         `
     }}`;

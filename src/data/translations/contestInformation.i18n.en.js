@@ -25,4 +25,6 @@ export default {
   "join-code": "Join Code",
   "copy-link": "Copy Invite Link",
   "switch-contest": "Switch Contest",
+  "add-new-announcement": "New Announcement",
+  "announcement-content": "Announcement Content",
 };

@@ -25,4 +25,6 @@ export default {
   "join-code": "رمز الانضمام",
   "copy-link": "نسخ رابط الدعوة",
   "switch-contest": "تبديل المسابقة",
+  "add-new-announcement": "إعلان جديد",
+  "announcement-content": "محتوى الإعلان",
 };

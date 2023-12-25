@@ -98,10 +98,11 @@ export const Navbar = styled.div`
     justify-content: space-between;
     flex-direction: column-reverse;
     padding: 16px 16px 0;
-    gap: 16px;
+    gap: 32px;
 
     @media (min-width: 768px) {
         flex-direction: row;
+        gap: 16px
     }
 
     .menu-button {

@@ -85,9 +85,9 @@ export const CurrentContestInfo = () => {
     });
   }, [currentContest]);
 
-  const switchContest = async (contestId) => {
+  const switchContest = async (contest) => {
     try {
-      await changeCurrentContest(contestId);
+      await changeCurrentContest(contest.id);
       window.location.reload();
     } catch (err) {
       console.log(`Failed to switch contest: ${err}`);
@@ -104,7 +104,7 @@ export const CurrentContestInfo = () => {
         <StyledCurrentContestWrapper>
           <div className="contest-details">
             <div>
-              {t('join-code')}: <code>{currentContest.access_code}</code>
+              {t('join-code')}: <code>{currentContest.contest_id}</code>
             </div>
             <Button variant="link">
               {t('copy-link')}
@@ -119,7 +119,7 @@ export const CurrentContestInfo = () => {
               <div className="menu-group-title">{t('switch-contest')}</div>
               <List>
                 {userContests.map((contest) => (
-                  <ListItem key={contest.id} onClick={() => switchContest(contest.id)}>
+                  <ListItem key={contest.id} onClick={() => switchContest(contest)}>
                     <MenuTitle>{contest.name}</MenuTitle>
                   </ListItem>
                 ))}

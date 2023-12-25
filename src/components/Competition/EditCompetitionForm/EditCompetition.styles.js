@@ -32,6 +32,7 @@ export const ParticipantsNumbers = styled(DefaultParticipantsNumbers)`
     font-size: 14px;
     flex: 1;
     max-width: none;
+    align-items: flex-start;
     @media (max-width: 34.375rem) {
     }
 `;
@@ -117,6 +118,10 @@ export const PublishedDate = styled.div`
 export const OverflowScrolling = styled.div`
     max-height: 27rem;
     overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
     @media (max-width: 34.375rem) {
     }
 `;

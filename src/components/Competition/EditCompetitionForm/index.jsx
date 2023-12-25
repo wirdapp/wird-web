@@ -3,19 +3,13 @@ import {useTranslation} from "react-i18next";
 import {updateContest} from "../../../services/competitionsServices";
 
 import {ParticipantsTitelsAtHome} from "../ContestMembers/ContestMembers.styles";
-import CompositionDefault, {
-  ButtonStyle,
-  DeleteAnnouncementBtn,
-  Form,
-  OverflowScrolling,
-  ParticipantsNumbers,
-  PublishedDate,
-  TextAreaSpace,
-  TypeSpace,
-} from "./EditCompetition.styles";
+import CompositionDefault, {ButtonStyle, Form, OverflowScrolling, ParticipantsNumbers,} from "./EditCompetition.styles";
 
 import {DivPass} from "../../Admins/Admins.styles";
 import InputField from "../../ContestCriteria/InputField";
+import {Checkbox} from "../../../ui/checkbox";
+import {css} from "@emotion/css";
+import {ManageAnnouncements} from "../manage-announcements";
 
 export default function EditCompetitionForm({contest, setContest}) {
   const {t} = useTranslation();
@@ -176,32 +170,8 @@ export default function EditCompetitionForm({contest, setContest}) {
   return (
     <CompositionDefault>
       <Form>
-        <ParticipantsNumbers>
-          <ParticipantsTitelsAtHome>
-            {t("make-an-announcement")}
-          </ParticipantsTitelsAtHome>
-          <TextAreaSpace
-            onChange={handleNewAnnouncementOnChange}
-            placeholder={t("new-announcement")}
-          />
-          {newAnnouncement.length > 0 && (
-            <ButtonStyle onClick={handleAddNewAnnouncementClick}>
-              {" "}
-              {t("add")}
-            </ButtonStyle>
-          )}
-          {newAnnouncementMessages.length > 0 &&
-            newAnnouncementMessages.map((message, index) => {
-              return (
-                <DivPass
-                  className={classNewAnnouncementMessagesColor}
-                  key={index}
-                >
-                  {message}
-                </DivPass>
-              );
-            })}
-        </ParticipantsNumbers>
+
+        <ManageAnnouncements/>
         <ParticipantsNumbers>
           <ParticipantsTitelsAtHome>
             {t("contest-information")}
@@ -209,7 +179,7 @@ export default function EditCompetitionForm({contest, setContest}) {
 
           <OverflowScrolling>
             <InputField
-              type={"text"}
+              type="text"
               label={t("name-label")}
               onChange={handleNameChange}
               value={name}
@@ -220,50 +190,19 @@ export default function EditCompetitionForm({contest, setContest}) {
               onChange={handleDescriptionChange}
               value={description}
             />
-            <InputField
-              type={"checkbox"}
-              label={t("active-announcements")}
-              checked={showStanding}
-              onChange={handleShowStandingChange}
-            />
-            <InputField
-              type={"checkbox"}
-              label={t("readonly")}
-              checked={readOnlyMode}
-              onChange={handleReadOnlyChange}
-            />
+            <div className={css`padding-inline-start: 90px`}>
+              <Checkbox
+                label={t("active-announcements")}
+                checked={showStanding}
+                onChange={handleShowStandingChange}
+              />
+              <Checkbox
+                label={t("readonly")}
+                checked={readOnlyMode}
+                onChange={handleReadOnlyChange}
+              />
+            </div>
 
-            {announcements && announcements.length > 0 ? (
-              <div style={{width: "100%"}}>
-                {announcements.map((announcement, index) => (
-                  <TypeSpace key={index} inside={true}>
-                    <DeleteAnnouncementBtn
-                      onClick={() => deleteAnnouncementHandler(index)}
-                      title={t("delete-this-announcement")}
-                    >
-                      {" "}
-                      &#10005;
-                    </DeleteAnnouncementBtn>
-
-                    <TextAreaSpace
-                      onClick={readOnlyChangeHandler}
-                      onChange={(e, index) =>
-                        changeAnnouncementTextHandler(e, index)
-                      }
-                    >
-                      {announcement}
-                    </TextAreaSpace>
-                    <PublishedDate>
-                      {t("announcement") + " " + (index + 1)}
-                    </PublishedDate>
-                  </TypeSpace>
-                ))}
-              </div>
-            ) : (
-              <ParticipantsTitelsAtHome>
-                {t("no-announcements-yet")}
-              </ParticipantsTitelsAtHome>
-            )}
             {messages.length > 0 &&
               messages.map((message, index) => {
                 return (

@@ -41,15 +41,11 @@ export const ParticipantsMember = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    padding: 0rem;
+    padding: 0;
     gap: 0.75rem;
 
     width: 100%;
     height: auto;
-
-    @media (max-width: 31.25rem) {
-        width: 12.5rem;
-    }
 `;
 
 export const ParticipantsTitels = styled.div`
@@ -94,9 +90,7 @@ export const ParticipantsNumbers = styled.div`
     justify-content: flex-start;
 
     @media (max-width: 500px) {
-        padding: 0.75rem;
         gap: 0.125rem;
-        justify-content: center;
     }
 `;
 
