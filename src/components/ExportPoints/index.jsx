@@ -15,6 +15,7 @@ import {
 } from "../ReviewOtherPoints/ReviewOtherPoints.styles";
 import { saveAs } from "file-saver";
 import Loader from "../Loader";
+import { useTranslation } from "react-i18next";
 
 export default function ExportPoints() {
   const [fromDay, setFromDay] = useState("");
@@ -25,7 +26,7 @@ export default function ExportPoints() {
   const [messages, setMessages] = useState([]);
   const [classColor, setClassColor] = useState("");
   const navigate = useNavigate();
-
+  const { t } = useTranslation();
   useEffect(() => {
     setFromArray([...Array(30).keys()].map((i) => i + 1));
     setToArray([...Array(30).keys()].map((i) => i + 1));
@@ -52,7 +53,7 @@ export default function ExportPoints() {
 
     if (fromDay === "" || toDay === "") {
       setClassColor("red");
-      setMessages(["اختر الآبام لاستخراج النتائج"]);
+      setMessages([t("dayResult")]);
       return;
     }
 
@@ -62,7 +63,7 @@ export default function ExportPoints() {
       toDay,
       (res) => {
         if (res && res.status === 200) {
-          setMessages(["تم استخراج النتائج بنجاح"]);
+          setMessages([t("succussResult")]);
           setClassColor("green");
           saveAs(res.data, `Points_${fromDay}_${toDay}.xlsx`);
 
@@ -79,7 +80,7 @@ export default function ExportPoints() {
         let isHtmlResponse =
           err?.response?.headers &&
           err?.response?.headers["content-type"] === "text/html";
-        errMessages.push("لم يتم استخراج النتائج");
+        errMessages.push(t("noResult"));
         if (err.response.data && !isHtmlResponse) {
           let obj = err.response.data;
           Object.keys(obj).forEach((e) => {
@@ -113,7 +114,7 @@ export default function ExportPoints() {
     <Container>
       <DropdownList className="DropdownList">
         <DropdownListItem className="title">
-          <Span>استخراج النتائج</Span>
+          <Span>{t("extractResult")}</Span>
         </DropdownListItem>
         <div className="dropdown-scroll-container">
           <DropdownListItem>
@@ -135,12 +136,12 @@ export default function ExportPoints() {
                     value={fromDay}
                   >
                     <Item key={0} value="">
-                      من يوم
+                      {t("fromDay")}
                     </Item>
                     {fromArray.map((day) => (
                       <Item key={day} value={day}>
                         {" "}
-                        {day} رمضان{" "}
+                        {day} {t("ramadan-word")}{" "}
                       </Item>
                     ))}
                   </List>
@@ -155,12 +156,12 @@ export default function ExportPoints() {
                     value={toDay}
                   >
                     <Item key={0} value="">
-                      إلى يوم
+                      {t("untilDay")}
                     </Item>
                     {toArray.map((day) => (
                       <Item key={day} value={day}>
                         {" "}
-                        {day} رمضان{" "}
+                        {day} {t("ramadan-word")}{" "}
                       </Item>
                     ))}
                   </List>
@@ -177,12 +178,10 @@ export default function ExportPoints() {
                 })}
               {fromDay !== "" && toDay !== "" && (
                 <>
-                  <DivPass style={{ color: "#000" }}>
-                    يمكنك استخراج النتائج مرة واحدة يوميا
-                  </DivPass>
+                  <DivPass style={{ color: "#000" }}>{t("yourResult")}</DivPass>
                   <InputSubmit type="submit" value="exportPoints">
                     {" "}
-                    استخراج <FileDownload style={{ fill: "white" }} />
+                    {t("extractKey")} <FileDownload style={{ fill: "white" }} />
                   </InputSubmit>
                 </>
               )}

@@ -145,9 +145,7 @@ function EditProfile() {
             />
           </DivTxtField>
           {showErrorMessageMatch && (
-            <DivPass className="red">
-              These passwords didn't match. Try again.
-            </DivPass>
+            <DivPass className="red">{t("tryAgainPassword")}</DivPass>
           )}
 
           <DivTxtField>

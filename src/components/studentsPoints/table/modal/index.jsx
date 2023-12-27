@@ -1,8 +1,10 @@
 import React from "react";
 import Divv, { Divvv, InputSubmit, FormInput, Span } from "./Modals.styled";
 import { DivTxtField } from "../../../shared/styles";
+import { useTranslation } from "react-i18next";
 
 export default function Modals() {
+  const { t } = useTranslation();
   return (
     <Divv>
       <Divvv>
@@ -10,14 +12,14 @@ export default function Modals() {
           <td key={index}>
             <DivTxtField>
               <Span />
-              <FormInput placeholder="ادخل رقم" type="number" required />
+              <FormInput placeholder={t("addNO")} type="number" required />
             </DivTxtField>
             <br />{" "}
           </td>
         ))}
       </Divvv>
       <InputSubmit type="submit" value="">
-        تعديل
+        {t("update")}
       </InputSubmit>
     </Divv>
   );

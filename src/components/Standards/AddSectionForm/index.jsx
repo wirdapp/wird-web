@@ -11,13 +11,14 @@ import {
   H3Pass,
 } from "../../shared/styles";
 import { addSection } from "../../../services/standardServices";
+import { useTranslation } from "react-i18next";
 
 export default function AddSectionForm(props) {
   const [label, setLabel] = useState("");
   const [position, setPosition] = useState(-1);
   const [messages, setMessages] = useState([]);
   const [classColor, setClassColor] = useState("");
-
+  const { t } = useTranslation();
   useEffect(() => {
     resetAddSectionForm();
   }, [props.reset]);
@@ -48,7 +49,7 @@ export default function AddSectionForm(props) {
           resetAddSectionForm();
 
           setClassColor("green");
-          setMessages(["تم إضافة القسم بنجاح"]);
+          setMessages([t("success-add-section-msg")]);
 
           setTimeout(() => {
             props.setSections([
@@ -62,7 +63,7 @@ export default function AddSectionForm(props) {
       },
       (err) => {
         let errMessages = [];
-        errMessages.push(["لم يتم إضافة القسم"]);
+        errMessages.push([t("fail-add-section-msg")]);
         if (err.response.data) {
           let obj = err.response.data;
           Object.keys(obj).forEach((e) => {
@@ -80,7 +81,7 @@ export default function AddSectionForm(props) {
       <DivTxtField>
         <Span />
         <FormInput
-          placeholder="ادخل العنوان"
+          placeholder={t("enter-title")}
           type="text"
           required
           value={label}
@@ -97,7 +98,7 @@ export default function AddSectionForm(props) {
           required
           onChange={handlePositionChange}
         />
-        <Label>ترتيب القسم داخل المسابقة</Label>
+        <Label> {t("section-order")}</Label>
       </DivTxtFieldnumber>
 
       {messages.length > 0 &&
@@ -108,7 +109,7 @@ export default function AddSectionForm(props) {
             </H3Pass>
           );
         })}
-      <InputSubmit type="submit">إضافة قسم جديد</InputSubmit>
+      <InputSubmit type="submit">{t("add-section")}</InputSubmit>
     </Formm>
   );
 }

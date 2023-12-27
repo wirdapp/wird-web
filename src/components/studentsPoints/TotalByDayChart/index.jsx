@@ -8,9 +8,10 @@ import {
 } from "@devexpress/dx-react-chart-material-ui";
 import { LineSeries } from "@devexpress/dx-react-chart";
 import { H5 } from "../../Students/setPasswordStudent/SetPasswordStudent.styles";
+import { useTranslation } from "react-i18next";
 export default function TotalByPoints({ selectedUser }) {
   const [chartData, setChartData] = useState([]);
-
+  const { t } = useTranslation();
   useEffect(() => {
     if (selectedUser !== "") {
       retrieveStudentsPointsPerLabelORPerDay(
@@ -32,7 +33,7 @@ export default function TotalByPoints({ selectedUser }) {
   if (selectedUser === "") {
     return (
       <div style={{ width: "100%" }} className="table-msg-text-section">
-        <H5>اختر الطالب لعرض الإحصائيات لكل يوم</H5>
+        <H5>{t("studentView")}</H5>
       </div>
     );
   }
@@ -40,7 +41,7 @@ export default function TotalByPoints({ selectedUser }) {
   if (chartData.length === 0) {
     return (
       <div style={{ width: "100%" }} className="table-msg-text-section">
-        <H5>لا يوجد نقاط لعرض الإحصائيات لكل يوم</H5>
+        <H5>{t("noStudentView")}</H5>
       </div>
     );
   }
@@ -55,7 +56,7 @@ export default function TotalByPoints({ selectedUser }) {
           valueField="total_day"
           argumentField="ramadan_record_date"
         />
-        <Title text="الإحصائيات لكل يوم" />
+        <Title text={t("statisticsDay")} />
       </Chart>
     </div>
   );

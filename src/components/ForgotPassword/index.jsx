@@ -16,10 +16,11 @@ import {
   SignupNowAccount,
 } from "../Login/login.styles";
 import WirdLogo from "../../assets/Logo/WirdLogoV2.svg";
+import { useTranslation } from "react-i18next";
 
 function ForgotPassword() {
   let Navigate = useNavigate();
-
+  const { t } = useTranslation();
   const [showErrorMessage, setShowErrorMessage] = useState(false);
 
   function handleSubmit(e) {
@@ -33,7 +34,7 @@ function ForgotPassword() {
     <LoginFormContainer>
       <DivCenter>
         <HeadLogIn>
-          <TitleLogin>Forgot Password</TitleLogin>
+          <TitleLogin>{t("forgetPass")}</TitleLogin>
         </HeadLogIn>
 
         {/* <HeadLogIn> */}
@@ -48,7 +49,7 @@ function ForgotPassword() {
 
           {/* TODO: style the error message */}
           {showErrorMessage && (
-            <DivPass className="red">Check your email.</DivPass>
+            <DivPass className="red">{t("checkEmail")}</DivPass>
           )}
 
           {/* <PageLink href="https://www.facebook.com/Wird.Competition/" target="_blank">
@@ -56,11 +57,12 @@ function ForgotPassword() {
           </PageLink> */}
 
           <InputSubmit type="submit" value="login">
-            Reset Password
+            {t("resetPass")}
           </InputSubmit>
         </Form>
         <SignupNowAccount>
-          Or<SignupNow href="/Login"> back to Login</SignupNow>
+          {t("orKey")}
+          <SignupNow href="/Login"> {t("backLogin")}</SignupNow>
         </SignupNowAccount>
       </DivCenter>
     </LoginFormContainer>

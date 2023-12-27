@@ -16,6 +16,10 @@ import editProfileI18nEn from "./editProfile.i18n.en";
 import editProfileI18nAr from "./editProfile.i18n.ar";
 import sidebarI18nAr from "./sidebar.i18n.ar";
 import sidebarI18nEn from "./sidebar.i18n.en";
+import adminI18nAr from "./admin.i18n.ar";
+import adminI18nEn from "./admin.i18n.en";
+import reviewI18nAr from "./review.i18n.ar";
+import reviewI18nEn from "./review.i18n.en";
 
 export default {
   en: {
@@ -29,6 +33,8 @@ export default {
       ...editProfileI18nEn,
       ...sidebarI18nEn,
       ...sharedEN,
+      ...adminI18nEn,
+      ...reviewI18nEn,
     },
   },
   ar: {
@@ -42,6 +48,8 @@ export default {
       ...editProfileI18nAr,
       ...sidebarI18nAr,
       ...sharedAR,
+      ...adminI18nAr,
+      ...reviewI18nAr,
     },
   },
 };

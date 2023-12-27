@@ -48,7 +48,7 @@ function MyPastContests() {
   return (
     <DefaultMyPastContests>
       <MyOngoingContestDiv>
-        <MyOngoingContest>My Past Contests</MyOngoingContest>
+        <MyOngoingContest>{t("pastContest")}</MyOngoingContest>
 
         <VictorArrows>
           <RightLeftArrow>
@@ -70,11 +70,11 @@ function MyPastContests() {
               <ParticipantsMember>
                 <ParticipantsTitels>
                   <ParticipantsTitelsAtHome>
-                    Participants
+                    {t("participantsKey")}
                   </ParticipantsTitelsAtHome>
 
                   <SeeAll>
-                    <SeeAllP>See all</SeeAllP>
+                    <SeeAllP>{t("see-all")}</SeeAllP>
                     <SeeAllIcon src={SeeMore} Alt="" />
                   </SeeAll>
                 </ParticipantsTitels>
@@ -113,7 +113,7 @@ function MyPastContests() {
                   </ParticipantsTitelsAtHome>
 
                   <SeeAll>
-                    <SeeAllP>See all</SeeAllP>
+                    <SeeAllP>{t("see-all")}</SeeAllP>
                     <SeeAllIcon src={SeeMore} Alt="" />
                   </SeeAll>
                 </ParticipantsTitels>
@@ -137,7 +137,7 @@ function MyPastContests() {
                   </ParticipantsNumbersRanks>
                 </ParticipantsNumbers>
               </TopRanksSection>
-              <SeeContestResult>See Contest Result</SeeContestResult>
+              <SeeContestResult>{t("see-contest-result")}</SeeContestResult>
             </TopRanksAndParticipants>
           </TopRank>
         </LeftPastContests>
@@ -149,11 +149,11 @@ function MyPastContests() {
               <ParticipantsMember>
                 <ParticipantsTitels>
                   <ParticipantsTitelsAtHome>
-                    Participants
+                    {t("participantsKey")}
                   </ParticipantsTitelsAtHome>
 
                   <SeeAll>
-                    <SeeAllP>See all</SeeAllP>
+                    <SeeAllP>{t("see-all")}</SeeAllP>
                     <SeeAllIcon src={SeeMore} Alt="" />
                   </SeeAll>
                 </ParticipantsTitels>
@@ -192,7 +192,7 @@ function MyPastContests() {
                   </ParticipantsTitelsAtHome>
 
                   <SeeAll>
-                    <SeeAllP>See all</SeeAllP>
+                    <SeeAllP>{t("see-all")}</SeeAllP>
                     <SeeAllIcon src={SeeMore} Alt="" />
                   </SeeAll>
                 </ParticipantsTitels>
@@ -217,7 +217,7 @@ function MyPastContests() {
                 </ParticipantsNumbers>
               </TopRanksSection>
 
-              <SeeContestResult>See Contest Result</SeeContestResult>
+              <SeeContestResult>{t("see-contest-result")}</SeeContestResult>
             </TopRanksAndParticipants>
           </TopRank>
         </LeftPastContests>

@@ -60,8 +60,8 @@ function Login() {
         <HeadLogIn>
           <TitleLogin>{`${t("login")}`}</TitleLogin>
           <SignupNowAccount>
-            Don’t have an account?{" "}
-            <SignupNow href="/signup">Signup now!</SignupNow>
+            {t("notAccount")}{" "}
+            <SignupNow href="/signup">{t("signUpKey")}</SignupNow>
           </SignupNowAccount>
         </HeadLogIn>
 
@@ -106,15 +106,13 @@ function Login() {
 
           {/* TODO: style the error message */}
           {showErrorMessage && (
-            <DivPass className="red">
-              Check your email and password or create an account.
-            </DivPass>
+            <DivPass className="red">{t("checkPassword")}</DivPass>
           )}
           {/* <PageLink href="https://www.facebook.com/Wird.Competition/" target="_blank">
             هل تواجه مشكلة تقنية أو نسيت كلمة المرور؟ تواصل مع الدعم الفني
           </PageLink> */}
           <InputSubmit type="submit" value="login">
-            Login
+            {t("login")}
           </InputSubmit>
         </Form>
 

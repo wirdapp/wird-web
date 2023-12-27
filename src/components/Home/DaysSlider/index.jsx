@@ -22,12 +22,14 @@ import DaySlider, {
   LiveTodaySlider,
   TodayOfThMonthLive,
 } from "./DaysSlider.styles";
+import { useTranslation } from "react-i18next";
 
 function DaysSlider() {
+  const { t } = useTranslation();
   return (
     <>
       <DaySlider>
-        <MyOngoingContest>My Ongoing Contest</MyOngoingContest>
+        <MyOngoingContest>{t("ongingContst")}</MyOngoingContest>
 
         <DaySliderGroup>
           <RightLeftArrow>
@@ -48,14 +50,14 @@ function DaysSlider() {
               <SwiperSlide style={{ width: "auto" }}>
                 <TodayDayMonth>
                   <TodayOfThMonth>12</TodayOfThMonth>
-                  <TodayTheMonthSlider>Ramadan</TodayTheMonthSlider>
+                  <TodayTheMonthSlider>{t("ramadan")}</TodayTheMonthSlider>
                 </TodayDayMonth>
               </SwiperSlide>
 
               <SwiperSlide style={{ width: "auto" }}>
                 <TodayDayMonth>
                   <TodayOfThMonth>13</TodayOfThMonth>
-                  <TodayTheMonthSlider>Ramadan</TodayTheMonthSlider>
+                  <TodayTheMonthSlider>{t("ramadan")}</TodayTheMonthSlider>
                 </TodayDayMonth>
               </SwiperSlide>
 
@@ -65,42 +67,42 @@ function DaysSlider() {
                     <TodayOfThMonth>14</TodayOfThMonth>
                     <LiveTodaySlider />
                   </TodayOfThMonthLive>
-                  <TodayTheMonthSlider>Ramadan</TodayTheMonthSlider>
+                  <TodayTheMonthSlider>{t("ramadan")}</TodayTheMonthSlider>
                 </TodayDayMonth>
               </SwiperSlide>
 
               <SwiperSlide style={{ width: "auto" }}>
                 <DayMonthFuture>
                   <DayOfThMonth>15</DayOfThMonth>
-                  <TheMonthSlider>Ramadan</TheMonthSlider>
+                  <TheMonthSlider>{t("ramadan")}</TheMonthSlider>
                 </DayMonthFuture>
               </SwiperSlide>
 
               <SwiperSlide style={{ width: "auto" }}>
                 <DayMonthFuture>
                   <DayOfThMonth>16</DayOfThMonth>
-                  <TheMonthSlider>Ramadan</TheMonthSlider>
+                  <TheMonthSlider>{t("ramadan")}</TheMonthSlider>
                 </DayMonthFuture>
               </SwiperSlide>
 
               <SwiperSlide style={{ width: "auto" }}>
                 <DayMonthFuture>
                   <DayOfThMonth>17</DayOfThMonth>
-                  <TheMonthSlider>Ramadan</TheMonthSlider>
+                  <TheMonthSlider>{t("ramadan")}</TheMonthSlider>
                 </DayMonthFuture>
               </SwiperSlide>
 
               <SwiperSlide style={{ width: "auto" }}>
                 <DayMonthFuture>
                   <DayOfThMonth>18</DayOfThMonth>
-                  <TheMonthSlider>Ramadan</TheMonthSlider>
+                  <TheMonthSlider>{t("ramadan")}</TheMonthSlider>
                 </DayMonthFuture>
               </SwiperSlide>
 
               <SwiperSlide style={{ width: "auto" }}>
                 <DayMonthFuture>
                   <DayOfThMonth>19</DayOfThMonth>
-                  <TheMonthSlider>Ramadan</TheMonthSlider>
+                  <TheMonthSlider>{t("ramadan")}</TheMonthSlider>
                 </DayMonthFuture>
               </SwiperSlide>
             </Swiper>

@@ -20,6 +20,7 @@ import {
 } from "../../shared/styles";
 import { DropdownDivSelect as Box } from "../../Groups/Groups.styles";
 import { updateStudent } from "../../../services/studentsServices";
+import { useTranslation } from "react-i18next";
 
 export default function EditStudentForm(props) {
   const [messages, setMessages] = useState([]);
@@ -29,7 +30,7 @@ export default function EditStudentForm(props) {
   const [lastName, setLastName] = useState("");
   const [photo, setPhoto] = useState(null);
   const [isReadOnly, setReadOnly] = useState(false);
-
+  const { t } = useTranslation();
   useEffect(() => {
     resetEditStudentsForm();
   }, [props.reset]);
@@ -51,7 +52,7 @@ export default function EditStudentForm(props) {
     e.preventDefault();
 
     if (selectedUsername === "") {
-      setMessages(["يجب عليك إختيار طالب للتعديل"]);
+      setMessages([t("editStudent")]);
       setClassColor("red");
       return;
     }
@@ -77,7 +78,7 @@ export default function EditStudentForm(props) {
           updatedStudent.read_only = isReadOnly;
           resetEditStudentsForm();
 
-          setMessages(["تم تعديل الطالب بنجاح"]);
+          setMessages([t("successEdit")]);
           setClassColor("green");
 
           setTimeout(() => {
@@ -92,7 +93,7 @@ export default function EditStudentForm(props) {
       },
       (err) => {
         let errMessages = [];
-        errMessages.push(["لم يتم تعديل الطالب"]);
+        errMessages.push([t("notSuccessEdit")]);
         if (err && err.response && err.response.data) {
           let obj = err.response.data;
           Object.keys(obj).forEach((e) => {
@@ -144,7 +145,7 @@ export default function EditStudentForm(props) {
           value={selectedUsername}
         >
           <DropdownListItem key={0} value="">
-            اختر الطالب
+            {t("selectStudent")}
           </DropdownListItem>
           {props.students.map((student, index) => (
             <DropdownListItem key={index + 1} value={student.person.username}>
@@ -158,7 +159,7 @@ export default function EditStudentForm(props) {
         <Span />
         <FormInput
           onChange={handleFirstNameChange}
-          placeholder="الاسم الأول"
+          placeholder={t("first-name")}
           type="text"
           value={firstName}
           required
@@ -169,7 +170,7 @@ export default function EditStudentForm(props) {
         <Span />
         <FormInput
           onChange={handleLastNameChange}
-          placeholder="اسم العائلة"
+          placeholder={t("familyName")}
           type="text"
           value={lastName}
           required
@@ -182,11 +183,11 @@ export default function EditStudentForm(props) {
           checked={isReadOnly}
           onChange={handleReadOnlyCheckboxChange}
         />{" "}
-        <LabelSoper>إضافته كطالب يستطيع المشاهدة فقط</LabelSoper>
+        <LabelSoper>{t("addStudent")}</LabelSoper>
       </DivTxtFieldnumber>
 
       <Box>
-        <H5>تحميل صورة شخصية</H5>
+        <H5>{t("photoUpdate")} </H5>
         <DivFileField>
           <FileFormInput type="file" onChange={handlePhotoChange} />
         </DivFileField>
@@ -201,7 +202,7 @@ export default function EditStudentForm(props) {
           );
         })}
       <InputSubmit type="submit" value="login">
-        تعديل الطالب
+        {t("studentModify")}
       </InputSubmit>
     </Form>
   );

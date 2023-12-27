@@ -17,6 +17,7 @@ import { DropdownListItem } from "../shared/styles";
 
 import TableData from "./table";
 import Loader from "../Loader";
+import { useTranslation } from "react-i18next";
 
 export default function StudentsPoints() {
   const [Students, setStudents] = useState(null);
@@ -24,6 +25,7 @@ export default function StudentsPoints() {
   const [day, setDay] = useState("");
   const [studentsResultsFlag, SetStudentsResultsFlag] = useState(true);
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     setLoading(true);
@@ -62,7 +64,7 @@ export default function StudentsPoints() {
           {Students?.length === 0 || !Students ? (
             <p style={{ textAlign: "center", margin: 0 }}>
               {" "}
-              لا يوجد طلاب لعرضهم{" "}
+              {t("noStudentDiplay")}{" "}
             </p>
           ) : (
             <>
@@ -70,13 +72,13 @@ export default function StudentsPoints() {
                 <Wird
                   onClick={() => SetStudentsResultsFlag(!studentsResultsFlag)}
                 >
-                  اضغط لعرض الجدول
+                  {t("clickView")}{" "}
                 </Wird>
               ) : (
                 <Wird
                   onClick={() => SetStudentsResultsFlag(!studentsResultsFlag)}
                 >
-                  اضغط لعرض الرسم البياني
+                  {t("viewChart")}{" "}
                 </Wird>
               )}
               <SelectInputContainer>
@@ -86,7 +88,7 @@ export default function StudentsPoints() {
                     onChange={handleSelectedUser}
                   >
                     <DropdownListItem key={0} value="">
-                      اختر المتسابق{" "}
+                      {t("chooseContestant")}{" "}
                     </DropdownListItem>
                     {Students && (
                       <>
@@ -110,13 +112,13 @@ export default function StudentsPoints() {
                       onChange={handleDayChange}
                     >
                       <DropdownListItem key={0} value="">
-                        اختر اليوم من رمضان
+                        {t("chooseRamdan")}{" "}
                       </DropdownListItem>
                       {Array(30)
                         .fill(undefined)
                         .map((val, idx) => (
                           <DropdownListItem key={idx + 1} value={idx + 1}>
-                            {idx + 1} رمضان
+                            {idx + 1} {t("ramadan-word")}{" "}
                           </DropdownListItem>
                         ))}
                     </DropdownList>

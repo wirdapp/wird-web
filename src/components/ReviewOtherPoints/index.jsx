@@ -23,8 +23,10 @@ import {
 import Container from "../Standards/Standards.styles";
 import { useNavigate } from "react-router-dom";
 import Loader from "../Loader";
+import { useTranslation } from "react-i18next";
 
 export default function ReviewOtherPoints() {
+  const { t } = useTranslation();
   const [selectedStudentUsername, setSelectedStudentUsername] = useState("");
   const [selectedDay, setSelectedDay] = useState(0);
   const [students, setStudents] = useState([]);
@@ -68,7 +70,7 @@ export default function ReviewOtherPoints() {
     e.preventDefault();
 
     if (pointRecord < 0) {
-      setMessages(["يجب عليك إدخال نتيجة لإضافتها"]);
+      setMessages([t("mustEnter")]);
       setClassColor("red");
       return;
     }
@@ -87,7 +89,7 @@ export default function ReviewOtherPoints() {
             (otherPoint) => otherPoint.id !== selectedPoint.id,
           );
 
-          setMessages(["تم إضافة النتيجة بنجاح"]);
+          setMessages([t("succussResult")]);
           setClassColor("green");
 
           setTimeout(() => {
@@ -97,7 +99,7 @@ export default function ReviewOtherPoints() {
       },
       (err) => {
         let errMessages = [];
-        errMessages.push(["لم يتم إضافة النتيجة"]);
+        errMessages.push([t("notAddResult")]);
         if (err.response.data) {
           let obj = err.response.data;
           Object.keys(obj).forEach((e) => {
@@ -175,7 +177,7 @@ export default function ReviewOtherPoints() {
   return (
     <Container>
       <Tabs
-        labels={["مراجعة المدخلات النصية"]}
+        labels={[t("reviewText")]}
         contents={[
           <>
             {students && students.length > 0 ? (
@@ -186,7 +188,7 @@ export default function ReviewOtherPoints() {
                 >
                   <DropdownList className="DropdownList">
                     <DropdownListItem key={0} value="">
-                      اختر الطالب
+                      {t("selectStudent")}
                     </DropdownListItem>
                     {students.map((student, index) => (
                       <DropdownListItem
@@ -202,29 +204,29 @@ export default function ReviewOtherPoints() {
                 <DropDownDiv className="DropdownDiv" onChange={handleDayChange}>
                   <DropdownList className="DropdownList">
                     <DropdownListItem key={0} value="0">
-                      اختر اليوم
+                      {t("chooseDay")}
                     </DropdownListItem>
                     {[...Array(30).keys()]
                       .map((i) => i + 1)
                       .map((day) => (
                         <DropdownListItem key={day} value={day}>
                           {" "}
-                          {day} رمضان{" "}
+                          {day} {t("ramadan-word")}{" "}
                         </DropdownListItem>
                       ))}
                   </DropdownList>
                 </DropDownDiv>
 
                 {selectedDay === 0 && selectedStudentUsername === "" ? (
-                  <Span>اختر الطالب واليوم</Span>
+                  <Span>{t("selectStudentDay")}</Span>
                 ) : selectedDay === 0 ? (
-                  <Span>اختر اليوم</Span>
+                  <Span>{t("chooseDay")}</Span>
                 ) : selectedStudentUsername === "" ? (
-                  <Span>اختر الطالب</Span>
+                  <Span>{t("selectStudent")}</Span>
                 ) : (
                   <>
                     {otherPoints && otherPoints.length === 0 ? (
-                      <Span>لا يوجد مدخلات نصية للطالب في هذا اليوم</Span>
+                      <Span>{t("studentText")}</Span>
                     ) : otherPoints.length > 1 ? (
                       <DropDownDiv
                         className="DropdownDiv"
@@ -232,7 +234,8 @@ export default function ReviewOtherPoints() {
                       >
                         <DropdownList className="DropdownList">
                           <DropdownListItem key={0} value="0">
-                            اختر المعييار
+                            {" "}
+                            {t("standardKey")}
                           </DropdownListItem>
                           {otherPoints.map((point, index) => (
                             <DropdownListItem key={index + 1} value={point.id}>
@@ -248,18 +251,18 @@ export default function ReviewOtherPoints() {
                       <>
                         {selectedPoint.user_input?.length > 0 ? (
                           <Box>
-                            <H5>النص المدخل من الطالب</H5>
+                            <H5>{t("textEntered")}</H5>
                             <TxtArea
                               readOnly
                               value={selectedPoint.user_input}
                             />
                           </Box>
                         ) : (
-                          <Span>لم يقم الطالب بأي إدخال</Span>
+                          <Span>{t("notTextEntered")}</Span>
                         )}
                         <DivTxtField>
                           <FormInput
-                            placeholder="العنوان"
+                            placeholder={t("addressKey")}
                             type="text"
                             value={selectedPoint.point_template.label}
                             readOnly
@@ -275,7 +278,7 @@ export default function ReviewOtherPoints() {
                               selectedPoint.point_template.upper_units_bound
                             }
                           />
-                          <Label>الحد الأعلى للتكرار</Label>
+                          <Label> {t("limitReptition")} </Label>
                         </DivTxtFieldnumber>
 
                         <DivTxtFieldnumber>
@@ -286,7 +289,7 @@ export default function ReviewOtherPoints() {
                             required
                             onChange={handlePointRecordChange}
                           />
-                          <Label>ادخل النتيجة</Label>
+                          <Label>{t("enterResult")}</Label>
                         </DivTxtFieldnumber>
 
                         {messages.length > 0 &&
@@ -297,14 +300,16 @@ export default function ReviewOtherPoints() {
                               </DivPass>
                             );
                           })}
-                        <InputSubmit type="submit">إضافةالنتيجة</InputSubmit>
+                        <InputSubmit type="submit">
+                          {t("addResult")}
+                        </InputSubmit>
                       </>
                     )}
                   </>
                 )}
               </Form>
             ) : (
-              <H5> لا يوجد طلاب </H5>
+              <H5> {t("notStudent")}</H5>
             )}
           </>,
         ]}

@@ -17,6 +17,7 @@ import { H5 } from "../Students/setPasswordStudent/SetPasswordStudent.styles";
 import Loader from "../Loader";
 import { isSuperAdmin } from "../../util/ContestPeople_Role";
 import { useDashboardData } from "../../util/routes-data";
+import { useTranslation } from "react-i18next";
 
 export default function Standards() {
   const { currentUser } = useDashboardData();
@@ -37,7 +38,7 @@ export default function Standards() {
   const [showSectionDeleteFailedMsg, setShowSectionDeleteFailedMsg] =
     useState(false);
   const [loading, setLoading] = useState(false);
-
+  const { t } = useTranslation();
   useEffect(() => {
     // retrieveStandards(
     //   (res) => {
@@ -78,17 +79,17 @@ export default function Standards() {
 
     if (hasPermission) {
       if (sections && sections.length > 0) {
-        labelsArray.push("تعديل قسم");
+        labelsArray.push(t("edit-section"));
         contentsArray.push(
           <EditSectionForm sections={sections} setSections={setSections} />,
         );
       }
-      labelsArray.push("إضافة قسم");
+      labelsArray.push(t("addSection"));
       contentsArray.push(
         <AddSectionForm sections={sections} setSections={setSections} />,
       );
       if (standards && standards.length > 0) {
-        labelsArray.push("تعديل معييار");
+        labelsArray.push(t("edit-criteria"));
         contentsArray.push(
           <EditStandardForm
             sections={sections}
@@ -97,7 +98,7 @@ export default function Standards() {
           />,
         );
       }
-      labelsArray.push("إضافة معييار");
+      labelsArray.push(t("add-criteria"));
       contentsArray.push(
         <AddStandardForm
           sections={sections}
@@ -108,7 +109,7 @@ export default function Standards() {
     }
 
     if (sections && sections.length > 0) {
-      currentLabelsArray.push("الأقسام الحالية");
+      currentLabelsArray.push(t("currentSections"));
       currentContentsArray.push(
         <StandardsDropDownList className="DropdownList">
           {sections.map((section, index) => {
@@ -121,7 +122,7 @@ export default function Standards() {
                       onClick={handleOpenSectionModelChange}
                       value={section.id}
                     >
-                      حذف
+                      {t("delete")}{" "}
                     </Button>
                     <Span>{section.label}</Span>
                   </>
@@ -133,9 +134,7 @@ export default function Standards() {
           })}
           {showSectionDeleteFailedMsg && (
             <DropdownListItem>
-              <DivPass className="red">
-                يرجى حذف جميع المعايير المسجلة في هذا القسم قبل حذفه
-              </DivPass>
+              <DivPass className="red">{t("deleteRecord")} </DivPass>
             </DropdownListItem>
           )}
         </StandardsDropDownList>,
@@ -143,7 +142,7 @@ export default function Standards() {
     }
 
     if (standards && standards.length > 0) {
-      currentLabelsArray.push("المعايير الحالية");
+      currentLabelsArray.push(t("currentStandards"));
       currentContentsArray.push(
         <StandardsDropDownList className="DropdownList">
           {standards.map((standard, index) => {
@@ -156,7 +155,7 @@ export default function Standards() {
                       onClick={handleOpenStandardModelChange}
                       value={standard.id}
                     >
-                      حذف
+                      {t("delete")}{" "}
                     </Button>
                     <Span>{standard.label}</Span>
                   </>
@@ -168,9 +167,7 @@ export default function Standards() {
           })}
           {showStandardDeleteFailedMsg && (
             <DropdownListItem>
-              <DivPass className="red">
-                يرجى حذف جميع نقاط الطلاب المسجلة لهذا المعييار قبل حذفه
-              </DivPass>
+              <DivPass className="red">{t("deleteAllStudents")} </DivPass>
             </DropdownListItem>
           )}
         </StandardsDropDownList>,
@@ -271,10 +268,10 @@ export default function Standards() {
     <>
       {openSectionModal && (
         <Modal
-          title="تأكيد الحذف"
-          content="هل تريد حذف هذا القسم؟"
-          deleteBtn="حذف"
-          cancelBtn="إلغاء"
+          title={t("delete-confirm")}
+          content={t("deleteSection")}
+          deleteBtn={t("delete")}
+          cancelBtn={t("cancel")}
           setOpenModal={setOpenSectionModal}
           deleteFunction={deleteSectionFunction}
         />
@@ -282,10 +279,10 @@ export default function Standards() {
 
       {openStandardModal && (
         <Modal
-          title="تأكيد الحذف"
-          content="هل تريد حذف هذا المعييار؟"
-          deleteBtn="حذف"
-          cancelBtn="إلغاء"
+          title={t("delete-confirm")}
+          content={t("deleteCriterion")}
+          deleteBtn={t("delete")}
+          cancelBtn={t("cancel")}
           setOpenModal={setOpenStandardModal}
           deleteFunction={deleteStandardFunction}
         />
@@ -305,7 +302,10 @@ export default function Standards() {
         }
 
         {currentLabels.length === 0 && labels.length === 0 && (
-          <Tabs labels={["المعايير"]} contents={[<H5>لا يوجد معايير</H5>]} />
+          <Tabs
+            labels={[t("criterias")]}
+            contents={[<H5>{t("noStandard")}</H5>]}
+          />
         )}
         <Tabs
           labels={currentLabels}

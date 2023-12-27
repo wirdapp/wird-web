@@ -7,4 +7,13 @@ export default {
   "first-name": "First Name",
   "re-type-new-password": "Re-type New Password",
   "new-password": "New Password",
+  tryAgainPassword: " These passwords didn't match. Try again.",
+  extractResult: "Extract results",
+  fromDay: "from day",
+  untilDay: "until today",
+  yourResult: "You can extract the results once daily",
+  extractKey: "Extract",
+  noResult: "Results were not extracted",
+  succussResult: "The results were extracted successfully",
+  dayResult: "Select the name to extract the results",
 };

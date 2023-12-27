@@ -16,6 +16,8 @@ import { updateAdmin } from "../../../services/adminsServices";
 import { useDashboardData } from "../../../util/routes-data";
 import { updateSessionUserDetails } from "../../../services/auth/session";
 
+import { useTranslation } from "react-i18next";
+
 export default function EditGroupForm(props) {
   const { currentUser } = useDashboardData();
 
@@ -27,7 +29,7 @@ export default function EditGroupForm(props) {
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [selectedUserName, setSelectedUserName] = useState("");
-
+  const { t } = useTranslation();
   useEffect(() => {
     setMessages([]);
     setClassColor("");
@@ -64,7 +66,7 @@ export default function EditGroupForm(props) {
           resetEditAdminForm();
 
           setClassColor("green");
-          setMessages(["تم تعديل المسؤول"]);
+          setMessages([t("modifyAdminMSG")]);
 
           setTimeout(() => {
             props.setAdmins([
@@ -83,7 +85,7 @@ export default function EditGroupForm(props) {
       },
       (err) => {
         let errMessages = [];
-        errMessages.push(["لم يتم تعديل المسؤول"]);
+        errMessages.push([t("notModifyAdminMSG")]);
         if (err.response.data) {
           let obj = err.response.data;
           Object.keys(obj).forEach((e) => {
@@ -150,7 +152,7 @@ export default function EditGroupForm(props) {
             onChange={handleAdminSelectChange}
             value={selectedUserName}
           >
-            <DropdownListItem>اختر المسؤول</DropdownListItem>
+            <DropdownListItem>{t("chooseAdmin")}</DropdownListItem>
             {props.admins.map((admin, index) => {
               if (
                 admin?.first_name?.length > 0 ||
@@ -176,7 +178,7 @@ export default function EditGroupForm(props) {
         <Span />
         <FormInput
           onChange={handleFirstNameChange}
-          placeholder="الاسم الأول"
+          placeholder={t("firstName")}
           type="text"
           value={firstName}
           required
@@ -187,7 +189,7 @@ export default function EditGroupForm(props) {
         <Span />
         <FormInput
           onChange={handleLastNameChange}
-          placeholder="اسم العائلة"
+          placeholder={t("familyName")}
           type="text"
           value={lastName}
           required
@@ -198,7 +200,7 @@ export default function EditGroupForm(props) {
         <Span />
         <FormInput
           onChange={handleEmailChange}
-          placeholder="البريد الإلكتروني"
+          placeholder={t("emailAddressKey")}
           type="email"
           value={email}
         />
@@ -208,7 +210,7 @@ export default function EditGroupForm(props) {
         <Span />
         <FormInput
           onChange={handlePhoneNumberChange}
-          placeholder="رقم الهاتف"
+          placeholder={t("phoneNumber")}
           type="text"
           value={phoneNumber}
         />
@@ -221,7 +223,7 @@ export default function EditGroupForm(props) {
             onChange={handleSuperAdminCheckChange}
             checked={isSuperAdmin}
           />
-          <LabelSoper>إضافته كمسؤول رئيسي</LabelSoper>
+          <LabelSoper>{t("addAdmin")}</LabelSoper>
         </DivTxtFieldnumber>
       )}
 
@@ -240,7 +242,7 @@ export default function EditGroupForm(props) {
           );
         })}
       <InputSubmit type="submit" value="login">
-        تعديل المسؤول
+        {t("modifyAdmin")}
       </InputSubmit>
     </Form>
   );

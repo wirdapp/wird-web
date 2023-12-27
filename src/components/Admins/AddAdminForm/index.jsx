@@ -10,6 +10,7 @@ import {
   FormInput,
   InputSubmit,
 } from "../../shared/styles";
+import { useTranslation } from "react-i18next";
 
 export default function AddAdminForm(props) {
   const [username, setUserName] = useState("");
@@ -25,7 +26,7 @@ export default function AddAdminForm(props) {
   const [classColor, setClassColor] = useState("");
   const [isValidPassword, setValidPassword] = useState(true);
   const [isValidUserName, setValidUserName] = useState(true);
-
+  const { t } = useTranslation();
   useEffect(() => {
     setMessages([]);
     setClassColor("");
@@ -77,7 +78,7 @@ export default function AddAdminForm(props) {
           resetAddAdminForm();
 
           setClassColor("green");
-          setMessages(["تمت إضافة المسؤول بنجاح"]);
+          setMessages([t("addAdminSuccess")]);
 
           setTimeout(() => {
             props.setAdmins([...props.admins, data]);
@@ -88,7 +89,7 @@ export default function AddAdminForm(props) {
       },
       (err) => {
         let errMessages = [];
-        errMessages.push(["لم تمت إضافة المسؤول"]);
+        errMessages.push([t("notAddAdminMSG")]);
         if (err.response.data) {
           let obj = err.response.data;
           Object.keys(obj).forEach((e) => {
@@ -165,23 +166,20 @@ export default function AddAdminForm(props) {
         <FormInput
           onChange={handleUserNameChange}
           type="text"
-          placeholder="اسم المستخدم"
+          placeholder={t("userNameKey")}
           value={username}
           required
         />
       </DivTxtField>
       {!isValidUserName && (
-        <DivPass className={classColor}>
-          اسم المستخدم يمكن أن يحتوي على الحروف والأرقام وبعض
-          الرموز(+/-/_/./@)فقط
-        </DivPass>
+        <DivPass className={classColor}>{t("userNameDisclimar")}</DivPass>
       )}
 
       <DivTxtField>
         <Span />
         <FormInput
           onChange={handleFirstNameChange}
-          placeholder="الاسم الأول"
+          placeholder={t("firstName")}
           type="text"
           value={firstName}
           required
@@ -192,7 +190,7 @@ export default function AddAdminForm(props) {
         <Span />
         <FormInput
           onChange={handleLastNameChange}
-          placeholder="اسم العائلة"
+          placeholder={t("familyName")}
           type="text"
           value={lastName}
           required
@@ -203,7 +201,7 @@ export default function AddAdminForm(props) {
         <Span />
         <FormInput
           onChange={handleEmailChange}
-          placeholder="البريد الإلكتروني"
+          placeholder={t("emailAddressKey")}
           type="email"
           value={email}
         />
@@ -213,7 +211,7 @@ export default function AddAdminForm(props) {
         <Span />
         <FormInput
           onChange={handlePhoneNumberChange}
-          placeholder="رقم الهاتف"
+          placeholder={t("phoneNumber")}
           type="text"
           value={phoneNumber}
         />
@@ -223,23 +221,21 @@ export default function AddAdminForm(props) {
         <Span />
         <FormInput
           onChange={handlePasswordChange}
-          placeholder="كلمة المرور"
+          placeholder={t("passwordKey")}
           type="password"
           value={password}
           required
         />
       </DivTxtField>
       {!isValidPassword && (
-        <DivPass className={classColor}>
-          يجب أن تتكون كلمة المرور من 8 أحرف على الأقل
-        </DivPass>
+        <DivPass className={classColor}>{t("passwordValidation")}</DivPass>
       )}
 
       <DivTxtField>
         <Span />
         <FormInput
           onChange={handleConfirmPasswordChange}
-          placeholder="تأكيد كلمة المرور"
+          placeholder={t("confirmPassword")}
           type="password"
           value={confirmPassword}
           required
@@ -247,9 +243,7 @@ export default function AddAdminForm(props) {
       </DivTxtField>
 
       {unmatchedPasswords && (
-        <DivPass className={classColor}>
-          الإدخال غير صحيح، تأكد من مطابقة كلمة المرور
-        </DivPass>
+        <DivPass className={classColor}>{t("matchPassword")}</DivPass>
       )}
 
       {/*TODO: Uncomment when it's supported in backend-side*/}
@@ -264,7 +258,7 @@ export default function AddAdminForm(props) {
 
       <DivTxtFieldnumber>
         <Checkboxes type="checkbox" onChange={handleSuperAdminCheckChange} />{" "}
-        <LabelSoper>إضافته كمسؤول رئيسي</LabelSoper>
+        <LabelSoper>{t("addAdmin")}</LabelSoper>
       </DivTxtFieldnumber>
 
       {messages.length > 0 &&
@@ -276,7 +270,7 @@ export default function AddAdminForm(props) {
           );
         })}
       <InputSubmit type="submit" value="login">
-        إضافة مسؤول جديد
+        {t("addNewAdmin")}
       </InputSubmit>
     </Form>
   );

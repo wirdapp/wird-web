@@ -13,7 +13,10 @@ import Loader from "../Loader";
 import { isSuperAdmin } from "../../util/ContestPeople_Role";
 import { useDashboardData } from "../../util/routes-data";
 
+import { useTranslation } from "react-i18next";
 export default function Admins() {
+  const { t } = useTranslation();
+
   const { currentUser } = useDashboardData();
 
   const [admins, setAdmins] = useState([]);
@@ -107,17 +110,20 @@ export default function Admins() {
     <AdminsDefault>
       {openModal && (
         <Modal
-          title="تأكيد الحذف"
-          content="هل تريد حذف هذا المسؤول؟"
-          deleteBtn="حذف"
-          cancelBtn="إلغاء"
+          title={t("delete-confirm")}
+          content={t("deleteAdminDisclimar")}
+          deleteBtn={t("deleteBtn")}
+          cancelBtn={t("cancelBtn")}
           setOpenModal={setOpenModal}
           deleteFunction={deleteFunction}
         />
       )}
 
       {adminsLabels.length === 0 && admins.length === 0 && (
-        <Tabs labels={["المسؤولون"]} contents={[<H5>لا يوجد مسؤولون</H5>]} />
+        <Tabs
+          labels={[t("adminsLabel")]}
+          contents={[<H5>{t("notAdmins")}</H5>]}
+        />
       )}
 
       {admins &&
@@ -128,7 +134,7 @@ export default function Admins() {
         ).length > 0 && (
           <DropdownList className="DropdownList">
             <DropdownListItem className="title">
-              <Span>المسؤولون</Span>
+              <Span>{t("adminsLabel")}</Span>
             </DropdownListItem>
             <div className="dropdown-scroll-container">
               {admins
@@ -147,7 +153,7 @@ export default function Admins() {
                             onClick={handleOpenModelChange}
                             value={admin.person.username}
                           >
-                            حذف
+                            {t("deleteBtn")}
                           </Button>
                           {admin.person.first_name?.length > 0 ||
                           admin.person.last_name?.length > 0 ? (

@@ -14,10 +14,11 @@ import {
 import WirdLogo from "../../../assets/Logo/WirdLogosvg.svg";
 
 import CarouselPry from "../../../assets/Carousel/CarouselPry.svg";
+import { useTranslation } from "react-i18next";
 
 export default function CarouselStatistics() {
   const [index, setIndex] = useState(0);
-
+  const { t } = useTranslation();
   const handleSelect = (selectedIndex, e) => {
     // setIndex(selectedIndex);
   };
@@ -36,21 +37,13 @@ export default function CarouselStatistics() {
                 </WirdLogoInHome>
 
                 <IntroductionSectionDiv>
-                  <WirdMinIntroduction>منصة ورد </WirdMinIntroduction>
-                  <Introduction>
-                    أهلا بك في موقع مسؤول المسابقة في منصة ورد، في هذا المكان
-                    يمكنك متابعة تفاصيل المتسابقين، ولمزيد من التفاصيل يرجى
-                    مشاهدة دليل الاستخدام من خلال الفيديو المرفق بالاسفل{" "}
-                  </Introduction>
+                  <WirdMinIntroduction>{t("ourName")}</WirdMinIntroduction>
+                  <Introduction>{t("welcomeMsg")}</Introduction>
                 </IntroductionSectionDiv>
               </IntroductionDiv>
               <BorderBottom></BorderBottom>
-              <h3>منصة ورد</h3>
-              <p>
-                أهلا بك في موقع مسؤول المسابقة في منصة ورد، في هذا المكان يمكنك
-                متابعة تفاصيل المتسابقين، ولمزيد من التفاصيل يرجى مشاهدة دليل
-                الاستخدام من خلال الفيديو المرفق بالاسفل{" "}
-              </p>
+              <h3>{t("ourName")}</h3>
+              <p>{t("welcomeMsg")} </p>
             </Carousel.Caption>
           </IntroductionSection>
 
@@ -68,23 +61,15 @@ export default function CarouselStatistics() {
                 </WirdLogoInHome>
 
                 <IntroductionSectionDiv>
-                  <WirdMinIntroduction>منصة ورد </WirdMinIntroduction>
-                  <Introduction>
-                    أهلا بك في موقع مسؤول المسابقة في منصة ورد، في هذا المكان
-                    يمكنك متابعة تفاصيل المتسابقين، ولمزيد من التفاصيل يرجى
-                    مشاهدة دليل الاستخدام من خلال الفيديو المرفق بالاسفل{" "}
-                  </Introduction>
+                  <WirdMinIntroduction>{t("ourName")}</WirdMinIntroduction>
+                  <Introduction>{t("welcomeMsg")}</Introduction>
                 </IntroductionSectionDiv>
               </IntroductionDiv>
               <BorderBottom></BorderBottom>
             </Carousel.Caption>
           </IntroductionSection>
-          <h3>منصة ورد</h3>
-          <p>
-            أهلا بك في موقع مسؤول المسابقة في منصة ورد، في هذا المكان يمكنك
-            متابعة تفاصيل المتسابقين، ولمزيد من التفاصيل يرجى مشاهدة دليل
-            الاستخدام من خلال الفيديو المرفق بالاسفل{" "}
-          </p>
+          <h3>{t("ourName")}</h3>
+          <p>{t("welcomeMsg")}</p>
           {/* </Carousel.Caption> */}
         </Carousel.Item>
 
@@ -99,23 +84,15 @@ export default function CarouselStatistics() {
                 </WirdLogoInHome>
 
                 <IntroductionSectionDiv>
-                  <WirdMinIntroduction>منصة ورد </WirdMinIntroduction>
-                  <Introduction>
-                    أهلا بك في موقع مسؤول المسابقة في منصة ورد، في هذا المكان
-                    يمكنك متابعة تفاصيل المتسابقين، ولمزيد من التفاصيل يرجى
-                    مشاهدة دليل الاستخدام من خلال الفيديو المرفق بالاسفل{" "}
-                  </Introduction>
+                  <WirdMinIntroduction>{t("ourName")}</WirdMinIntroduction>
+                  <Introduction>{t("welcomeMsg")}</Introduction>
                 </IntroductionSectionDiv>
               </IntroductionDiv>
               <BorderBottom></BorderBottom>
             </Carousel.Caption>
           </IntroductionSection>
-          <h3>منصة ورد</h3>
-          <p>
-            أهلا بك في موقع مسؤول المسابقة في منصة ورد، في هذا المكان يمكنك
-            متابعة تفاصيل المتسابقين، ولمزيد من التفاصيل يرجى مشاهدة دليل
-            الاستخدام من خلال الفيديو المرفق بالاسفل{" "}
-          </p>
+          <h3>{t("ourName")}</h3>
+          <p>{t("welcomeMsg")}</p>
           {/* </Carousel.Caption> */}
         </Carousel.Item>
       </Carousel>

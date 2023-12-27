@@ -17,6 +17,7 @@ import {
 } from "../Login/login.styles";
 import * as AuthApi from "../../services/auth/api";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function Signup() {
   const [username, setUsername] = useState("");
@@ -32,6 +33,7 @@ function Signup() {
   const [isValidUserName, setValidUserName] = useState(true);
   const [photo, setPhoto] = useState(null);
   const navigate = useNavigate();
+  const { t } = useTranslation();
   // const [accessCode, setAccessCode] = useState("");
   // const [contestName, setContestName] = useState("");
   // const [activeParticipantButton, setActiveParticipantButton] =
@@ -162,10 +164,10 @@ function Signup() {
     <SignupFormContainer>
       <DivCenter>
         <HeadLogIn>
-          <TitleLogin>Signup</TitleLogin>
+          <TitleLogin>{t("signUp")}</TitleLogin>
           <SignupNowAccount>
-            Already have an account?{" "}
-            <SignupNow href="/Login">Login now!</SignupNow>
+            {t("alreadyHaveAccount")}
+            <SignupNow href="/Login">{t("loginNow")}</SignupNow>
           </SignupNowAccount>
         </HeadLogIn>
 
@@ -223,14 +225,12 @@ function Signup() {
             <FormInput
               onChange={handleChangeUsername}
               type="text"
-              placeholder="Username"
+              placeholder={t("userNameKey")}
               required
             />
           </DivTxtField>
           {!isValidUserName && (
-            <DivPass className={classColor}>
-              Username can contain Letters, digits and @/./+/-/_ only.
-            </DivPass>
+            <DivPass className={classColor}>{t("userNameDisclimar")}</DivPass>
           )}
 
           {/*TODO: Uncomment when it's ready*/}
@@ -256,7 +256,7 @@ function Signup() {
           <DivTxtField>
             <FormInput
               onChange={handleChangePassword}
-              placeholder="Password"
+              placeholder={t("passwordKey")}
               type="password"
               required
             />
@@ -265,21 +265,19 @@ function Signup() {
           <DivTxtField>
             <FormInput
               onChange={handleRetypePassword}
-              placeholder="Re-type password"
+              placeholder={t("retypePassword")}
               type="password"
               required
             />
           </DivTxtField>
           {showErrorMessageMatch && (
-            <DivPass className="red">
-              These passwords didn't match. Try again.
-            </DivPass>
+            <DivPass className="red">{t("retypePasswordDisclimar")}</DivPass>
           )}
 
           <DivTxtField>
             <FormInput
               onChange={handleChangeFirstName}
-              placeholder="First Name"
+              placeholder={t("firstName")}
               type="text"
               required
             />
@@ -288,7 +286,7 @@ function Signup() {
           <DivTxtField>
             <FormInput
               onChange={handleChangeLastName}
-              placeholder="Last Name"
+              placeholder={t("lastName")}
               type="text"
               required
             />
@@ -298,7 +296,7 @@ function Signup() {
             <FormInput
               onChange={handleChangeEmail}
               type="text"
-              placeholder="Email address"
+              placeholder={t("emailAddress")}
             />
           </DivTxtField>
 
@@ -306,12 +304,12 @@ function Signup() {
             <FormInput
               onChange={handlePhoneNumberChange}
               type="text"
-              placeholder="Phone Number"
+              placeholder={t("phoneNumber")}
             />
           </DivTxtField>
 
           <DivFileField>
-            Profile photo
+            {t("profilePhoto")}
             <FileFormInput type="file" onChange={handlePhotoChange} />
           </DivFileField>
           <br />
@@ -328,7 +326,7 @@ function Signup() {
               );
             })}
           <InputSubmit type="submit" value="login">
-            Signup
+            {t("signUp")}
           </InputSubmit>
         </Form>
       </DivCenter>
