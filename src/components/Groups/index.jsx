@@ -1,16 +1,16 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import AddGroupForm from "./AddGroupForm";
 import EditGroupForm from "./EditGroupForm";
-import {retrieveStudents} from "../../services/studentsServices";
-import {retrieveAdmins} from "../../services/adminsServices";
-import {deleteGroup, retrieveGroups} from "../../services/groupsServices";
+import { retrieveStudents } from "../../services/studentsServices";
+import { retrieveAdmins } from "../../services/adminsServices";
+import { deleteGroup, retrieveGroups } from "../../services/groupsServices";
 import Modal from "../shared/Modal";
-import {DropdownListItem, Span,} from "../Admins/Admins.styles";
-import {H5} from "../Students/setPasswordStudent/SetPasswordStudent.styles";
-import {H3Pass} from "../shared/styles";
+import { DropdownListItem, Span } from "../Admins/Admins.styles";
+import { H5 } from "../Students/setPasswordStudent/SetPasswordStudent.styles";
+import { H3Pass } from "../shared/styles";
 import Loader from "../Loader";
-import {isSuperAdmin} from "../../util/ContestPeople_Role";
+import { isSuperAdmin } from "../../util/ContestPeople_Role";
 
 import GroupsContentDefault, {
   ActionButton,
@@ -25,15 +25,14 @@ import GroupsContentDefault, {
   NormalDiv,
   RowContainer,
 } from "./Groups.styles";
-import {ReactComponent as GroupIcon} from "../../assets/icons/groupIcon.svg";
-import {ReactComponent as AddGroupIcon} from "../../assets/icons/addGroupIcon.svg";
-import {colors} from "styles";
-import {useTranslation} from "react-i18next";
-import {useDashboardData} from "../../util/routes-data";
-
+import { ReactComponent as GroupIcon } from "../../assets/icons/groupIcon.svg";
+import { ReactComponent as AddGroupIcon } from "../../assets/icons/addGroupIcon.svg";
+import { colors } from "styles";
+import { useTranslation } from "react-i18next";
+import { useDashboardData } from "../../util/routes-data";
 
 export default function Groups() {
-  const {currentUser} = useDashboardData();
+  const { currentUser } = useDashboardData();
 
   const [admins, setAdmins] = useState([]);
   const [groups, setGroups] = useState([]);
@@ -41,12 +40,13 @@ export default function Groups() {
   const [groupIdToDelete, setGroupIdToDelete] = useState("");
   const [openGroupModal, setOpenGroupModal] = useState(false);
   const [hasPermission, setPermission] = useState(false);
-  const [showDeleteGroupFailedMsg, setShowDeleteGroupFailedMsg] = useState(false);
+  const [showDeleteGroupFailedMsg, setShowDeleteGroupFailedMsg] =
+    useState(false);
   const [loading, setLoading] = useState(false);
   const [addGroupFormOpen, setAddGroupFormOpen] = useState(false);
   const [editGroupFormOpen, setEditGroupFormOpen] = useState(false);
   const [groupIdToEdit, setGroupIdToEdit] = useState("");
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   useEffect(() => {
     setLoading(true);
@@ -56,9 +56,9 @@ export default function Groups() {
       },
       (err) => {
         console.log(
-          "Failed to retrieve admins: " + JSON.stringify(err.response.data)
+          "Failed to retrieve admins: " + JSON.stringify(err.response.data),
         );
-      }
+      },
     );
 
     retrieveGroups(
@@ -68,9 +68,9 @@ export default function Groups() {
       },
       (err) => {
         console.log(
-          "Failed to retrieve groups: " + JSON.stringify(err.response.data)
+          "Failed to retrieve groups: " + JSON.stringify(err.response.data),
         );
-      }
+      },
     );
 
     retrieveStudents(
@@ -80,28 +80,25 @@ export default function Groups() {
       },
       (err) => {
         console.log(
-          "Failed to retrieve students: " + JSON.stringify(err.response.data)
+          "Failed to retrieve students: " + JSON.stringify(err.response.data),
         );
         setLoading(false);
-      }
+      },
     );
-
-
   }, []);
 
   useEffect(() => {
     if (students && students.length > 0) {
       students.map(
         (student) =>
-          (student["full_name"] = student.person.first_name + " " + student.person.last_name)
+          (student["full_name"] =
+            student.person.first_name + " " + student.person.last_name),
       );
     }
   }, [students]);
 
   useEffect(() => {
-    setPermission(
-      currentUser && isSuperAdmin(currentUser)
-    );
+    setPermission(currentUser && isSuperAdmin(currentUser));
   }, [currentUser]);
 
   const handleOpenGroupModalChange = (groupId) => {
@@ -134,21 +131,19 @@ export default function Groups() {
       (res) => {
         if (res && (res.status === 204 || res.status === 200)) {
           console.log(`Group with id: ${groupIdToDelete} has been deleted`);
-          setGroups(
-            groups.filter((group) => group.id !== groupIdToDelete)
-          );
+          setGroups(groups.filter((group) => group.id !== groupIdToDelete));
         }
       },
       (err) => {
         console.log(
           "Failed to delete group: ",
-          JSON.stringify(err.response.data)
+          JSON.stringify(err.response.data),
         );
         setShowDeleteGroupFailedMsg(true);
         setTimeout(() => {
           setShowDeleteGroupFailedMsg(false);
         }, 7000);
-      }
+      },
     );
     setOpenGroupModal(false);
   };
@@ -156,17 +151,14 @@ export default function Groups() {
   if (loading) {
     return (
       <main>
-        <Loader/>
+        <Loader />
       </main>
     );
   }
 
-
   return (
     <>
-
       <GroupsContentDefault>
-
         <GroupsTitleLine>
           <BoldText>
             {groups.length} {t("groups")}
@@ -177,8 +169,8 @@ export default function Groups() {
             width="130px"
             onClick={addGroupFormHandler}
           >
-            <span style={{margin: "5px"}}>{t("add-group")}</span>
-            <AddGroupIcon/>
+            <span style={{ margin: "5px" }}>{t("add-group")}</span>
+            <AddGroupIcon />
           </ActionButton>
 
           {addGroupFormOpen && (
@@ -217,13 +209,13 @@ export default function Groups() {
                   <NormalDiv>
                     <RowContainer>
                       <IconBox>
-                        <GroupIcon/>
+                        <GroupIcon />
                       </IconBox>
-                      <ColumnContainer style={{marginLeft: "10px"}}>
+                      <ColumnContainer style={{ marginLeft: "10px" }}>
                         <BoldText>{group.name}</BoldText>
                         <LightText>
                           {`${t("joined")} ${new Date(
-                            group.created_at
+                            group.created_at,
                           ).toLocaleString()}`}
                         </LightText>
                       </ColumnContainer>
@@ -253,7 +245,7 @@ export default function Groups() {
                         color="#FF5367"
                         onClick={handleOpenGroupModalChange.bind(
                           null,
-                          group.id
+                          group.id,
                         )}
                       >
                         {t("delete")}
@@ -291,7 +283,7 @@ export default function Groups() {
                   )}
                 </>
               ) : (
-                <Span style={{width: "100%"}}>{group.name}</Span>
+                <Span style={{ width: "100%" }}>{group.name}</Span>
               )}
             </GroupCard>
           ))

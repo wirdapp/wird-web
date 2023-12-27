@@ -1,9 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import {
-  DivMultiselect,
-  DropdownDivSelect,
-  Span
-} from "../Groups.styles";
+import { DivMultiselect, DropdownDivSelect, Span } from "../Groups.styles";
 import {
   DivTxtField,
   DropdownDiv,
@@ -19,19 +15,24 @@ import {
   addOrRemoveAdminToGroup,
   addOrRemoveMemberToGroup,
   retrieveGroupById,
-  updateGroup
+  updateGroup,
 } from "../../../services/groupsServices";
 
 import { useTranslation } from "react-i18next";
 
 export default function EditGroupForm(props) {
   const [newSelectedStudents, setNewSelectedStudents] = useState([]);
-  const [newSelectedStudentsUsernames, setNewSelectedStudentsUsernames] = useState([]);
+  const [newSelectedStudentsUsernames, setNewSelectedStudentsUsernames] =
+    useState([]);
   const [currentSelectedStudents, setCurrentSelectedStudents] = useState([]);
-  const [currentSelectedStudentsUsernames, setCurrentSelectedStudentsUsernames] = useState([]);
+  const [
+    currentSelectedStudentsUsernames,
+    setCurrentSelectedStudentsUsernames,
+  ] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState({});
   const [selectedAdminUserName, setSelectedAdminUserName] = useState("");
-  const [currentSelectedAdminUserName, setCurrentSelectedAdminUserName] = useState("");
+  const [currentSelectedAdminUserName, setCurrentSelectedAdminUserName] =
+    useState("");
   const [groupName, setGroupName] = useState("");
   const [isValidGroupName, setValidGroupName] = useState(true);
   const [messages, setMessages] = useState([]);
@@ -42,45 +43,51 @@ export default function EditGroupForm(props) {
   useEffect(() => {
     setMessages([]);
     setClassColor("");
-  }, [
-    newSelectedStudents,
-    selectedAdminUserName,
-    groupName,
-    selectedGroup
-  ]);
+  }, [newSelectedStudents, selectedAdminUserName, groupName, selectedGroup]);
 
   useEffect(() => {
     resetEditGroupForm();
   }, [props.reset]);
 
   useEffect(() => {
-    retrieveGroupById(props.selectedGroupId,
-        (res)=>{
-          if(res && res.status ===200){
-            setSelectedGroup(res.data);
+    retrieveGroupById(
+      props.selectedGroupId,
+      (res) => {
+        if (res && res.status === 200) {
+          setSelectedGroup(res.data);
 
-            if(res.data && res.data.members?.length > 0){
-              let studentsUsernamesInSelectedGroups = res.data.members.map(member => member.username);
-              setCurrentSelectedStudentsUsernames(studentsUsernamesInSelectedGroups);
-              setCurrentSelectedStudents(props.students.filter(
-                  student => studentsUsernamesInSelectedGroups.includes(student.person.username)
-                  )
-              );
-            }else{
-              setCurrentSelectedStudentsUsernames([]);
-              setCurrentSelectedStudents([]);
-            }
-
-            if(res.data && res.data.admins?.length > 0){
-              setCurrentSelectedAdminUserName(res.data.admins[0].username);
-            }else{
-              setCurrentSelectedAdminUserName("");
-            }
-            setGroupName(res.data.name);
+          if (res.data && res.data.members?.length > 0) {
+            let studentsUsernamesInSelectedGroups = res.data.members.map(
+              (member) => member.username,
+            );
+            setCurrentSelectedStudentsUsernames(
+              studentsUsernamesInSelectedGroups,
+            );
+            setCurrentSelectedStudents(
+              props.students.filter((student) =>
+                studentsUsernamesInSelectedGroups.includes(
+                  student.person.username,
+                ),
+              ),
+            );
+          } else {
+            setCurrentSelectedStudentsUsernames([]);
+            setCurrentSelectedStudents([]);
           }
-        },(err)=>{
-              console.log(`Failed to get group by Id: ${props.selectedGroupId}: ${err}`);
+
+          if (res.data && res.data.admins?.length > 0) {
+            setCurrentSelectedAdminUserName(res.data.admins[0].username);
+          } else {
+            setCurrentSelectedAdminUserName("");
+          }
+          setGroupName(res.data.name);
         }
+      },
+      (err) => {
+        console.log(
+          `Failed to get group by Id: ${props.selectedGroupId}: ${err}`,
+        );
+      },
     );
   }, [props.selectedGroupId]);
 
@@ -135,7 +142,7 @@ export default function EditGroupForm(props) {
     let data = {
       admins: [selectedAdminUserName],
       name: groupName,
-      members: newSelectedStudents
+      members: newSelectedStudents,
     };
 
     updateGroup(
@@ -144,97 +151,107 @@ export default function EditGroupForm(props) {
       (res) => {
         if (res && res.status === 200) {
           let updatedGroup = props.studentsGroups.filter(
-            (group) => group.id === props.selectedGroupId
+            (group) => group.id === props.selectedGroupId,
           )[0];
           updatedGroup.admins_count = [selectedAdminUserName].length;
           updatedGroup.name = groupName;
           updatedGroup.members_count = newSelectedStudentsUsernames.length;
           removeCurrentAdmins(updatedGroup);
         }
-      },(err) => {
-          handleError(err);
-        }
+      },
+      (err) => {
+        handleError(err);
+      },
     );
   };
 
-  const removeCurrentAdmins = (updatedGroup)=>{
-    addOrRemoveAdminToGroup({
-          persons: [currentSelectedAdminUserName],
-          action: "remove"
-        },
-        props.selectedGroupId,
-        (res) => {
-          if (res && res.status === 200) {
-              addTheNewAdmins(updatedGroup);
-          }
-        },(err) => {
-          handleError(err);
+  const removeCurrentAdmins = (updatedGroup) => {
+    addOrRemoveAdminToGroup(
+      {
+        persons: [currentSelectedAdminUserName],
+        action: "remove",
+      },
+      props.selectedGroupId,
+      (res) => {
+        if (res && res.status === 200) {
+          addTheNewAdmins(updatedGroup);
         }
+      },
+      (err) => {
+        handleError(err);
+      },
     );
   };
 
-
-  const addTheNewAdmins = (updatedGroup)=>{
-    addOrRemoveAdminToGroup({
-          persons: [selectedAdminUserName],
-          action: "add"
-        },
-        props.selectedGroupId,
-        (res) => {
-          if (res && res.status === 200) {
-            removeCurrentMembers(updatedGroup);
-          }
-        }, (err) => {
-          handleError(err);
+  const addTheNewAdmins = (updatedGroup) => {
+    addOrRemoveAdminToGroup(
+      {
+        persons: [selectedAdminUserName],
+        action: "add",
+      },
+      props.selectedGroupId,
+      (res) => {
+        if (res && res.status === 200) {
+          removeCurrentMembers(updatedGroup);
         }
+      },
+      (err) => {
+        handleError(err);
+      },
     );
   };
 
-  const removeCurrentMembers = (updatedGroup)=>{
-    addOrRemoveMemberToGroup({
-          persons: currentSelectedStudentsUsernames,
-          action: "remove"
-        },
-        props.selectedGroupId,
-        (res) => {
-          if (res && res.status === 200) {
-            addTheNewMembers(updatedGroup);
-          }
-        }, (err) => {
-          handleError(err);
+  const removeCurrentMembers = (updatedGroup) => {
+    addOrRemoveMemberToGroup(
+      {
+        persons: currentSelectedStudentsUsernames,
+        action: "remove",
+      },
+      props.selectedGroupId,
+      (res) => {
+        if (res && res.status === 200) {
+          addTheNewMembers(updatedGroup);
         }
+      },
+      (err) => {
+        handleError(err);
+      },
     );
   };
 
-  const addTheNewMembers = (updatedGroup)=>{
-    addOrRemoveMemberToGroup({
-          persons: newSelectedStudentsUsernames,
-          action: "add"
-        },
-        props.selectedGroupId,
-        (res) => {
-          if (res && res.status === 200) {
-            resetEditGroupForm();
+  const addTheNewMembers = (updatedGroup) => {
+    addOrRemoveMemberToGroup(
+      {
+        persons: newSelectedStudentsUsernames,
+        action: "add",
+      },
+      props.selectedGroupId,
+      (res) => {
+        if (res && res.status === 200) {
+          resetEditGroupForm();
 
-            setClassColor("green");
-            setMessages([t("group-edit-success")]);
+          setClassColor("green");
+          setMessages([t("group-edit-success")]);
 
-            setTimeout(() => {
-              props.setGroups(
-                  props.studentsGroups.map(group => group.id !== props.selectedGroupId ? group : updatedGroup)
-              );
-              setClassColor("");
-              setMessages([]);
-              props.closeEditGroupForm();
-            }, 2000);
-          }
-        }, (err) => {
-          handleError(err);
+          setTimeout(() => {
+            props.setGroups(
+              props.studentsGroups.map((group) =>
+                group.id !== props.selectedGroupId ? group : updatedGroup,
+              ),
+            );
+            setClassColor("");
+            setMessages([]);
+            props.closeEditGroupForm();
+          }, 2000);
         }
+      },
+      (err) => {
+        handleError(err);
+      },
     );
   };
 
-  const handleError = (err)=>{
+  const handleError = (err) => {
     let errMessages = [];
     errMessages.push([t("group-edit-failed")]);
     if (err.response.data) {
@@ -249,12 +266,10 @@ export default function EditGroupForm(props) {
 
   return (
     <Form onSubmit={handleEditGroupSubmit}>
-
       <DropdownDivSelect>
         <Span>{t("selected-group")}</Span>
         <Span>{selectedGroup.name}</Span>
       </DropdownDivSelect>
-
 
       {props.hasPermission ? (
         props.students && props.students.length > 0 ? (
@@ -286,7 +301,11 @@ export default function EditGroupForm(props) {
         <DropdownDiv className="DropdownDiv">
           <DropdownList
             className="DropdownList_groups"
-            value={selectedAdminUserName.length > 0 ? selectedAdminUserName : currentSelectedAdminUserName}
+            value={
+              selectedAdminUserName.length > 0
+                ? selectedAdminUserName
+                : currentSelectedAdminUserName
+            }
             onChange={handleAdminSelectChange}
           >
             <DropdownListItem key={0} value="">

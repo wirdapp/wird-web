@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {DivPass, Span} from "../Admins.styles";
+import React, { useEffect, useState } from "react";
+import { DivPass, Span } from "../Admins.styles";
 import {
   Checkboxes,
   DivTxtField,
@@ -8,20 +8,18 @@ import {
   Form,
   FormInput,
   InputSubmit,
-  LabelSoper
+  LabelSoper,
 } from "../../shared/styles";
 
-import {DropdownDiv, DropdownList} from "./EditAdminForm.styles";
-import {updateAdmin} from "../../../services/adminsServices";
-import {useDashboardData} from "../../../util/routes-data";
-import {updateSessionUserDetails} from "../../../services/auth/session";
+import { DropdownDiv, DropdownList } from "./EditAdminForm.styles";
+import { updateAdmin } from "../../../services/adminsServices";
+import { useDashboardData } from "../../../util/routes-data";
+import { updateSessionUserDetails } from "../../../services/auth/session";
 
-import { useTranslation } from 'react-i18next';
-
-
+import { useTranslation } from "react-i18next";
 
 export default function EditGroupForm(props) {
-  const {currentUser} = useDashboardData();
+  const { currentUser } = useDashboardData();
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -31,7 +29,7 @@ export default function EditGroupForm(props) {
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [selectedUserName, setSelectedUserName] = useState("");
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   useEffect(() => {
     setMessages([]);
     setClassColor("");
@@ -44,18 +42,21 @@ export default function EditGroupForm(props) {
   const handleEditAdminSubmit = (e) => {
     e.preventDefault();
 
-
-    updateAdmin(selectedUserName, {
-        'username': selectedUserName,
-        'first_name': firstName,
-        'last_name': lastName,
-        'email': email,
-        'phone_number': phoneNumber,
-        'is_super_admin': isSuperAdmin
+    updateAdmin(
+      selectedUserName,
+      {
+        username: selectedUserName,
+        first_name: firstName,
+        last_name: lastName,
+        email: email,
+        phone_number: phoneNumber,
+        is_super_admin: isSuperAdmin,
       },
       (res) => {
         if (res && res.status === 200) {
-          let updatedAdmin = props.admins.filter(admin => admin.username === selectedUserName)[0];
+          let updatedAdmin = props.admins.filter(
+            (admin) => admin.username === selectedUserName,
+          )[0];
           updatedAdmin.first_name = firstName;
           updatedAdmin.last_name = lastName;
           updatedAdmin.email = email;
@@ -68,9 +69,14 @@ export default function EditGroupForm(props) {
           setMessages([t("modifyAdminMSG")]);
 
           setTimeout(() => {
-            props.setAdmins([...props.admins.filter(admin => admin.username !== selectedUserName), updatedAdmin]);
+            props.setAdmins([
+              ...props.admins.filter(
+                (admin) => admin.username !== selectedUserName,
+              ),
+              updatedAdmin,
+            ]);
             if (currentUser > 0 && currentUser.username === selectedUserName) {
-              updateSessionUserDetails(updatedAdmin)
+              updateSessionUserDetails(updatedAdmin);
             }
             setClassColor("");
             setMessages([]);
@@ -82,14 +88,13 @@ export default function EditGroupForm(props) {
         errMessages.push([t("notModifyAdminMSG")]);
         if (err.response.data) {
           let obj = err.response.data;
-          Object.keys(obj).forEach(e => {
-              errMessages.push(`${obj[e]} : ${e}`);
-            }
-          )
+          Object.keys(obj).forEach((e) => {
+            errMessages.push(`${obj[e]} : ${e}`);
+          });
         }
         setClassColor("red");
         setMessages(errMessages);
-      }
+      },
     );
   };
 
@@ -104,7 +109,7 @@ export default function EditGroupForm(props) {
 
   const handleSuperAdminCheckChange = (e) => {
     setSuperAdmin(e.target.checked);
-  }
+  };
 
   const handleFirstNameChange = (e) => {
     setFirstName(e.target.value);
@@ -122,9 +127,10 @@ export default function EditGroupForm(props) {
     setPhoneNumber(e.target.value);
   };
 
-
   const handleAdminSelectChange = (e) => {
-    let admin = props.admins.filter(admin => admin.username === e.target.value)[0];
+    let admin = props.admins.filter(
+      (admin) => admin.username === e.target.value,
+    )[0];
     if (admin) {
       setSelectedUserName(admin.username);
       setFirstName(admin.first_name);
@@ -135,60 +141,91 @@ export default function EditGroupForm(props) {
     } else {
       resetEditAdminForm();
     }
-
-  }
+  };
 
   return (
     <Form onSubmit={handleEditAdminSubmit}>
-
-      {
-        props.admins && props.admins.length > 0 &&
+      {props.admins && props.admins.length > 0 && (
         <DropdownDiv className="DropdownDiv">
-          <DropdownList className="DropdownList_editAdmin" onChange={handleAdminSelectChange}
-                        value={selectedUserName}>
+          <DropdownList
+            className="DropdownList_editAdmin"
+            onChange={handleAdminSelectChange}
+            value={selectedUserName}
+          >
             <DropdownListItem>{t("chooseAdmin")}</DropdownListItem>
-            {
-              props.admins.map((admin, index) => {
-                if (admin?.first_name?.length > 0 || admin?.last_name?.length > 0) {
-                  return <DropdownListItem key={index}
-                                           value={admin.username}>{admin.first_name} {admin.last_name}</DropdownListItem>
-                } else {
-                  return <DropdownListItem key={index}
-                                           value={admin.username}>{admin.username}</DropdownListItem>
-                }
-              })
-            }
+            {props.admins.map((admin, index) => {
+              if (
+                admin?.first_name?.length > 0 ||
+                admin?.last_name?.length > 0
+              ) {
+                return (
+                  <DropdownListItem key={index} value={admin.username}>
+                    {admin.first_name} {admin.last_name}
+                  </DropdownListItem>
+                );
+              } else {
+                return (
+                  <DropdownListItem key={index} value={admin.username}>
+                    {admin.username}
+                  </DropdownListItem>
+                );
+              }
+            })}
           </DropdownList>
         </DropdownDiv>
-      }
+      )}
       <DivTxtField>
-        <Span/>
-        <FormInput onChange={handleFirstNameChange} placeholder={t("firstName")} type="text" value={firstName}
-                   required/>
+        <Span />
+        <FormInput
+          onChange={handleFirstNameChange}
+          placeholder={t("firstName")}
+          type="text"
+          value={firstName}
+          required
+        />
       </DivTxtField>
 
       <DivTxtField>
-        <Span/>
-        <FormInput onChange={handleLastNameChange} placeholder={t("familyName")} type="text" value={lastName}
-                   required/>
+        <Span />
+        <FormInput
+          onChange={handleLastNameChange}
+          placeholder={t("familyName")}
+          type="text"
+          value={lastName}
+          required
+        />
       </DivTxtField>
 
       <DivTxtField>
-        <Span/>
-        <FormInput onChange={handleEmailChange} placeholder={t("emailAddressKey")} type="email" value={email}/>
+        <Span />
+        <FormInput
+          onChange={handleEmailChange}
+          placeholder={t("emailAddressKey")}
+          type="email"
+          value={email}
+        />
       </DivTxtField>
 
       <DivTxtField>
-        <Span/>
-        <FormInput onChange={handlePhoneNumberChange} placeholder={t("phoneNumber")}  type="text" value={phoneNumber}/>
+        <Span />
+        <FormInput
+          onChange={handlePhoneNumberChange}
+          placeholder={t("phoneNumber")}
+          type="text"
+          value={phoneNumber}
+        />
       </DivTxtField>
 
-      {props.hasPermission &&
+      {props.hasPermission && (
         <DivTxtFieldnumber>
-          <Checkboxes type="checkbox" onChange={handleSuperAdminCheckChange} checked={isSuperAdmin}/>
+          <Checkboxes
+            type="checkbox"
+            onChange={handleSuperAdminCheckChange}
+            checked={isSuperAdmin}
+          />
           <LabelSoper>{t("addAdmin")}</LabelSoper>
         </DivTxtFieldnumber>
-      }
+      )}
 
       {/*TODO: Uncomment when it's supported in backend-side*/}
       {/*<DivTxtField>*/}
@@ -198,12 +235,15 @@ export default function EditGroupForm(props) {
 
       {messages.length > 0 &&
         messages.map((message, index) => {
-          return <DivPass className={classColor} key={index}>{message}</DivPass>
-        })
-      }
-      <InputSubmit type="submit" value='login'>{t("modifyAdmin")}</InputSubmit>
-
+          return (
+            <DivPass className={classColor} key={index}>
+              {message}
+            </DivPass>
+          );
+        })}
+      <InputSubmit type="submit" value="login">
+        {t("modifyAdmin")}
+      </InputSubmit>
     </Form>
-
   );
 }

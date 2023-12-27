@@ -10,7 +10,7 @@ import ModeratorCards, {
 } from "./ModeratorCards";
 import { useTranslation } from "react-i18next";
 import { ReactComponent as SearchIcons2 } from "assets/icons/search2.svg";
-import {updateContestPeopleRole} from "../../services/adminsServices";
+import { updateContestPeopleRole } from "../../services/adminsServices";
 
 const ModeratorCard = ({ person, admins, setAdmins }) => {
   const { t } = useTranslation();
@@ -20,17 +20,24 @@ const ModeratorCard = ({ person, admins, setAdmins }) => {
   if (!fullName) fullName = userName;
   console.log("Person >>>>", userName);
 
-  const deactivateAdmin = (username) =>{
-    updateContestPeopleRole(username, {
-      "contest_role": 6
-    }, (res)=>{
-      if(res && res.status === 200){
-        setAdmins([...admins.filter(admin => admin.person.username !== username)]);
-      }
-    }, (err) =>{
-      console.log(`Failed to deactivate admin ${username}: ${err}`);
-    });
-  }
+  const deactivateAdmin = (username) => {
+    updateContestPeopleRole(
+      username,
+      {
+        contest_role: 6,
+      },
+      (res) => {
+        if (res && res.status === 200) {
+          setAdmins([
+            ...admins.filter((admin) => admin.person.username !== username),
+          ]);
+        }
+      },
+      (err) => {
+        console.log(`Failed to deactivate admin ${username}: ${err}`);
+      },
+    );
+  };
 
   return (
     <ModeratorCards>
@@ -45,7 +52,13 @@ const ModeratorCard = ({ person, admins, setAdmins }) => {
           </ColumnContainer>
         </div>
 
-        <DeleteButton onClick={()=>{deactivateAdmin(userName)}}>{t("deactivate")}</DeleteButton>
+        <DeleteButton
+          onClick={() => {
+            deactivateAdmin(userName);
+          }}
+        >
+          {t("deactivate")}
+        </DeleteButton>
       </ParticipantsNumbers>
     </ModeratorCards>
   );

@@ -24,7 +24,7 @@ import { addStandard } from "../../../services/standardServices";
 import { useTranslation } from "react-i18next";
 
 export default function AddStandardForm(props) {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const [selectedSection, setSelectedSection] = useState({});
   const [label, setLabel] = useState("");
   const [order, setOrder] = useState(-1);
@@ -136,7 +136,7 @@ export default function AddStandardForm(props) {
         }
         setClassColor("red");
         setMessages(errMessages);
-      }
+      },
     );
   };
 
@@ -145,7 +145,7 @@ export default function AddStandardForm(props) {
       setSelectedSection({});
     } else {
       setSelectedSection(
-        props.sections.filter((section) => section.id === e.target.value)[0]
+        props.sections.filter((section) => section.id === e.target.value)[0],
       );
     }
   };
@@ -253,7 +253,7 @@ export default function AddStandardForm(props) {
           required
           onChange={handleOrderChange}
         />
-        <Label>  {t("criteria-order")} </Label>
+        <Label> {t("criteria-order")} </Label>
       </DivTxtFieldnumber>
 
       <DropdownListStanderd
@@ -264,12 +264,14 @@ export default function AddStandardForm(props) {
         <DropdownListItemStanderd value="">
           {t("choose-type")}
         </DropdownListItemStanderd>
-        <DropdownListItemStanderd value="num">{t("digital")}</DropdownListItemStanderd>
+        <DropdownListItemStanderd value="num">
+          {t("digital")}
+        </DropdownListItemStanderd>
         <DropdownListItemStanderd value="chk">
-         {t("checkBoxChecker")}
-                 </DropdownListItemStanderd>
+          {t("checkBoxChecker")}
+        </DropdownListItemStanderd>
         <DropdownListItemStanderd value="oth">
-           {t("textReview")}
+          {t("textReview")}
         </DropdownListItemStanderd>
       </DropdownListStanderd>
 
@@ -295,7 +297,7 @@ export default function AddStandardForm(props) {
               value={lowerUnitsBound !== -1 ? "" + lowerUnitsBound : ""}
               onChange={handleLowerBoundPointUnitsChange}
             />
-            <Label> {t("minimum-repeat")}  </Label>
+            <Label> {t("minimum-repeat")} </Label>
           </DivTxtFieldnumber>
 
           <DivTxtFieldnumber>
@@ -322,9 +324,7 @@ export default function AddStandardForm(props) {
           onChange={handlePointUnitChange}
         />
         <Label>
-          {formType !== "chk"
-            ? t("enter-repetition")
-            : t("enterCreterion")}
+          {formType !== "chk" ? t("enter-repetition") : t("enterCreterion")}
         </Label>
       </DivTxtFieldnumber>
 

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import LoginFormContainer, {
   DivCenter,
   Form,
@@ -10,14 +10,14 @@ import LoginFormContainer, {
   TitleLogin,
 } from "./login.styles";
 
-import {DivPass, DivTxtField} from "../shared/styles";
-import {useLocation, useNavigate} from "react-router-dom";
+import { DivPass, DivTxtField } from "../shared/styles";
+import { useLocation, useNavigate } from "react-router-dom";
 import Loader from "../Loader";
-import {useTranslation} from "react-i18next";
-import {login} from "../../services/auth/session";
+import { useTranslation } from "react-i18next";
+import { login } from "../../services/auth/session";
 
 function Login() {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   let navigate = useNavigate();
   const [username, setUsername] = useState(" ");
   const [password, setPassword] = useState(" ");
@@ -25,14 +25,14 @@ function Login() {
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const location = useLocation();
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await login(username, password);
       navigate(
         location?.state?.redirectTo?.length > 0
           ? location.state.redirectTo
-          : "/dashboard"
+          : "/dashboard",
       );
     } catch (err) {
       console.log("Failed to login : ", err?.response?.data || err);
@@ -49,7 +49,7 @@ function Login() {
   if (loading) {
     return (
       <main>
-        <Loader/>
+        <Loader />
       </main>
     );
   }
@@ -58,11 +58,9 @@ function Login() {
     <LoginFormContainer>
       <DivCenter>
         <HeadLogIn>
-          <TitleLogin>
-            {`${t("login")}`}
-          </TitleLogin>
+          <TitleLogin>{`${t("login")}`}</TitleLogin>
           <SignupNowAccount>
-           {t("notAccount")}{" "}
+            {t("notAccount")}{" "}
             <SignupNow href="/signup">{t("signUpKey")}</SignupNow>
           </SignupNowAccount>
         </HeadLogIn>
@@ -108,9 +106,7 @@ function Login() {
 
           {/* TODO: style the error message */}
           {showErrorMessage && (
-            <DivPass className="red">
-              {t("checkPassword")}
-            </DivPass>
+            <DivPass className="red">{t("checkPassword")}</DivPass>
           )}
           {/* <PageLink href="https://www.facebook.com/Wird.Competition/" target="_blank">
             هل تواجه مشكلة تقنية أو نسيت كلمة المرور؟ تواصل مع الدعم الفني

@@ -1,14 +1,14 @@
 import styled from "@emotion/styled";
-import {DropdownList} from "../Admins/Admins.styles";
-import Default from "../shared/styles"
+import { DropdownList } from "../Admins/Admins.styles";
+import Default from "../shared/styles";
 
 export default styled(Default)`
-width: 100%;
-height: 60rem;
-padding: 0; 
+  width: 100%;
+  height: 60rem;
+  padding: 0;
 `;
 
 export const StandardsDropDownList = styled(DropdownList)`
-width: auto;
-margin: 0;
+  width: auto;
+  margin: 0;
 `;

@@ -1,18 +1,18 @@
-import React, {useEffect, useState} from "react";
-import {HomeContainer} from "./home.styles";
+import React, { useEffect, useState } from "react";
+import { HomeContainer } from "./home.styles";
 
-import {retrieveTopMembers} from "../../services/competitionsServices";
+import { retrieveTopMembers } from "../../services/competitionsServices";
 import Loader from "../Loader";
 import HomeBanner from "./HomeBanner";
 import TopRanks from "./TopRanks";
-import {retrieveStudents} from "../../services/studentsServices";
-import {useDashboardData} from "../../util/routes-data";
-import {PageTitle} from "../shared/page-title";
-import {useTranslation} from "react-i18next";
+import { retrieveStudents } from "../../services/studentsServices";
+import { useDashboardData } from "../../util/routes-data";
+import { PageTitle } from "../shared/page-title";
+import { useTranslation } from "react-i18next";
 
 function Home() {
-  const {currentUser} = useDashboardData();
-  const {t} = useTranslation();
+  const { currentUser } = useDashboardData();
+  const { t } = useTranslation();
 
   const [loading, setLoading] = useState(false);
   const [students, setStudents] = useState([]);
@@ -29,7 +29,7 @@ function Home() {
       },
       (err) => {
         console.log("Failed to retrieve top members : ", err.data);
-      }
+      },
     );
 
     retrieveStudents(
@@ -42,32 +42,28 @@ function Home() {
       (err) => {
         console.log("Failed to retrieve students : ", err.data);
         setLoading(false);
-      }
+      },
     );
   }, []);
 
   if (loading) {
-    return (
-      <Loader/>
-    );
+    return <Loader />;
   }
 
   return (
     <>
-      <PageTitle>{t('home-page')}</PageTitle>
+      <PageTitle>{t("home-page")}</PageTitle>
       <HomeContainer>
         <HomeBanner
           name={
             currentUser?.first_name?.length > 0
-              ? currentUser.first_name +
-              " " +
-              currentUser.last_name
+              ? currentUser.first_name + " " + currentUser.last_name
               : "Admin"
           }
           dayNumber={"1"}
         />
         {/* <DaysSlider /> */}
-        <TopRanks students={students} topMembers={topMembers}/>
+        <TopRanks students={students} topMembers={topMembers} />
       </HomeContainer>
     </>
   );

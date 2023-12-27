@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import {retrieveStudents} from "../../services/studentsServices";
+import { retrieveStudents } from "../../services/studentsServices";
 import TotalByPoints from "./TotalByDayChart";
 import TotalByLabelChars from "./TotalByLabelChart";
 import LoginFormContainer, {
@@ -13,7 +13,7 @@ import LoginFormContainer, {
   SelectInputContainer,
   Wird,
 } from "../studentsPoints/StudentsPoints.styles";
-import {DropdownListItem} from "../shared/styles";
+import { DropdownListItem } from "../shared/styles";
 
 import TableData from "./table";
 import Loader from "../Loader";
@@ -25,7 +25,7 @@ export default function StudentsPoints() {
   const [day, setDay] = useState("");
   const [studentsResultsFlag, SetStudentsResultsFlag] = useState(true);
   const [loading, setLoading] = useState(false);
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   useEffect(() => {
     setLoading(true);
@@ -37,7 +37,7 @@ export default function StudentsPoints() {
       (err) => {
         console.log("ERROR: " + JSON.stringify(err.response.data));
         setLoading(false);
-      }
+      },
     );
   }, []);
 
@@ -52,7 +52,7 @@ export default function StudentsPoints() {
   if (loading) {
     return (
       <main>
-        <Loader/>
+        <Loader />
       </main>
     );
   }
@@ -62,7 +62,7 @@ export default function StudentsPoints() {
       <PointShow>
         <LoginForm>
           {Students?.length === 0 || !Students ? (
-            <p style={{textAlign: "center", margin: 0}}>
+            <p style={{ textAlign: "center", margin: 0 }}>
               {" "}
               {t("noStudentDiplay")}{" "}
             </p>
@@ -72,12 +72,14 @@ export default function StudentsPoints() {
                 <Wird
                   onClick={() => SetStudentsResultsFlag(!studentsResultsFlag)}
                 >
-                  {t("clickView")}                </Wird>
+                  {t("clickView")}{" "}
+                </Wird>
               ) : (
                 <Wird
                   onClick={() => SetStudentsResultsFlag(!studentsResultsFlag)}
                 >
-                  {t("viewChart")}                </Wird>
+                  {t("viewChart")}{" "}
+                </Wird>
               )}
               <SelectInputContainer>
                 <DropdownDiv className="DropdownDiv">
@@ -110,12 +112,14 @@ export default function StudentsPoints() {
                       onChange={handleDayChange}
                     >
                       <DropdownListItem key={0} value="">
-                        {t("chooseRamdan")}                      </DropdownListItem>
+                        {t("chooseRamdan")}{" "}
+                      </DropdownListItem>
                       {Array(30)
                         .fill(undefined)
                         .map((val, idx) => (
                           <DropdownListItem key={idx + 1} value={idx + 1}>
-                            {idx + 1} {t("ramadan-word")}                          </DropdownListItem>
+                            {idx + 1} {t("ramadan-word")}{" "}
+                          </DropdownListItem>
                         ))}
                     </DropdownList>
                   </DropdownDiv>
@@ -123,13 +127,13 @@ export default function StudentsPoints() {
               </SelectInputContainer>
               {studentsResultsFlag && (
                 <ChartsContainer>
-                  <TotalByPoints selectedUser={username}/>
-                  <TotalByLabelChars selectedUser={username}/>
+                  <TotalByPoints selectedUser={username} />
+                  <TotalByLabelChars selectedUser={username} />
                 </ChartsContainer>
               )}
 
               {!studentsResultsFlag && (
-                <TableData selectedUser={username} selectedDay={day}/>
+                <TableData selectedUser={username} selectedDay={day} />
               )}
             </>
           )}

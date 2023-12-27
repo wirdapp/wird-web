@@ -1,97 +1,113 @@
-import {doRequest} from "./doRequest";
+import { doRequest } from "./doRequest";
 
 export const retrieveStandards = (successCallback, faiCallback) => {
-  doRequest(null, "/admin-panel/point-template/",
+  doRequest(
+    null,
+    "/admin-panel/point-template/",
     {
       "Content-Type": "application/json",
-
     },
     "get",
     successCallback,
     faiCallback,
-    true);
+    true,
+  );
 };
 
 export const retrieveSections = (successCallback, faiCallback) => {
-  doRequest(null, "/admin-panel/section/",
+  doRequest(
+    null,
+    "/admin-panel/section/",
     {
       "Content-Type": "application/json",
-
     },
     "get",
     successCallback,
     faiCallback,
-    true);
+    true,
+  );
 };
 
 export const addStandard = (data, successCallback, faiCallback) => {
-  doRequest(data, "/admin-panel/point-template/",
+  doRequest(
+    data,
+    "/admin-panel/point-template/",
     {
       "Content-Type": "application/json",
-
     },
     "post",
     successCallback,
     faiCallback,
-    true);
+    true,
+  );
 };
 
 export const addSection = (data, successCallback, faiCallback) => {
-  doRequest(data, "/admin-panel/section/",
+  doRequest(
+    data,
+    "/admin-panel/section/",
     {
       "Content-Type": "application/json",
-
     },
     "post",
     successCallback,
     faiCallback,
-    true);
+    true,
+  );
 };
 
 export const updateStandard = (id, data, successCallback, faiCallback) => {
-  doRequest(data, `/admin-panel/point-template/${id}/`,
+  doRequest(
+    data,
+    `/admin-panel/point-template/${id}/`,
     {
       "Content-Type": "application/json",
-
     },
     "put",
     successCallback,
     faiCallback,
-    true);
+    true,
+  );
 };
 
 export const updateSection = (id, data, successCallback, faiCallback) => {
-  doRequest(data, `/admin-panel/section/${id}/`,
+  doRequest(
+    data,
+    `/admin-panel/section/${id}/`,
     {
       "Content-Type": "application/json",
-
     },
     "put",
     successCallback,
     faiCallback,
-    true);
+    true,
+  );
 };
 
 export const deleteStandard = (id, successCallback, faiCallback) => {
-  doRequest(null, `/admin-panel/point-template/${id}/`,
+  doRequest(
+    null,
+    `/admin-panel/point-template/${id}/`,
     {
       "Content-Type": "application/json",
-
     },
     "delete",
     successCallback,
     faiCallback,
-    true);
+    true,
+  );
 };
 
 export const deleteSection = (id, successCallback, faiCallback) => {
-  doRequest(null, `/admin-panel/section/${id}/`,
+  doRequest(
+    null,
+    `/admin-panel/section/${id}/`,
     {
       "Content-Type": "application/json",
-
     },
     "delete",
     successCallback,
     faiCallback,
-    true);
+    true,
+  );
 };

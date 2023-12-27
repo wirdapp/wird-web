@@ -1,9 +1,5 @@
-import React, { useEffect, useState, useRef} from "react";
-import {
-  DivMultiselect,
-  DropdownDivSelect,
-  Span
-} from "../Groups.styles";
+import React, { useEffect, useState, useRef } from "react";
+import { DivMultiselect, DropdownDivSelect, Span } from "../Groups.styles";
 import {
   DivTxtField,
   Form,
@@ -83,23 +79,23 @@ export default function AddGroupForm(props) {
     let data = {
       admin: selectedAdminUserName,
       name: groupName,
-      group_students: selectedStudents
+      group_students: selectedStudents,
     };
 
     addGroup(
-        {
-          name: groupName
-        },
+      {
+        name: groupName,
+      },
       (res) => {
         if (res && res.status === 201) {
           data.id = res.data.id;
           addOrRemoveAdminFromGroup(
-              {
-                persons: [selectedAdminUserName],
-                "action": "add"
-              },
-              res.data.id,
-              selectedStudents
+            {
+              persons: [selectedAdminUserName],
+              action: "add",
+            },
+            res.data.id,
+            selectedStudents,
           );
         }
       },
@@ -114,63 +110,72 @@ export default function AddGroupForm(props) {
         }
         setClassColor("red");
         setMessages(errMessages);
-      }
+      },
     );
   };
 
-  const addOrRemoveAdminFromGroup = (data, groupId, members) =>{
-    addOrRemoveAdminToGroup(data, groupId, (res)=>{
-      if (res && res.status === 200) {
-        addOrRemoveMemberFromGroup({
-            persons: members,
-            "action": "add"
-          }, groupId);
-      }
-    }, (err)=>{
-      let errMessages = [];
-      errMessages.push(t("group-not-add"));
-      if (err.response.data) {
-        let obj = err.response.data;
-        Object.keys(obj).forEach((e) => {
-          errMessages.push(`${obj[e]} : ${e}`);
-        });
-      }
-      setClassColor("red");
-      setMessages(errMessages);
-    });
+  const addOrRemoveAdminFromGroup = (data, groupId, members) => {
+    addOrRemoveAdminToGroup(
+      data,
+      groupId,
+      (res) => {
+        if (res && res.status === 200) {
+          addOrRemoveMemberFromGroup(
+            {
+              persons: members,
+              action: "add",
+            },
+            groupId,
+          );
+        }
+      },
+      (err) => {
+        let errMessages = [];
+        errMessages.push(t("group-not-add"));
+        if (err.response.data) {
+          let obj = err.response.data;
+          Object.keys(obj).forEach((e) => {
+            errMessages.push(`${obj[e]} : ${e}`);
+          });
+        }
+        setClassColor("red");
+        setMessages(errMessages);
+      },
+    );
   };
 
   const addOrRemoveMemberFromGroup = (data, groupId) => {
     addOrRemoveMemberToGroup(
-        data,
-        groupId,
-        (res) => {
-          if (res && res.status === 200) {
-            resetAddGroupForm();
-            setMessages([t("add-group-success")]);
-            setClassColor("green");
+      data,
+      groupId,
+      (res) => {
+        if (res && res.status === 200) {
+          resetAddGroupForm();
+          setMessages([t("add-group-success")]);
+          setClassColor("green");
 
-            setTimeout(() => {
-              props.setGroups([...props.studentsGroups, data]);
-              setClassColor("");
-              setMessages([]);
+          setTimeout(() => {
+            props.setGroups([...props.studentsGroups, data]);
+            setClassColor("");
+            setMessages([]);
 
-              window.location.reload(true);
-            }, 2000);
-          }
-        },
-        (err) => {
-          let errMessages = [];
-          errMessages.push(t("group-not-add"));
-          if (err.response.data) {
-            let obj = err.response.data;
-            Object.keys(obj).forEach((e) => {
-              errMessages.push(`${obj[e]} : ${e}`);
-            });
-          }
-          setClassColor("red");
-          setMessages(errMessages);
-        });
+            window.location.reload(true);
+          }, 2000);
+        }
+      },
+      (err) => {
+        let errMessages = [];
+        errMessages.push(t("group-not-add"));
+        if (err.response.data) {
+          let obj = err.response.data;
+          Object.keys(obj).forEach((e) => {
+            errMessages.push(`${obj[e]} : ${e}`);
+          });
+        }
+        setClassColor("red");
+        setMessages(errMessages);
+      },
+    );
   };
 
   return (

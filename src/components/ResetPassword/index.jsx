@@ -1,13 +1,24 @@
-import React, {useState} from "react";
-import {useNavigate} from "react-router-dom";
-import LoginFormContainer, {DivCenter, DivPass, TitleLogin,} from "./ResetPassword.styles";
-import {DivTxtField} from "../shared/styles";
-import {Form, FormInput, HeadLogIn, InputSubmit, SignupNow, SignupNowAccount,} from "../Login/login.styles"
-import WirdLogo from '../../assets/Logo/WirdLogoV2.svg';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import LoginFormContainer, {
+  DivCenter,
+  DivPass,
+  TitleLogin,
+} from "./ResetPassword.styles";
+import { DivTxtField } from "../shared/styles";
+import {
+  Form,
+  FormInput,
+  HeadLogIn,
+  InputSubmit,
+  SignupNow,
+  SignupNowAccount,
+} from "../Login/login.styles";
+import WirdLogo from "../../assets/Logo/WirdLogoV2.svg";
 import { useTranslation } from "react-i18next";
 
 function ForgotPassword() {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   let Navigate = useNavigate();
   const [password, setPassword] = useState(" ");
   const [Retypepassword, setRetypePassword] = useState(" ");
@@ -28,18 +39,18 @@ function ForgotPassword() {
 
     // setLoading(true);
     if (password !== Retypepassword) {
-      console.log('not = ------------------------');
-      setshowErrorMessageMatch(true)
-      setShowErrorMessage(false)
+      console.log("not = ------------------------");
+      setshowErrorMessageMatch(true);
+      setShowErrorMessage(false);
       return;
     }
     if (password.length < 8) {
-      setShowErrorMessage(true)
-      setshowErrorMessageMatch(false)
+      setShowErrorMessage(true);
+      setshowErrorMessageMatch(false);
       return;
     } else {
-      Navigate('/')
-      console.log('trueeeeeee ------------------------')
+      Navigate("/");
+      console.log("trueeeeeee ------------------------");
     }
   }
 
@@ -47,13 +58,11 @@ function ForgotPassword() {
     <LoginFormContainer>
       <DivCenter>
         <HeadLogIn>
-          <TitleLogin>
-            {t("resetPass")}
-          </TitleLogin>
+          <TitleLogin>{t("resetPass")}</TitleLogin>
         </HeadLogIn>
 
         {/* <HeadLogIn> */}
-        <img src={WirdLogo} alt=''/>
+        <img src={WirdLogo} alt="" />
         {/* <OrWayToLogIn>Or</OrWayToLogIn> */}
         {/* </HeadLogIn> */}
 
@@ -94,11 +103,13 @@ function ForgotPassword() {
           </InputSubmit>
         </Form>
         <SignupNowAccount>
-          <SignupNow href="https://www.facebook.com/Wird.Competition/"> {t("wirdSupport")} </SignupNow>
+          <SignupNow href="https://www.facebook.com/Wird.Competition/">
+            {" "}
+            {t("wirdSupport")}{" "}
+          </SignupNow>
           {t("orKey")}
           <SignupNow href="/Login"> {t("backLogin")}</SignupNow>
         </SignupNowAccount>
-
       </DivCenter>
     </LoginFormContainer>
   );

@@ -1,6 +1,11 @@
-import {createBrowserRouter, Outlet, redirect, useRouteError} from "react-router-dom";
+import {
+  createBrowserRouter,
+  Outlet,
+  redirect,
+  useRouteError,
+} from "react-router-dom";
 import Login from "./components/Login";
-import {DashboardLayout} from "./components/layout/DashboardLayout";
+import { DashboardLayout } from "./components/layout/DashboardLayout";
 import Home from "./components/Home";
 import EditProfile from "./components/EditProfile";
 import ContestModerator from "./components/ContestModerator";
@@ -13,42 +18,50 @@ import ContestCriteria from "./components/ContestCriteria";
 import ReviewOtherPoints from "./components/ReviewOtherPoints";
 import ExportPoints from "./components/ExportPoints";
 import StudentsPoints from "./components/studentsPoints";
-import {destroySession, isLogged, updateSessionUserDetails} from "./services/auth/session";
-import {isSuperAdmin} from "./util/ContestPeople_Role";
+import {
+  destroySession,
+  isLogged,
+  updateSessionUserDetails,
+} from "./services/auth/session";
+import { isSuperAdmin } from "./util/ContestPeople_Role";
 import * as AuthApi from "./services/auth/api";
 import Signup from "./components/Signup";
 import ResetPassword from "./components/ResetPassword";
 import ForgotPassword from "./components/ForgotPassword";
-import {ReactComponent as WirdLogo} from "assets/icons/Shared/wirdLogo.svg";
-import {getCurrentContest} from "./services/contests/utils";
-import {getContests} from "./services/contests/api";
+import { ReactComponent as WirdLogo } from "assets/icons/Shared/wirdLogo.svg";
+import { getCurrentContest } from "./services/contests/utils";
+import { getContests } from "./services/contests/api";
 
 function ErrorBoundary() {
   let error = useRouteError();
   console.error(error);
   if (error.status === 404) {
-    return (<div className="error-page">
-      <WirdLogo/>
-      <hr/>
-      <h2>404 Not Found</h2>
-      <p>Sorry, the page you are looking for does not exist.</p>
-      <a href="/dashboard">Go to Home</a>
-    </div>);
+    return (
+      <div className="error-page">
+        <WirdLogo />
+        <hr />
+        <h2>404 Not Found</h2>
+        <p>Sorry, the page you are looking for does not exist.</p>
+        <a href="/dashboard">Go to Home</a>
+      </div>
+    );
   }
 
   // Uncaught ReferenceError: path is not defined
-  return (<div className="error-page">
-    <WirdLogo/>
-    <hr/>
-    <h2>Something went wrong :(</h2>
-  </div>);
+  return (
+    <div className="error-page">
+      <WirdLogo />
+      <hr />
+      <h2>Something went wrong :(</h2>
+    </div>
+  );
 }
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <Outlet/>,
-    errorElement: <ErrorBoundary/>,
+    element: <Outlet />,
+    errorElement: <ErrorBoundary />,
     children: [
       {
         index: true,
@@ -62,24 +75,24 @@ export const router = createBrowserRouter([
           }
           return null;
         },
-        element: <Login/>,
+        element: <Login />,
       },
       {
         path: "signup",
-        element: <Signup/>,
+        element: <Signup />,
       },
       {
         path: "reset-password",
-        element: <ResetPassword/>,
+        element: <ResetPassword />,
       },
       {
         path: "forgot-password",
-        element: <ForgotPassword/>,
+        element: <ForgotPassword />,
       },
       {
         id: "dashboard",
         path: "dashboard",
-        loader: async ({request}) => {
+        loader: async ({ request }) => {
           const redirectTo = new URL(request.url).pathname;
           if (!isLogged()) {
             return redirect(`/login?redirectTo=${redirectTo}`);
@@ -105,59 +118,59 @@ export const router = createBrowserRouter([
           }
           return data;
         },
-        element: <DashboardLayout/>,
-        errorElement: <ErrorBoundary/>,
+        element: <DashboardLayout />,
+        errorElement: <ErrorBoundary />,
         children: [
           {
             index: true,
-            element: <Home/>,
+            element: <Home />,
           },
           {
             path: "edit-profile",
-            element: <EditProfile/>,
+            element: <EditProfile />,
           },
           {
             path: "competition",
-            element: <Competition/>,
+            element: <Competition />,
           },
           {
             path: "top-students",
-            element: <TopStudents/>,
+            element: <TopStudents />,
           },
           {
             path: "loading",
-            element: <Loader/>,
+            element: <Loader />,
           },
           {
             path: "students",
-            element: <Students/>,
+            element: <Students />,
           },
           {
             path: "groups",
-            element: <Groups/>,
+            element: <Groups />,
           },
           {
             path: "admins",
-            element: <ContestModerator/>,
+            element: <ContestModerator />,
           },
           {
             path: "contest-criteria",
-            element: <ContestCriteria/>,
+            element: <ContestCriteria />,
           },
           {
             path: "review-other-points",
-            element: <ReviewOtherPoints/>,
+            element: <ReviewOtherPoints />,
           },
           {
             path: "students-points",
-            element: <StudentsPoints/>,
+            element: <StudentsPoints />,
           },
           {
             path: "export-points",
-            element: <ExportPoints/>,
-          }
+            element: <ExportPoints />,
+          },
         ],
-      }
-    ]
-  }
+      },
+    ],
+  },
 ]);

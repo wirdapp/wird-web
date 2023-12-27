@@ -2,15 +2,25 @@ import axios from "../util/axios";
 
 const apiUrl = process.env.REACT_APP_BASE_URL;
 
-export const doRequest = (data, uri, config, method, successCallback, failCallback, beforeRefresh) => {
+export const doRequest = (
+  data,
+  uri,
+  config,
+  method,
+  successCallback,
+  failCallback,
+  beforeRefresh,
+) => {
   axios({
-      method: method,
-      url: `${apiUrl}${uri}`,
-      data: data,
-    }
-  ).then((data) => {
-    successCallback(data);
-  }, (err) => {
-    failCallback?.(err);
-  });
-}
+    method: method,
+    url: `${apiUrl}${uri}`,
+    data: data,
+  }).then(
+    (data) => {
+      successCallback(data);
+    },
+    (err) => {
+      failCallback?.(err);
+    },
+  );
+};

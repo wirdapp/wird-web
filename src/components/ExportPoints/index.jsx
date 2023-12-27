@@ -1,11 +1,19 @@
-import React, {useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
-import {DropdownListItem as Item, Form, InputSubmit} from "../shared/styles";
-import Container, {DivPass, DropdownList, DropdownListItem, Span,} from "../Admins/Admins.styles";
-import {ReactComponent as FileDownload} from "assets/icons/fileDownload.svg";
-import {exportPoints} from "../../services/adminsServices";
-import {DropDownDiv, DropdownList as List,} from "../ReviewOtherPoints/ReviewOtherPoints.styles";
-import {saveAs} from "file-saver";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { DropdownListItem as Item, Form, InputSubmit } from "../shared/styles";
+import Container, {
+  DivPass,
+  DropdownList,
+  DropdownListItem,
+  Span,
+} from "../Admins/Admins.styles";
+import { ReactComponent as FileDownload } from "assets/icons/fileDownload.svg";
+import { exportPoints } from "../../services/adminsServices";
+import {
+  DropDownDiv,
+  DropdownList as List,
+} from "../ReviewOtherPoints/ReviewOtherPoints.styles";
+import { saveAs } from "file-saver";
 import Loader from "../Loader";
 import { useTranslation } from "react-i18next";
 
@@ -18,7 +26,7 @@ export default function ExportPoints() {
   const [messages, setMessages] = useState([]);
   const [classColor, setClassColor] = useState("");
   const navigate = useNavigate();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   useEffect(() => {
     setFromArray([...Array(30).keys()].map((i) => i + 1));
     setToArray([...Array(30).keys()].map((i) => i + 1));
@@ -29,7 +37,7 @@ export default function ExportPoints() {
       setToArray(
         [...Array(30).keys()]
           .map((i) => i + 1)
-          .filter((i) => i > Number(fromDay))
+          .filter((i) => i > Number(fromDay)),
       );
       setToDay("");
     }
@@ -82,7 +90,7 @@ export default function ExportPoints() {
         setClassColor("red");
         setMessages(errMessages);
         setLoading(false);
-      }
+      },
     );
   };
 
@@ -97,7 +105,7 @@ export default function ExportPoints() {
   if (loading) {
     return (
       <main>
-        <Loader/>
+        <Loader />
       </main>
     );
   }
@@ -120,7 +128,7 @@ export default function ExportPoints() {
               >
                 <DropDownDiv
                   className="DropdownDiv"
-                  style={{display: "inline", margin: "10px"}}
+                  style={{ display: "inline", margin: "10px" }}
                 >
                   <List
                     className="DropdownList"
@@ -128,8 +136,7 @@ export default function ExportPoints() {
                     value={fromDay}
                   >
                     <Item key={0} value="">
-       
-                    {t("fromDay")}
+                      {t("fromDay")}
                     </Item>
                     {fromArray.map((day) => (
                       <Item key={day} value={day}>
@@ -141,7 +148,7 @@ export default function ExportPoints() {
                 </DropDownDiv>
                 <DropDownDiv
                   className="DropdownDiv"
-                  style={{display: "inline", margin: "10px"}}
+                  style={{ display: "inline", margin: "10px" }}
                 >
                   <List
                     className="DropdownList"
@@ -149,12 +156,12 @@ export default function ExportPoints() {
                     value={toDay}
                   >
                     <Item key={0} value="">
-                      {t("untilDay")} 
+                      {t("untilDay")}
                     </Item>
                     {toArray.map((day) => (
                       <Item key={day} value={day}>
                         {" "}
-                        {day} {t("ramadan-word")} {" "}
+                        {day} {t("ramadan-word")}{" "}
                       </Item>
                     ))}
                   </List>
@@ -171,12 +178,10 @@ export default function ExportPoints() {
                 })}
               {fromDay !== "" && toDay !== "" && (
                 <>
-                  <DivPass style={{color: "#000"}}>
-                  {t("yourResult")}
-                  </DivPass>
+                  <DivPass style={{ color: "#000" }}>{t("yourResult")}</DivPass>
                   <InputSubmit type="submit" value="exportPoints">
                     {" "}
-                    {t("extractKey")} <FileDownload style={{fill: "white"}}/>
+                    {t("extractKey")} <FileDownload style={{ fill: "white" }} />
                   </InputSubmit>
                 </>
               )}

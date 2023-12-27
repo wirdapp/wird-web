@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import Loader from "components/Loader";
-import {retrieveAdmins} from "services/adminsServices";
-import {ReactComponent as SearchIcons2} from "assets/icons/search2.svg";
-import {useTranslation} from "react-i18next";
+import { retrieveAdmins } from "services/adminsServices";
+import { ReactComponent as SearchIcons2 } from "assets/icons/search2.svg";
+import { useTranslation } from "react-i18next";
 
 import ContestModeratorDefault, {
   AddModeratorContainer,
@@ -20,14 +20,14 @@ import ContestModeratorDefault, {
 
 import ModeratorCard from "./ModeratorCard";
 // import {retrieveContestInfo} from "../../services/competitionsServices";
-import {DivPass} from "../ResetPassword/ResetPassword.styles";
+import { DivPass } from "../ResetPassword/ResetPassword.styles";
 import AddAdminModal from "./AddAdminModal";
-import {useDashboardData} from "../../util/routes-data";
+import { useDashboardData } from "../../util/routes-data";
 
 const ContestModerator = () => {
-  const {currentUser} = useDashboardData();
+  const { currentUser } = useDashboardData();
 
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
 
   const [loading, setLoading] = useState(false);
@@ -40,9 +40,7 @@ const ContestModerator = () => {
   const [modalState, setModalState] = useState(false);
   const [newAdminUsername, setNewAdminUsername] = useState("");
 
-
   useEffect(() => {
-
     // retrieveContestInfo((res)=>{
     //   setCurrentContest(res?.data?.filter(contest => contest.id ===  context.getAdminInfo().contest?.id));
     //   setOtherContests(res?.data?.filter(contest => contest.id !==  context.getAdminInfo().contest?.id));
@@ -57,14 +55,13 @@ const ContestModerator = () => {
       (err) => {
         setLoading(false);
         console.log("Failing", err);
-      }
+      },
     );
-
   }, []);
 
   const handleAdminSearchTextChange = (e) => {
     setAdminSearchText(e.target.value);
-  }
+  };
 
   const handleAdminSearchClick = () => {
     setLoading(true);
@@ -77,7 +74,8 @@ const ContestModerator = () => {
         setLoading(false);
         console.log("Failing", err);
       },
-      adminSearchText);
+      adminSearchText,
+    );
     setIsExpanded(false);
   };
 
@@ -90,17 +88,20 @@ const ContestModerator = () => {
       return;
     }
     setModalState(true);
-  }
+  };
 
   const getAdminsNumber = () => {
-    return admins.some(admin => admin.person.username === currentUser?.person?.username)
-      ? admins.length - 1 : admins.length;
-  }
+    return admins.some(
+      (admin) => admin.person.username === currentUser?.person?.username,
+    )
+      ? admins.length - 1
+      : admins.length;
+  };
 
   if (loading) {
     return (
       <main>
-        <Loader/>
+        <Loader />
       </main>
     );
   }
@@ -132,26 +133,38 @@ const ContestModerator = () => {
               {/* <LightText onClick={() => setIsExpanded(!isExpanded)}>
                 {t("search")}
               </LightText> */}
-              <SearchIcons2
-                onClick={handleAdminSearchClick}
-              />
+              <SearchIcons2 onClick={handleAdminSearchClick} />
             </ModeratorSearchContainer>
           </RowContainer>
 
-          {admins.filter(admin => admin.person.username !== currentUser.username).map((person, idx) => {
-            return <ModeratorCard key={idx} person={person.person} admins={admins} setAdmins={setAdmins}/>;
-          })}
+          {admins
+            .filter((admin) => admin.person.username !== currentUser.username)
+            .map((person, idx) => {
+              return (
+                <ModeratorCard
+                  key={idx}
+                  person={person.person}
+                  admins={admins}
+                  setAdmins={setAdmins}
+                />
+              );
+            })}
         </div>
 
         <AddModeratorContainer>
           <AddModeratorSpan>{t("add-moderator-manually")}</AddModeratorSpan>
           <SearchInputContainer>
             <SearchContainerForm>
-              <SearchContainer placeholder={t("username")} type="text"
-                               onChange={handleNonAdminTextChange}/>
+              <SearchContainer
+                placeholder={t("username")}
+                type="text"
+                onChange={handleNonAdminTextChange}
+              />
             </SearchContainerForm>
 
-            <GoBtn onClick={handleAddAdminManuallyClick}>{t("add-admin")}</GoBtn>
+            <GoBtn onClick={handleAddAdminManuallyClick}>
+              {t("add-admin")}
+            </GoBtn>
           </SearchInputContainer>
           {showErrorMessage && (
             <DivPass className="red">{errorMessage}</DivPass>

@@ -8,11 +8,11 @@ export function isLogged() {
 }
 
 export function destroySession() {
-  Cookies.remove(SESSION_COOKIE_KEY, {path: '/'});
+  Cookies.remove(SESSION_COOKIE_KEY, { path: "/" });
 }
 
 export function saveSession(session) {
-  Cookies.set(SESSION_COOKIE_KEY, JSON.stringify(session), {path: '/'});
+  Cookies.set(SESSION_COOKIE_KEY, JSON.stringify(session), { path: "/" });
 }
 
 export function getSession() {
@@ -33,7 +33,7 @@ export function updateSessionUserDetails(user) {
 
 export async function getUser() {
   if (!isLogged()) return null;
-  let {user} = getSession();
+  let { user } = getSession();
   if (!user) {
     try {
       user = await AuthApi.currentUserInfo();
@@ -49,5 +49,4 @@ export async function getUser() {
 export const login = async (username, password) => {
   const session = await AuthApi.doLogin(username, password);
   saveSession(session);
-}
-
+};

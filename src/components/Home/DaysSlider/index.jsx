@@ -25,7 +25,7 @@ import DaySlider, {
 import { useTranslation } from "react-i18next";
 
 function DaysSlider() {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   return (
     <>
       <DaySlider>

@@ -1,10 +1,14 @@
-import React, {useEffect, useState} from "react";
-import {retrieveStudents, retrieveStudentsPointsOfTypeOther, updateStudentPoint} from "../../services/studentsServices";
-import {DropDownDiv, DropdownList, TxtArea} from "./ReviewOtherPoints.styles";
-import {DropdownDivSelect as Box} from "../Groups/Groups.styles"
+import React, { useEffect, useState } from "react";
+import {
+  retrieveStudents,
+  retrieveStudentsPointsOfTypeOther,
+  updateStudentPoint,
+} from "../../services/studentsServices";
+import { DropDownDiv, DropdownList, TxtArea } from "./ReviewOtherPoints.styles";
+import { DropdownDivSelect as Box } from "../Groups/Groups.styles";
 import Tabs from "../shared/Tabs";
-import {H5} from "../Students/setPasswordStudent/SetPasswordStudent.styles";
-import {Span} from "../Login/login.styles";
+import { H5 } from "../Students/setPasswordStudent/SetPasswordStudent.styles";
+import { Span } from "../Login/login.styles";
 import {
   DivPass,
   DivTxtField,
@@ -14,15 +18,15 @@ import {
   FormInput,
   FormInputnumber,
   InputSubmit,
-  Label
+  Label,
 } from "../shared/styles";
-import Container from '../Standards/Standards.styles';
-import {useNavigate} from "react-router-dom";
+import Container from "../Standards/Standards.styles";
+import { useNavigate } from "react-router-dom";
 import Loader from "../Loader";
 import { useTranslation } from "react-i18next";
 
 export default function ReviewOtherPoints() {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const [selectedStudentUsername, setSelectedStudentUsername] = useState("");
   const [selectedDay, setSelectedDay] = useState(0);
   const [students, setStudents] = useState([]);
@@ -41,16 +45,26 @@ export default function ReviewOtherPoints() {
       (res) => {
         setStudents(res.data);
         setLoading(false);
-      }, (err) => {
-        console.log("Failed to retrieve students: " + JSON.stringify(err.response.data));
+      },
+      (err) => {
+        console.log(
+          "Failed to retrieve students: " + JSON.stringify(err.response.data),
+        );
         setLoading(false);
-      });
+      },
+    );
   }, []);
 
   useEffect(() => {
     setMessages([]);
     setClassColor("");
-  }, [selectedStudentUsername, selectedDay, otherPoints, selectedPoint, pointRecord]);
+  }, [
+    selectedStudentUsername,
+    selectedDay,
+    otherPoints,
+    selectedPoint,
+    pointRecord,
+  ]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -61,15 +75,19 @@ export default function ReviewOtherPoints() {
       return;
     }
 
-    updateStudentPoint(selectedStudentUsername, selectedPoint.id,
+    updateStudentPoint(
+      selectedStudentUsername,
+      selectedPoint.id,
       {
         point_scored_units: pointRecord,
         point_template: selectedPoint.point_template.id,
-        ramadan_record_date: selectedDay
+        ramadan_record_date: selectedDay,
       },
       (res) => {
         if (res && res.status === 200) {
-          let filteredOtherPoints = otherPoints.filter(otherPoint => otherPoint.id !== selectedPoint.id);
+          let filteredOtherPoints = otherPoints.filter(
+            (otherPoint) => otherPoint.id !== selectedPoint.id,
+          );
 
           setMessages([t("succussResult")]);
           setClassColor("green");
@@ -84,20 +102,20 @@ export default function ReviewOtherPoints() {
         errMessages.push([t("notAddResult")]);
         if (err.response.data) {
           let obj = err.response.data;
-          Object.keys(obj).forEach(e => {
-              errMessages.push(obj[e]);
-            }
-          )
+          Object.keys(obj).forEach((e) => {
+            errMessages.push(obj[e]);
+          });
         }
         setClassColor("red");
         setMessages(errMessages);
-      }
+      },
     );
-
   };
 
   const getUserPoint = (username, day) => {
-    retrieveStudentsPointsOfTypeOther(username, day,
+    retrieveStudentsPointsOfTypeOther(
+      username,
+      day,
       (res) => {
         if (res && res.status === 200) {
           setOtherPoints(res.data);
@@ -105,9 +123,13 @@ export default function ReviewOtherPoints() {
             setSelectedPoint(res.data[0]);
           }
         }
-      }, (err) => {
-        console.log("Failed to retrieve students point of type other: ", err?.response?.data);
-      }
+      },
+      (err) => {
+        console.log(
+          "Failed to retrieve students point of type other: ",
+          err?.response?.data,
+        );
+      },
     );
   };
 
@@ -130,7 +152,9 @@ export default function ReviewOtherPoints() {
   };
 
   const handlePointChange = (e) => {
-    let point = otherPoints.filter(otherPoint => otherPoint.id === e.target.value)[0];
+    let point = otherPoints.filter(
+      (otherPoint) => otherPoint.id === e.target.value,
+    )[0];
     if (point) {
       setSelectedPoint(point);
     } else {
@@ -140,132 +164,156 @@ export default function ReviewOtherPoints() {
 
   const handlePointRecordChange = (e) => {
     setPointRecord(Number(e.target.value));
-  }
+  };
 
   if (loading) {
     return (
       <main>
-        <Loader/>
+        <Loader />
       </main>
     );
   }
 
   return (
-
     <Container>
-      <Tabs labels={[t('reviewText')]} contents={[
-        <>
-          {students && students.length > 0 ?
-            <Form onSubmit={handleSubmit}>
-              <DropDownDiv className="DropdownDiv" onChange={handleSelectedUserChange}>
-                <DropdownList className="DropdownList">
-                  <DropdownListItem key={0} value="">{t("selectStudent")}</DropdownListItem>
-                  {
-                    students.map((student, index) => (
-                      <DropdownListItem key={index + 1}
-                                        value={student.username}>{student.first_name} {student.last_name}</DropdownListItem>
-                    ))
-                  }
-                </DropdownList>
-              </DropDownDiv>
+      <Tabs
+        labels={[t("reviewText")]}
+        contents={[
+          <>
+            {students && students.length > 0 ? (
+              <Form onSubmit={handleSubmit}>
+                <DropDownDiv
+                  className="DropdownDiv"
+                  onChange={handleSelectedUserChange}
+                >
+                  <DropdownList className="DropdownList">
+                    <DropdownListItem key={0} value="">
+                      {t("selectStudent")}
+                    </DropdownListItem>
+                    {students.map((student, index) => (
+                      <DropdownListItem
+                        key={index + 1}
+                        value={student.username}
+                      >
+                        {student.first_name} {student.last_name}
+                      </DropdownListItem>
+                    ))}
+                  </DropdownList>
+                </DropDownDiv>
 
+                <DropDownDiv className="DropdownDiv" onChange={handleDayChange}>
+                  <DropdownList className="DropdownList">
+                    <DropdownListItem key={0} value="0">
+                      {t("chooseDay")}
+                    </DropdownListItem>
+                    {[...Array(30).keys()]
+                      .map((i) => i + 1)
+                      .map((day) => (
+                        <DropdownListItem key={day} value={day}>
+                          {" "}
+                          {day} {t("ramadan-word")}{" "}
+                        </DropdownListItem>
+                      ))}
+                  </DropdownList>
+                </DropDownDiv>
 
-              <DropDownDiv className="DropdownDiv" onChange={handleDayChange}>
-                <DropdownList className="DropdownList">
-                  <DropdownListItem key={0} value="0">{t("chooseDay")}</DropdownListItem>
-                  {
-                    ([...Array(30).keys()].map(i => i + 1)).map((day) => (
-                      <DropdownListItem key={day}
-                                        value={day}> {day} {t("ramadan-word")} </DropdownListItem>
-                    ))
-                  }
-                </DropdownList>
-              </DropDownDiv>
-
-              {selectedDay === 0 && selectedStudentUsername === "" ?
-                <Span>{t("selectStudentDay")}</Span>
-                : selectedDay === 0 ?
+                {selectedDay === 0 && selectedStudentUsername === "" ? (
+                  <Span>{t("selectStudentDay")}</Span>
+                ) : selectedDay === 0 ? (
                   <Span>{t("chooseDay")}</Span>
-                  : selectedStudentUsername === "" ?
-                    <Span>{t("selectStudent")}</Span>
-                    :
-                    <>
-                      {otherPoints && otherPoints.length === 0 ?
-                        <Span>{t("studentText")}</Span>
+                ) : selectedStudentUsername === "" ? (
+                  <Span>{t("selectStudent")}</Span>
+                ) : (
+                  <>
+                    {otherPoints && otherPoints.length === 0 ? (
+                      <Span>{t("studentText")}</Span>
+                    ) : otherPoints.length > 1 ? (
+                      <DropDownDiv
+                        className="DropdownDiv"
+                        onChange={handlePointChange}
+                      >
+                        <DropdownList className="DropdownList">
+                          <DropdownListItem key={0} value="0">
+                            {" "}
+                            {t("standardKey")}
+                          </DropdownListItem>
+                          {otherPoints.map((point, index) => (
+                            <DropdownListItem key={index + 1} value={point.id}>
+                              {point.point_template.label}
+                            </DropdownListItem>
+                          ))}
+                        </DropdownList>
+                      </DropDownDiv>
+                    ) : (
+                      <></>
+                    )}
+                    {Object.keys(selectedPoint).length > 0 && (
+                      <>
+                        {selectedPoint.user_input?.length > 0 ? (
+                          <Box>
+                            <H5>{t("textEntered")}</H5>
+                            <TxtArea
+                              readOnly
+                              value={selectedPoint.user_input}
+                            />
+                          </Box>
+                        ) : (
+                          <Span>{t("notTextEntered")}</Span>
+                        )}
+                        <DivTxtField>
+                          <FormInput
+                            placeholder={t("addressKey")}
+                            type="text"
+                            value={selectedPoint.point_template.label}
+                            readOnly
+                          />
+                        </DivTxtField>
 
-                        : otherPoints.length > 1 ?
-                          <DropDownDiv className="DropdownDiv"
-                                       onChange={handlePointChange}>
-                            <DropdownList className="DropdownList">
-                              <DropdownListItem key={0} value="0"> {t("standardKey")}
-                                </DropdownListItem>
-                              {
-                                otherPoints.map((point, index) => (
-                                  <DropdownListItem key={index + 1}
-                                                    value={point.id}>{point.point_template.label}</DropdownListItem>
-                                ))
-                              }
-                            </DropdownList>
-                          </DropDownDiv>
+                        <DivTxtFieldnumber>
+                          <Span />
+                          <FormInputnumber
+                            type="number"
+                            readOnly
+                            value={
+                              selectedPoint.point_template.upper_units_bound
+                            }
+                          />
+                          <Label> {t("limitReptition")} </Label>
+                        </DivTxtFieldnumber>
 
-                          : <></>
-                      }
-                      {Object.keys(selectedPoint).length > 0 &&
-                        <>
+                        <DivTxtFieldnumber>
+                          <Span />
+                          <FormInputnumber
+                            type="number"
+                            max={selectedPoint.point_template.upper_units_bound}
+                            required
+                            onChange={handlePointRecordChange}
+                          />
+                          <Label>{t("enterResult")}</Label>
+                        </DivTxtFieldnumber>
 
-                          {selectedPoint.user_input?.length > 0
-                            ? <Box>
-                              <H5>{t("textEntered")}</H5>
-                              <TxtArea readOnly
-                                       value={selectedPoint.user_input}/>
-                            </Box>
-
-                            : <Span>{t("notTextEntered")}</Span>
-
-                          }
-                          <DivTxtField>
-                            <FormInput placeholder={t('addressKey') }type="text"
-                                       value={selectedPoint.point_template.label}
-                                       readOnly/>
-                          </DivTxtField>
-
-                          <DivTxtFieldnumber>
-                            <Span/>
-                            <FormInputnumber type="number" readOnly
-                                             value={selectedPoint.point_template.upper_units_bound}/>
-                            <Label> {t("limitReptition")} </Label>
-                          </DivTxtFieldnumber>
-
-                          <DivTxtFieldnumber>
-                            <Span/>
-                            <FormInputnumber type="number"
-                                             max={selectedPoint.point_template.upper_units_bound}
-                                             required onChange={handlePointRecordChange}/>
-                            <Label>{t("enterResult")}</Label>
-                          </DivTxtFieldnumber>
-
-                          {messages.length > 0 &&
-                            messages.map((message, index) => {
-                              return <DivPass className={classColor}
-                                              key={index}>{message}</DivPass>
-                            })
-                          }
-                          <InputSubmit type="submit">{t("addResult")}</InputSubmit>
-
-                        </>
-
-                      }
-                    </>
-
-              }
-
-            </Form>
-
-            : <H5> {t("notStudent")}</H5>
-          }
-        </>
-
-      ]}/>
+                        {messages.length > 0 &&
+                          messages.map((message, index) => {
+                            return (
+                              <DivPass className={classColor} key={index}>
+                                {message}
+                              </DivPass>
+                            );
+                          })}
+                        <InputSubmit type="submit">
+                          {t("addResult")}
+                        </InputSubmit>
+                      </>
+                    )}
+                  </>
+                )}
+              </Form>
+            ) : (
+              <H5> {t("notStudent")}</H5>
+            )}
+          </>,
+        ]}
+      />
     </Container>
   );
 }

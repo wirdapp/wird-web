@@ -1,13 +1,18 @@
-import React, {useEffect, useState} from "react";
-import {DivTxtField} from "../shared/styles.js";
-import SignupFormContainer, {DivCenter, DivFileField, DivPass, FileFormInput,} from "../Signup/Signup.styles";
-import {Form, FormInput, InputSubmit} from "../Login/login.styles";
-import {updateProfileData} from "../../services/updateProfileData";
-import {UserAccountImg} from "./EditProfile.styled";
-import {useTranslation} from "react-i18next";
+import React, { useEffect, useState } from "react";
+import { DivTxtField } from "../shared/styles.js";
+import SignupFormContainer, {
+  DivCenter,
+  DivFileField,
+  DivPass,
+  FileFormInput,
+} from "../Signup/Signup.styles";
+import { Form, FormInput, InputSubmit } from "../Login/login.styles";
+import { updateProfileData } from "../../services/updateProfileData";
+import { UserAccountImg } from "./EditProfile.styled";
+import { useTranslation } from "react-i18next";
 
 function EditProfile() {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -108,7 +113,7 @@ function EditProfile() {
         }
         setClassColor("red");
         setMessages(errMessages);
-      }
+      },
     );
   }
 
@@ -140,9 +145,7 @@ function EditProfile() {
             />
           </DivTxtField>
           {showErrorMessageMatch && (
-            <DivPass className="red">
-             {t("tryAgainPassword")}
-            </DivPass>
+            <DivPass className="red">{t("tryAgainPassword")}</DivPass>
           )}
 
           <DivTxtField>
@@ -181,9 +184,9 @@ function EditProfile() {
 
           <DivFileField>
             {t("profile-photo")}
-            <FileFormInput type="file" onChange={handlePhotoChange}/>
+            <FileFormInput type="file" onChange={handlePhotoChange} />
           </DivFileField>
-          <br/>
+          <br />
 
           {messages.length > 0 &&
             messages.map((message, index) => {

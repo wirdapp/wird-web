@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 
-import {RightLeftArrow as DefaultRightLeftArrow} from "../DaysSlider/DaysSlider.styles";
+import { RightLeftArrow as DefaultRightLeftArrow } from "../DaysSlider/DaysSlider.styles";
 
 import {
   ParticipantsMember as DefaultParticipantsMember,
