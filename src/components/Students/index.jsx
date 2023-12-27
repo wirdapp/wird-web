@@ -1,9 +1,13 @@
-import React, {useEffect, useState} from "react";
-import {deleteStudent, retrieveDeactivatedMembers, retrieveStudents,} from "../../services/studentsServices";
+import React, { useEffect, useState } from "react";
+import {
+  deleteStudent,
+  retrieveDeactivatedMembers,
+  retrieveStudents,
+} from "../../services/studentsServices";
 import Loader from "../Loader";
-import {isSuperAdmin} from "../../util/ContestPeople_Role";
-import {ReactComponent as SearchIcons2} from "assets/icons/search2.svg";
-import {useTranslation} from "react-i18next";
+import { isSuperAdmin } from "../../util/ContestPeople_Role";
+import { ReactComponent as SearchIcons2 } from "assets/icons/search2.svg";
+import { useTranslation } from "react-i18next";
 import StudentsContainer, {
   AddParticipantContainer,
   BoldText,
@@ -15,12 +19,12 @@ import StudentsContainer, {
 import ParticipantCard from "./ParticipantCard";
 import WaitingCard from "./WaitingCard";
 import Participants from "./ParticipantsMember";
-import {useDashboardData} from "../../util/routes-data";
+import { useDashboardData } from "../../util/routes-data";
 
 export default function Students() {
-  const {currentUser} = useDashboardData();
+  const { currentUser } = useDashboardData();
 
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const [students, setStudents] = useState([]);
   const [deactivatedStudents, setDeactivatedStudents] = useState([]);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -43,9 +47,9 @@ export default function Students() {
       (err) => {
         console.log(
           "Failed to retrieve deactivated students: " +
-          JSON.stringify(err?.response?.data)
+            JSON.stringify(err?.response?.data),
         );
-      }
+      },
     );
 
     retrieveStudents(
@@ -55,17 +59,15 @@ export default function Students() {
       },
       (err) => {
         console.log(
-          "Failed to retrieve students: " + JSON.stringify(err?.response?.data)
+          "Failed to retrieve students: " + JSON.stringify(err?.response?.data),
         );
         setLoading(false);
-      }
+      },
     );
   }, []);
 
   useEffect(() => {
-    setPermission(
-      currentUser && isSuperAdmin(currentUser)
-    );
+    setPermission(currentUser && isSuperAdmin(currentUser));
   }, [currentUser]);
 
   useEffect(() => {
@@ -85,17 +87,17 @@ export default function Students() {
           console.log(`Student ${studentToDelete} has been deleted`);
           setStudents(
             students.filter(
-              (student) => student.person.username !== studentToDelete
-            )
+              (student) => student.person.username !== studentToDelete,
+            ),
           );
         }
       },
       (err) => {
         console.log(
           "Failed to delete admin: ",
-          JSON.stringify(err?.response?.data)
+          JSON.stringify(err?.response?.data),
         );
-      }
+      },
     );
     setOpenModal(false);
   };
@@ -116,11 +118,11 @@ export default function Students() {
         (err) => {
           console.log(
             "Failed to retrieve students: " +
-            JSON.stringify(err?.response?.data)
+              JSON.stringify(err?.response?.data),
           );
           setLoading(false);
         },
-        searchText
+        searchText,
       );
     } else {
       retrieveDeactivatedMembers(
@@ -133,11 +135,11 @@ export default function Students() {
         (err) => {
           console.log(
             "Failed to retrieve deactivated students: " +
-            JSON.stringify(err?.response?.data)
+              JSON.stringify(err?.response?.data),
           );
           setLoading(false);
         },
-        searchText
+        searchText,
       );
     }
   };
@@ -145,7 +147,7 @@ export default function Students() {
   if (loading) {
     return (
       <main>
-        <Loader/>
+        <Loader />
       </main>
     );
   }
@@ -170,8 +172,8 @@ export default function Students() {
                 {isStudentsDisplayed
                   ? `${t("students")}(${students.length})`
                   : `${t("deactivatedStudents")}(${
-                    deactivatedStudents.length
-                  })`}
+                      deactivatedStudents.length
+                    })`}
               </BoldText>
               <StudentSearchContainer>
                 <SearchInput
@@ -180,49 +182,49 @@ export default function Students() {
                   placeholder={t("search")}
                   isExpanded={isExpanded}
                 />
-                <SearchIcons2 onClick={handleSearchClick}/>
+                <SearchIcons2 onClick={handleSearchClick} />
               </StudentSearchContainer>
             </RowContainer>
 
             {isStudentsDisplayed
               ? students.map((student, idx) => {
-                return (
-                  <ParticipantCard
-                    key={idx}
-                    name={
-                      student.person?.first_name?.length > 0
-                        ? student.person.first_name +
-                        " " +
-                        student.person.last_name
-                        : student.person.username
-                    }
-                    username={student.person.username}
-                    setStudents={setStudents}
-                    students={students}
-                    setDeactivatedStudents={setDeactivatedStudents}
-                    deactivatedStudents={deactivatedStudents}
-                  />
-                );
-              })
+                  return (
+                    <ParticipantCard
+                      key={idx}
+                      name={
+                        student.person?.first_name?.length > 0
+                          ? student.person.first_name +
+                            " " +
+                            student.person.last_name
+                          : student.person.username
+                      }
+                      username={student.person.username}
+                      setStudents={setStudents}
+                      students={students}
+                      setDeactivatedStudents={setDeactivatedStudents}
+                      deactivatedStudents={deactivatedStudents}
+                    />
+                  );
+                })
               : deactivatedStudents.map((deactivatedStudent, idx) => {
-                return (
-                  <WaitingCard
-                    key={idx}
-                    name={
-                      deactivatedStudent.person?.first_name?.length > 0
-                        ? deactivatedStudent.person.first_name +
-                        " " +
-                        deactivatedStudent.person.last_name
-                        : deactivatedStudent.person.username
-                    }
-                    username={deactivatedStudent.person.username}
-                    setStudents={setStudents}
-                    students={students}
-                    setDeactivatedStudents={setDeactivatedStudents}
-                    deactivatedStudents={deactivatedStudents}
-                  />
-                );
-              })}
+                  return (
+                    <WaitingCard
+                      key={idx}
+                      name={
+                        deactivatedStudent.person?.first_name?.length > 0
+                          ? deactivatedStudent.person.first_name +
+                            " " +
+                            deactivatedStudent.person.last_name
+                          : deactivatedStudent.person.username
+                      }
+                      username={deactivatedStudent.person.username}
+                      setStudents={setStudents}
+                      students={students}
+                      setDeactivatedStudents={setDeactivatedStudents}
+                      deactivatedStudents={deactivatedStudents}
+                    />
+                  );
+                })}
           </div>
 
           <AddParticipantContainer>

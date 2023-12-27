@@ -1,9 +1,22 @@
-import React, {useEffect, useState} from "react";
-import {DivTxtField} from "../shared/styles.js";
-import SignupFormContainer, {DivCenter, DivFileField, DivPass, FileFormInput,} from "../Signup/Signup.styles";
-import {Form, FormInput, HeadLogIn, InputSubmit, SignupNow, SignupNowAccount, TitleLogin,} from "../Login/login.styles";
+import React, { useEffect, useState } from "react";
+import { DivTxtField } from "../shared/styles.js";
+import SignupFormContainer, {
+  DivCenter,
+  DivFileField,
+  DivPass,
+  FileFormInput,
+} from "../Signup/Signup.styles";
+import {
+  Form,
+  FormInput,
+  HeadLogIn,
+  InputSubmit,
+  SignupNow,
+  SignupNowAccount,
+  TitleLogin,
+} from "../Login/login.styles";
 import * as AuthApi from "../../services/auth/api";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Signup() {
   const [username, setUsername] = useState("");
@@ -36,7 +49,6 @@ function Signup() {
   useEffect(() => {
     setShowErrorMessageMatch(false);
   }, [password, retypePassword]);
-
 
   // const activeCreator = () => {
   //   setCreator(true);
@@ -95,7 +107,7 @@ function Signup() {
     setPhoto(e.target.files[0]);
   };
 
-  const handleSubmit = async form => {
+  const handleSubmit = async (form) => {
     form.preventDefault();
 
     if (password !== retypePassword) {
@@ -130,7 +142,7 @@ function Signup() {
         setClassColor("");
         setMessages([]);
         form.target.reset();
-        navigate("/login")
+        navigate("/login");
       }, 2000);
     } catch (err) {
       let errMessages = [];
@@ -156,7 +168,6 @@ function Signup() {
             <SignupNow href="/Login">Login now!</SignupNow>
           </SignupNowAccount>
         </HeadLogIn>
-
 
         {/*TODO: Uncomment when it's ready*/}
 
@@ -301,9 +312,9 @@ function Signup() {
 
           <DivFileField>
             Profile photo
-            <FileFormInput type="file" onChange={handlePhotoChange}/>
+            <FileFormInput type="file" onChange={handlePhotoChange} />
           </DivFileField>
-          <br/>
+          <br />
 
           {/* <PageLink href="https://www.facebook.com/Wird.Competition/" target="_blank">
             هل تواجه مشكلة تقنية أو نسيت كلمة المرور؟ تواصل مع الدعم الفني

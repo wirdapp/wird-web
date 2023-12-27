@@ -30,7 +30,7 @@ export default {
   "ramadan-word": "رمضان",
   "choose-section": "اختر القسم",
   "no-sections": "لا يوجد أقسام - يجب إضافة قسم",
-  "select-specific-days" : "اختر الأيام",
+  "select-specific-days": "اختر الأيام",
   "success-add-standard-msg": "تم إضافة المعييار بنجاح",
   "success-edit-standard-msg": "تم تعديل المعييار بنجاح",
   "fail-add-standard-msg": "لم يتم إضافة المعييار",

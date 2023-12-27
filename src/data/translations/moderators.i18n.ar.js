@@ -6,5 +6,5 @@ export default {
   search: "ابحث",
   "add-admin": "إضافة...",
   "add-as-admin": "إضافته كمسؤول",
-  "add-as-super-admin": "إضافته كمسؤول رئيسي"
+  "add-as-super-admin": "إضافته كمسؤول رئيسي",
 };

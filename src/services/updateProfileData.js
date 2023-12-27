@@ -9,6 +9,6 @@ export const updateProfileData = (data, successCallback, faiCallback) => {
     "post",
     successCallback,
     faiCallback,
-    true
+    true,
   );
 };

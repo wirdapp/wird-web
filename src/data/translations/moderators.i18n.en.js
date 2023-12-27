@@ -6,5 +6,5 @@ export default {
   search: "Search",
   "add-admin": "Add...",
   "add-as-admin": "Add as admin",
-  "add-as-super-admin": "Add as super admin"
+  "add-as-super-admin": "Add as super admin",
 };

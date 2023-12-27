@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import {retrieveStudents} from "../../services/studentsServices";
+import { retrieveStudents } from "../../services/studentsServices";
 import TotalByPoints from "./TotalByDayChart";
 import TotalByLabelChars from "./TotalByLabelChart";
 import LoginFormContainer, {
@@ -13,7 +13,7 @@ import LoginFormContainer, {
   SelectInputContainer,
   Wird,
 } from "../studentsPoints/StudentsPoints.styles";
-import {DropdownListItem} from "../shared/styles";
+import { DropdownListItem } from "../shared/styles";
 
 import TableData from "./table";
 import Loader from "../Loader";
@@ -35,7 +35,7 @@ export default function StudentsPoints() {
       (err) => {
         console.log("ERROR: " + JSON.stringify(err.response.data));
         setLoading(false);
-      }
+      },
     );
   }, []);
 
@@ -50,7 +50,7 @@ export default function StudentsPoints() {
   if (loading) {
     return (
       <main>
-        <Loader/>
+        <Loader />
       </main>
     );
   }
@@ -60,7 +60,7 @@ export default function StudentsPoints() {
       <PointShow>
         <LoginForm>
           {Students?.length === 0 || !Students ? (
-            <p style={{textAlign: "center", margin: 0}}>
+            <p style={{ textAlign: "center", margin: 0 }}>
               {" "}
               لا يوجد طلاب لعرضهم{" "}
             </p>
@@ -125,13 +125,13 @@ export default function StudentsPoints() {
               </SelectInputContainer>
               {studentsResultsFlag && (
                 <ChartsContainer>
-                  <TotalByPoints selectedUser={username}/>
-                  <TotalByLabelChars selectedUser={username}/>
+                  <TotalByPoints selectedUser={username} />
+                  <TotalByLabelChars selectedUser={username} />
                 </ChartsContainer>
               )}
 
               {!studentsResultsFlag && (
-                <TableData selectedUser={username} selectedDay={day}/>
+                <TableData selectedUser={username} selectedDay={day} />
               )}
             </>
           )}

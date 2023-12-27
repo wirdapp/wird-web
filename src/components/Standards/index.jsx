@@ -1,20 +1,25 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import AddStandardForm from "./AddStandardForm";
 import EditStandardForm from "./EditStandardForm";
 import AddSectionForm from "./AddSectionForm";
 import EditSectionForm from "./EditSectionForm";
-import {deleteSection, deleteStandard,} from "../../services/standardServices";
+import { deleteSection, deleteStandard } from "../../services/standardServices";
 import Tabs from "../shared/Tabs";
-import Container, {StandardsDropDownList} from "./Standards.styles";
+import Container, { StandardsDropDownList } from "./Standards.styles";
 import Modal from "../shared/Modal";
-import {Button, DivPass, DropdownListItem, Span,} from "../Admins/Admins.styles";
-import {H5} from "../Students/setPasswordStudent/SetPasswordStudent.styles";
+import {
+  Button,
+  DivPass,
+  DropdownListItem,
+  Span,
+} from "../Admins/Admins.styles";
+import { H5 } from "../Students/setPasswordStudent/SetPasswordStudent.styles";
 import Loader from "../Loader";
-import {isSuperAdmin} from "../../util/ContestPeople_Role";
-import {useDashboardData} from "../../util/routes-data";
+import { isSuperAdmin } from "../../util/ContestPeople_Role";
+import { useDashboardData } from "../../util/routes-data";
 
 export default function Standards() {
-  const {currentUser} = useDashboardData();
+  const { currentUser } = useDashboardData();
 
   const [sections, setSections] = useState([]);
   const [standards, setStandards] = useState([]);
@@ -62,9 +67,7 @@ export default function Standards() {
   }, []);
 
   useEffect(() => {
-    setPermission(
-      currentUser && isSuperAdmin(currentUser)
-    );
+    setPermission(currentUser && isSuperAdmin(currentUser));
   }, [context.adminInfo]);
 
   useEffect(() => {
@@ -77,12 +80,12 @@ export default function Standards() {
       if (sections && sections.length > 0) {
         labelsArray.push("تعديل قسم");
         contentsArray.push(
-          <EditSectionForm sections={sections} setSections={setSections}/>
+          <EditSectionForm sections={sections} setSections={setSections} />,
         );
       }
       labelsArray.push("إضافة قسم");
       contentsArray.push(
-        <AddSectionForm sections={sections} setSections={setSections}/>
+        <AddSectionForm sections={sections} setSections={setSections} />,
       );
       if (standards && standards.length > 0) {
         labelsArray.push("تعديل معييار");
@@ -91,7 +94,7 @@ export default function Standards() {
             sections={sections}
             standards={standards}
             setStandards={setStandards}
-          />
+          />,
         );
       }
       labelsArray.push("إضافة معييار");
@@ -100,7 +103,7 @@ export default function Standards() {
           sections={sections}
           standards={standards}
           setStandards={setStandards}
-        />
+        />,
       );
     }
 
@@ -123,7 +126,7 @@ export default function Standards() {
                     <Span>{section.label}</Span>
                   </>
                 ) : (
-                  <Span style={{width: "100%"}}>{section.label}</Span>
+                  <Span style={{ width: "100%" }}>{section.label}</Span>
                 )}
               </DropdownListItem>
             );
@@ -135,7 +138,7 @@ export default function Standards() {
               </DivPass>
             </DropdownListItem>
           )}
-        </StandardsDropDownList>
+        </StandardsDropDownList>,
       );
     }
 
@@ -158,7 +161,7 @@ export default function Standards() {
                     <Span>{standard.label}</Span>
                   </>
                 ) : (
-                  <Span style={{width: "100%"}}>{standard.label}</Span>
+                  <Span style={{ width: "100%" }}>{standard.label}</Span>
                 )}
               </DropdownListItem>
             );
@@ -170,7 +173,7 @@ export default function Standards() {
               </DivPass>
             </DropdownListItem>
           )}
-        </StandardsDropDownList>
+        </StandardsDropDownList>,
       );
     }
 
@@ -202,11 +205,11 @@ export default function Standards() {
       (res) => {
         if (res && res.status === 204) {
           console.log(
-            `Standard with id: ${standardIdToDelete} has been deleted`
+            `Standard with id: ${standardIdToDelete} has been deleted`,
           );
           setStandards([
             ...standards.filter(
-              (standard) => standard.id !== Number(standardIdToDelete)
+              (standard) => standard.id !== Number(standardIdToDelete),
             ),
           ]);
         }
@@ -214,7 +217,7 @@ export default function Standards() {
       (err) => {
         console.log(
           "Failed to delete standard: ",
-          JSON.stringify(err.response.data)
+          JSON.stringify(err.response.data),
         );
         if (err?.response?.status === 500) {
           setShowStandardDeleteFailedMsg(true);
@@ -222,7 +225,7 @@ export default function Standards() {
             setShowStandardDeleteFailedMsg(false);
           }, 7000);
         }
-      }
+      },
     );
     setOpenStandardModal(false);
   };
@@ -235,15 +238,15 @@ export default function Standards() {
           console.log(`Section with id: ${sectionIdToDelete} has been deleted`);
           setSections(
             sections.filter(
-              (section) => section.id !== Number(sectionIdToDelete)
-            )
+              (section) => section.id !== Number(sectionIdToDelete),
+            ),
           );
         }
       },
       (err) => {
         console.log(
           "Failed to delete section: ",
-          JSON.stringify(err.response.data)
+          JSON.stringify(err.response.data),
         );
         if (err?.response?.status === 500) {
           setShowSectionDeleteFailedMsg(true);
@@ -251,7 +254,7 @@ export default function Standards() {
             setShowSectionDeleteFailedMsg(false);
           }, 7000);
         }
-      }
+      },
     );
     setOpenSectionModal(false);
   };
@@ -259,7 +262,7 @@ export default function Standards() {
   if (loading) {
     return (
       <main>
-        <Loader/>
+        <Loader />
       </main>
     );
   }
@@ -302,7 +305,7 @@ export default function Standards() {
         }
 
         {currentLabels.length === 0 && labels.length === 0 && (
-          <Tabs labels={["المعايير"]} contents={[<H5>لا يوجد معايير</H5>]}/>
+          <Tabs labels={["المعايير"]} contents={[<H5>لا يوجد معايير</H5>]} />
         )}
         <Tabs
           labels={currentLabels}
@@ -310,7 +313,7 @@ export default function Standards() {
           contentClass=" no-padding"
         />
 
-        <Tabs labels={labels} contents={contents}/>
+        <Tabs labels={labels} contents={contents} />
       </Container>
     </>
   );

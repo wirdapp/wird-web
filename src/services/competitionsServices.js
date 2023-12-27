@@ -1,18 +1,18 @@
-import {doRequest} from "./doRequest";
+import { doRequest } from "./doRequest";
 import axios from "../util/axios";
 
 export const retrieveContestsInfo = async () => {
-  const {data} = await axios.get("/contests/");
+  const { data } = await axios.get("/contests/");
   return data;
 };
 
 export const retrieveCurrentContestInfo = async () => {
-  const {data} = await axios.get("/contests/current/")
+  const { data } = await axios.get("/contests/current/");
   return data;
 };
 
 export const changeCurrentContest = async (contestId) => {
-  const {data} = await axios.post("/contests/switch_contest/", {
+  const { data } = await axios.post("/contests/switch_contest/", {
     id: contestId,
     contest_id: contestId,
   });
@@ -20,83 +20,100 @@ export const changeCurrentContest = async (contestId) => {
 };
 
 export const createContest = async (formData) => {
-  const {data} = await axios.post("/contests/", formData)
+  const { data } = await axios.post("/contests/", formData);
   return data;
 };
 
 export const joinContest = async (formData) => {
-  const {data} = await axios.post("/join-contest/", formData)
+  const { data } = await axios.post("/join-contest/", formData);
   return data;
 };
 
 export const retrieveCompetitions = (successCallback, faiCallback) => {
-  doRequest(null, "/comp-admin/comp-view/",
+  doRequest(
+    null,
+    "/comp-admin/comp-view/",
     {
       "Content-Type": "application/json",
-
     },
     "get",
     successCallback,
     faiCallback,
-    true);
+    true,
+  );
 };
 
 export const retrieveTopMembers = (successCallback, faiCallback) => {
-  doRequest(null, "/top-members/",
+  doRequest(
+    null,
+    "/top-members/",
     {
       "Content-Type": "application/json",
-
     },
     "get",
     successCallback,
     faiCallback,
-    true);
+    true,
+  );
 };
 
 export const updateCompetition = (id, data, successCallback, faiCallback) => {
-  doRequest(data, `/comp-admin/comp-view/${id}/`,
+  doRequest(
+    data,
+    `/comp-admin/comp-view/${id}/`,
     {
       "Content-Type": "application/json",
-
     },
     "put",
     successCallback,
     faiCallback,
-    true);
+    true,
+  );
 };
 
 export const updateContest = (id, data, successCallback, faiCallback) => {
-  doRequest(data, `/contests/${id}/`,
+  doRequest(
+    data,
+    `/contests/${id}/`,
     {
       "Content-Type": "application/json",
-
     },
     "put",
     successCallback,
     faiCallback,
-    true);
+    true,
+  );
 };
 
 export const retrieveResultsOnDate = (date, successCallback, faiCallback) => {
-  doRequest(null, `/admin-panel/results/${date}`,
+  doRequest(
+    null,
+    `/admin-panel/results/${date}`,
     {
       "Content-Type": "application/json",
-
     },
     "get",
     successCallback,
     faiCallback,
-    true);
+    true,
+  );
 };
 
-export const retrieveResultsOnDatePerGroup = (date, groupId, successCallback, faiCallback) => {
-  doRequest(null, `/admin-panel/results/${date}/${groupId}`,
+export const retrieveResultsOnDatePerGroup = (
+  date,
+  groupId,
+  successCallback,
+  faiCallback,
+) => {
+  doRequest(
+    null,
+    `/admin-panel/results/${date}/${groupId}`,
     {
       "Content-Type": "application/json",
-
     },
     "get",
     successCallback,
     faiCallback,
-    true);
+    true,
+  );
 };

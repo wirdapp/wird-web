@@ -1,7 +1,7 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import StudentBannerimg1 from "../../../assets/icons/studentImgAtBanner/studentBanner3.svg";
 import StudentBannerimg2 from "../../../assets/icons/studentImgAtBanner/studentBanner2.svg";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 import Banner, {
   ButtonTitle,
@@ -18,17 +18,17 @@ import Banner, {
   TitleContent,
   WelcomeName,
 } from "./homeBanner.styles";
-import {useNavigate} from "react-router-dom";
-import {useDashboardData} from "../../../util/routes-data";
-import {JoinContestPopup} from "../../Competition/join-contest-popup";
-import {Button} from "../../../ui/button";
-import {CreateContestPopup} from "../../Competition/create-contest-popup";
-import {PlusCircleIcon} from "@heroicons/react/20/solid";
-import {css} from "@emotion/css";
+import { useNavigate } from "react-router-dom";
+import { useDashboardData } from "../../../util/routes-data";
+import { JoinContestPopup } from "../../Competition/join-contest-popup";
+import { Button } from "../../../ui/button";
+import { CreateContestPopup } from "../../Competition/create-contest-popup";
+import { PlusCircleIcon } from "@heroicons/react/20/solid";
+import { css } from "@emotion/css";
 
 function HomeBanner(props) {
-  const {currentContest} = useDashboardData();
-  const {t} = useTranslation();
+  const { currentContest } = useDashboardData();
+  const { t } = useTranslation();
   const [createContestOpen, setCreateContestOpen] = useState(false);
   const [joinContestOpen, setJoinContestOpen] = useState(false);
 
@@ -40,46 +40,61 @@ function HomeBanner(props) {
   return (
     <Banner>
       <CirclesStyle>
-        <SecondCircle/>
-        <FirstCircle/>
+        <SecondCircle />
+        <FirstCircle />
       </CirclesStyle>
 
       <ContentAndImgs>
         <ContentBanner>
           <TitleContent>
             <WelcomeName>
-              {t("welcome")},{' '}
-              {props.name}!
+              {t("welcome")}, {props.name}!
             </WelcomeName>
             <DayContent>
-              {t("today-is")}{' '}
-              {props.dayNumber} {t("ramadan")}
+              {t("today-is")} {props.dayNumber} {t("ramadan")}
             </DayContent>
           </TitleContent>
 
           {currentContest ? (
-            <ResultButton href="/dashboard/StudentsPoints" onClick={resultButtonOnClick}>
+            <ResultButton
+              href="/dashboard/StudentsPoints"
+              onClick={resultButtonOnClick}
+            >
               <ButtonTitle>{t("see-contest-result")}</ButtonTitle>
             </ResultButton>
           ) : (
-            <div className={css`display: flex;
+            <div
+              className={css`
+                display: flex;
                 flex-direction: row;
-                gap: 8px;`}>
-              <Button variant="primary" onClick={() => setCreateContestOpen(true)}>
-                {t('create-contest')}
-                <PlusCircleIcon/>
+                gap: 8px;
+              `}
+            >
+              <Button
+                variant="primary"
+                onClick={() => setCreateContestOpen(true)}
+              >
+                {t("create-contest")}
+                <PlusCircleIcon />
               </Button>
               <Button onClick={() => setJoinContestOpen(true)}>
-                {t('join-contest')}
+                {t("join-contest")}
               </Button>
-              <CreateContestPopup visible={createContestOpen} onClose={() => setCreateContestOpen(false)}/>
-              <JoinContestPopup visible={joinContestOpen} onClose={() => setJoinContestOpen(false)}/>
-            </div>)}
+              <CreateContestPopup
+                visible={createContestOpen}
+                onClose={() => setCreateContestOpen(false)}
+              />
+              <JoinContestPopup
+                visible={joinContestOpen}
+                onClose={() => setJoinContestOpen(false)}
+              />
+            </div>
+          )}
         </ContentBanner>
 
         <StudentBanner>
-          <StudentBanner2 src={StudentBannerimg2} Alt=""/>
-          <StudentBanner1 src={StudentBannerimg1} Alt=""/>
+          <StudentBanner2 src={StudentBannerimg2} Alt="" />
+          <StudentBanner1 src={StudentBannerimg1} Alt="" />
         </StudentBanner>
       </ContentAndImgs>
     </Banner>

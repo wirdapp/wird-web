@@ -1,18 +1,23 @@
-import React, {useEffect, useState} from "react";
-import {useTranslation} from "react-i18next";
-import {updateContest} from "../../../services/competitionsServices";
+import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { updateContest } from "../../../services/competitionsServices";
 
-import {ParticipantsTitelsAtHome} from "../ContestMembers/ContestMembers.styles";
-import CompositionDefault, {ButtonStyle, Form, OverflowScrolling, ParticipantsNumbers,} from "./EditCompetition.styles";
+import { ParticipantsTitelsAtHome } from "../ContestMembers/ContestMembers.styles";
+import CompositionDefault, {
+  ButtonStyle,
+  Form,
+  OverflowScrolling,
+  ParticipantsNumbers,
+} from "./EditCompetition.styles";
 
-import {DivPass} from "../../Admins/Admins.styles";
+import { DivPass } from "../../Admins/Admins.styles";
 import InputField from "../../ContestCriteria/InputField";
-import {Checkbox} from "../../../ui/checkbox";
-import {css} from "@emotion/css";
-import {ManageAnnouncements} from "../manage-announcements";
+import { Checkbox } from "../../../ui/checkbox";
+import { css } from "@emotion/css";
+import { ManageAnnouncements } from "../manage-announcements";
 
-export default function EditCompetitionForm({contest}) {
-  const {t} = useTranslation();
+export default function EditCompetitionForm({ contest }) {
+  const { t } = useTranslation();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [showStanding, setShowStanding] = useState(true);
@@ -42,7 +47,7 @@ export default function EditCompetitionForm({contest}) {
     setAnnouncements(
       contest.announcements && contest.announcements.length > 0
         ? [...contest.announcements]
-        : []
+        : [],
     );
     setName(contest.name);
     setDescription(contest.description);
@@ -70,7 +75,6 @@ export default function EditCompetitionForm({contest}) {
 
           setClassColor("green");
           setMessages([t("contest-has-been-edited-successfully")]);
-
         }
       },
       (err) => {
@@ -84,13 +88,13 @@ export default function EditCompetitionForm({contest}) {
         }
         setClassColor("red");
         setMessages(errMessages);
-      }
+      },
     );
   };
 
   const deleteAnnouncementHandler = (index) => {
     let tmpAnnouncements = announcements.filter(
-      (announcement, i) => i !== index
+      (announcement, i) => i !== index,
     );
     setAnnouncements(tmpAnnouncements);
   };
@@ -114,7 +118,6 @@ export default function EditCompetitionForm({contest}) {
           setNewAnnouncementMessages([
             t("contest-has-been-edited-successfully"),
           ]);
-
         }
       },
       (err) => {
@@ -128,7 +131,7 @@ export default function EditCompetitionForm({contest}) {
         }
         setNewAnnouncementMessagesClassColor("red");
         setNewAnnouncementMessages(errMessages);
-      }
+      },
     );
   };
   const handleShowStandingChange = (e) => {
@@ -143,8 +146,7 @@ export default function EditCompetitionForm({contest}) {
     setNewAnnouncement(e.target.value);
   };
 
-  const readOnlyChangeHandler = () => {
-  };
+  const readOnlyChangeHandler = () => {};
 
   const handleNameChange = (e) => {
     setName(e.target.value);
@@ -156,7 +158,7 @@ export default function EditCompetitionForm({contest}) {
 
   const changeAnnouncementTextHandler = (e, index) => {
     let tmpAnnouncements = announcements.map((announcement, i) =>
-      i === index ? e.target.value : announcement
+      i === index ? e.target.value : announcement,
     );
     setAnnouncements(tmpAnnouncements);
   };
@@ -164,8 +166,7 @@ export default function EditCompetitionForm({contest}) {
   return (
     <CompositionDefault>
       <Form>
-
-        <ManageAnnouncements/>
+        <ManageAnnouncements />
         <ParticipantsNumbers>
           <ParticipantsTitelsAtHome>
             {t("contest-information")}
@@ -184,7 +185,11 @@ export default function EditCompetitionForm({contest}) {
               onChange={handleDescriptionChange}
               value={description}
             />
-            <div className={css`padding-inline-start: 90px`}>
+            <div
+              className={css`
+                padding-inline-start: 90px;
+              `}
+            >
               <Checkbox
                 label={t("active-announcements")}
                 checked={showStanding}

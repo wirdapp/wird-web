@@ -1,9 +1,20 @@
-import React, {useState} from "react";
-import {useNavigate} from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import LoginFormContainer, {DivCenter, DivPass, TitleLogin,} from "./ForgotPassword.styles";
-import {DivTxtField} from "../shared/styles";
-import {Form, FormInput, HeadLogIn, InputSubmit, SignupNow, SignupNowAccount,} from "../Login/login.styles";
+import LoginFormContainer, {
+  DivCenter,
+  DivPass,
+  TitleLogin,
+} from "./ForgotPassword.styles";
+import { DivTxtField } from "../shared/styles";
+import {
+  Form,
+  FormInput,
+  HeadLogIn,
+  InputSubmit,
+  SignupNow,
+  SignupNowAccount,
+} from "../Login/login.styles";
 import WirdLogo from "../../assets/Logo/WirdLogoV2.svg";
 
 function ForgotPassword() {
@@ -26,13 +37,13 @@ function ForgotPassword() {
         </HeadLogIn>
 
         {/* <HeadLogIn> */}
-        <img src={WirdLogo} alt=""/>
+        <img src={WirdLogo} alt="" />
         {/* <OrWayToLogIn>Or</OrWayToLogIn> */}
         {/* </HeadLogIn> */}
 
         <Form onSubmit={handleSubmit}>
           <DivTxtField>
-            <FormInput type="text" placeholder="Email address" required/>
+            <FormInput type="text" placeholder="Email address" required />
           </DivTxtField>
 
           {/* TODO: style the error message */}

@@ -1,30 +1,33 @@
 import styled from "@emotion/styled";
-import {DivCenter as DefaultDivCenter, TitleLogin as DefaultTitleLogin} from "../Login/login.styles";
+import {
+  DivCenter as DefaultDivCenter,
+  TitleLogin as DefaultTitleLogin,
+} from "../Login/login.styles";
 
-import {DivPass as DefaultDivPass,} from "../shared/styles";
+import { DivPass as DefaultDivPass } from "../shared/styles";
 
 export default styled.div`
-    display: flex;
-    margin: 0;
-    padding: 0;
-    background: #FDFDFB;
-    height: 100vh;
-    overflow: hidden;
+  display: flex;
+  margin: 0;
+  padding: 0;
+  background: #fdfdfb;
+  height: 100vh;
+  overflow: hidden;
 `;
 export const DivCenter = styled(DefaultDivCenter)`
-    height: 30rem;
+  height: 30rem;
 
-    @media (max-width: 43.75rem) {
-        height: 25rem;
-    }
+  @media (max-width: 43.75rem) {
+    height: 25rem;
+  }
 `;
 
 export const TitleLogin = styled(DefaultTitleLogin)`
-    @media (max-width: 43.75rem) {
-        font-size: 1.4375rem;
-    }
+  @media (max-width: 43.75rem) {
+    font-size: 1.4375rem;
+  }
 `;
 
 export const DivPass = styled(DefaultDivPass)`
-    margin-bottom: 1rem;
+  margin-bottom: 1rem;
 `;

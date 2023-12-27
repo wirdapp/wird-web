@@ -1,10 +1,10 @@
-import {doRequest} from "./doRequest";
+import { doRequest } from "./doRequest";
 import cookie from "react-cookies";
 
 export const retrieveAdmins = (
   successCallback,
   faiCallback,
-  searchQuery = ""
+  searchQuery = "",
 ) => {
   let url = "/admin-panel/contest-people/?contest_role=2&contest_role=3";
   if (searchQuery) url += `&search=${searchQuery}`;
@@ -19,16 +19,15 @@ export const retrieveAdmins = (
     "get",
     successCallback,
     faiCallback,
-    true
+    true,
   );
 };
-
 
 export const updateContestPeopleRole = (
   username,
   data,
   successCallback,
-  faiCallback
+  faiCallback,
 ) => {
   doRequest(
     data,
@@ -40,7 +39,7 @@ export const updateContestPeopleRole = (
     "put",
     successCallback,
     faiCallback,
-    true
+    true,
   );
 };
 
@@ -55,7 +54,7 @@ export const addAdmin = (data, successCallback, faiCallback) => {
     "post",
     successCallback,
     faiCallback,
-    true
+    true,
   );
 };
 export const resetMemberPassword = (data, successCallback, faiCallback) => {
@@ -69,7 +68,7 @@ export const resetMemberPassword = (data, successCallback, faiCallback) => {
     "post",
     successCallback,
     faiCallback,
-    true
+    true,
   );
 };
 
@@ -84,7 +83,7 @@ export const updateAdmin = (username, data, successCallback, faiCallback) => {
     "put",
     successCallback,
     faiCallback,
-    true
+    true,
   );
 };
 
@@ -99,7 +98,7 @@ export const deleteAdmin = (username, successCallback, faiCallback) => {
     "delete",
     successCallback,
     faiCallback,
-    true
+    true,
   );
 };
 
@@ -107,7 +106,7 @@ export const resetAdminPassword = (
   username,
   data,
   successCallback,
-  faiCallback
+  faiCallback,
 ) => {
   doRequest(
     data,
@@ -119,7 +118,7 @@ export const resetAdminPassword = (
     "put",
     successCallback,
     faiCallback,
-    true
+    true,
   );
 };
 
@@ -134,6 +133,6 @@ export const exportPoints = (fromDay, toDay, successCallback, faiCallback) => {
     "get",
     successCallback,
     faiCallback,
-    true
+    true,
   );
 };

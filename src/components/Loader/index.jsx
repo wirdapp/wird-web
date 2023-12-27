@@ -1,11 +1,10 @@
 import React from "react";
-import Container, {LoaderAnimation} from "./loder.styles";
+import Container, { LoaderAnimation } from "./loder.styles";
 
 export default function Loader() {
-
   return (
     <Container>
-      <LoaderAnimation/>
+      <LoaderAnimation />
       <span>جاري التحميل</span>
     </Container>
   );

@@ -1,6 +1,6 @@
 import React from "react";
 import SeeMore from "../../../assets/icons/Home/SeeMore.svg";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 import TopRank, {
   Empty,
@@ -24,11 +24,11 @@ import TopRank, {
 import NumberAndAbbreviationOfNames from "../../shared/NumberAndAbbreviationOfNames";
 
 function TopRanks(props) {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const styles = [
-    {background: "#FDD561"},
-    {background: "#FF5367"},
-    {background: "#503E9D"},
+    { background: "#FDD561" },
+    { background: "#FF5367" },
+    { background: "#503E9D" },
   ];
 
   return (
@@ -42,14 +42,14 @@ function TopRanks(props) {
 
             <SeeAll href="/dashboard/students" target="_blank">
               <SeeAllP>{t("see-all")}</SeeAllP>
-              <SeeAllIcon src={SeeMore} Alt=""/>
+              <SeeAllIcon src={SeeMore} Alt="" />
             </SeeAll>
           </ParticipantsTitels>
 
           <ParticipantsNumbers>
             <TotalOfMembers>{props.students.length}</TotalOfMembers>
 
-            <NumberAndAbbreviationOfNames users={props.students}/>
+            <NumberAndAbbreviationOfNames users={props.students} />
           </ParticipantsNumbers>
         </ParticipantsMember>
 
@@ -61,7 +61,7 @@ function TopRanks(props) {
 
             <SeeAll href="/dashboard/top-students" target="_blank">
               <SeeAllP>{t("see-all")}</SeeAllP>
-              <SeeAllIcon src={SeeMore} Alt=""/>
+              <SeeAllIcon src={SeeMore} Alt="" />
             </SeeAll>
           </ParticipantsTitels>
 

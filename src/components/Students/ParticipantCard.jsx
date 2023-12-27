@@ -13,7 +13,15 @@ import { ReactComponent as MoreButton } from "assets/icons/more-button.svg";
 import ButtonsModal from "./ButtonsModal";
 import { useState } from "react";
 
-const ModeratorCard = ({ key, name, username, students, setStudents, setDeactivatedStudents, deactivatedStudents}) => {
+const ModeratorCard = ({
+  key,
+  name,
+  username,
+  students,
+  setStudents,
+  setDeactivatedStudents,
+  deactivatedStudents,
+}) => {
   const [modalState, setModalState] = useState(false);
 
   return (
@@ -21,10 +29,11 @@ const ModeratorCard = ({ key, name, username, students, setStudents, setDeactiva
       <ParticipantsNumbers>
         <div style={{ display: "flex", gap: "12px" }}>
           <ShortedName>
-            { name.split(" ").length > 1
-                ? (name.split(" ")[0].charAt(0) + name.split(" ")[1].charAt(0)).toUpperCase()
-                : name.slice(0, 2).toUpperCase()
-            }
+            {name.split(" ").length > 1
+              ? (
+                  name.split(" ")[0].charAt(0) + name.split(" ")[1].charAt(0)
+                ).toUpperCase()
+              : name.slice(0, 2).toUpperCase()}
           </ShortedName>
           <ColumnContainer>
             <BoldText>{name}</BoldText>

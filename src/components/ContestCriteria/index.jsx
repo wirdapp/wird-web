@@ -1,6 +1,11 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import Loader from "../Loader";
-import {deleteSection, deleteStandard, retrieveSections, retrieveStandards,} from "../../services/standardServices";
+import {
+  deleteSection,
+  deleteStandard,
+  retrieveSections,
+  retrieveStandards,
+} from "../../services/standardServices";
 
 import MainContainer, {
   AddButton,
@@ -19,7 +24,7 @@ import MainContainer, {
 import PopUpModal from "components/shared/PopUpModal";
 import CriteriaForm from "./CriteriaForm";
 import AddSectionForm from "./AddSectionForm";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 import EditSectionForm from "./EditSectionForm";
 
 export default function ContestCriteria() {
@@ -39,10 +44,9 @@ export default function ContestCriteria() {
   const [standardIdForUpdate, setStandardIdForUpdate] = useState("");
   const [currentSelectedDays, setCurrentSelectedDays] = useState([]);
 
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   useEffect(() => {
-
     retrieveSections(
       (res) => {
         setSections(res.data);
@@ -50,9 +54,9 @@ export default function ContestCriteria() {
       (err) => {
         console.log(
           "Failed to retrieve sections, ERROR: ",
-          JSON.stringify(err.response.data)
+          JSON.stringify(err.response.data),
         );
-      }
+      },
     );
 
     retrieveStandards(
@@ -63,14 +67,12 @@ export default function ContestCriteria() {
       (err) => {
         console.log(
           "Failed to retrieve standards, ERROR: ",
-          JSON.stringify(err.response.data)
+          JSON.stringify(err.response.data),
         );
         setLoading(false);
-      }
+      },
     );
-
   }, []);
-
 
   function handleCriteriaDelete(event, id) {
     const buttonPosition = event.target.offsetTop;
@@ -99,34 +101,42 @@ export default function ContestCriteria() {
   };
 
   const handleConfirmDelete = () => {
-    deleteSection(sectionIdForDelete,
+    deleteSection(
+      sectionIdForDelete,
       (res) => {
         if (res && (res.status === 200 || res.status === 204)) {
-          setSections(sections.filter(sec => sec.id !== sectionIdForDelete));
+          setSections(sections.filter((sec) => sec.id !== sectionIdForDelete));
         }
         hideAllModals();
-      }, (err) => {
+      },
+      (err) => {
         console.log(
-          `Failed to delete section with id: ${sectionIdForDelete}: ${JSON.stringify(err.response.data)}`
+          `Failed to delete section with id: ${sectionIdForDelete}: ${JSON.stringify(
+            err.response.data,
+          )}`,
         );
         hideAllModals();
-      }
+      },
     );
   };
 
   const handleConfirmStandardDelete = () => {
-    deleteStandard(standardIdForDelete,
+    deleteStandard(
+      standardIdForDelete,
       (res) => {
         if (res && (res.status === 200 || res.status === 204)) {
-          setSections(sections.filter(sec => sec.id !== standardIdForDelete));
+          setSections(sections.filter((sec) => sec.id !== standardIdForDelete));
         }
         hideAllModals();
-      }, (err) => {
+      },
+      (err) => {
         console.log(
-          `Failed to delete standard with id: ${standardIdForDelete}: ${JSON.stringify(err.response.data)}`
+          `Failed to delete standard with id: ${standardIdForDelete}: ${JSON.stringify(
+            err.response.data,
+          )}`,
         );
         hideAllModals();
-      }
+      },
     );
   };
 
@@ -174,7 +184,7 @@ export default function ContestCriteria() {
   if (loading) {
     return (
       <main>
-        <Loader/>
+        <Loader />
       </main>
     );
   }
@@ -209,29 +219,36 @@ export default function ContestCriteria() {
                   <InnerText>{section.label}</InnerText>
                   <div>
                     <ButtonsContainer>
-                      <EditButton onClick={() => {
-                        handleEditSectionClick(section.id)
-                      }}>{t("edit")}</EditButton>
-                      <DeleteButton onClick={(e) => handleSectionDelete(e, section.id)}>
+                      <EditButton
+                        onClick={() => {
+                          handleEditSectionClick(section.id);
+                        }}
+                      >
+                        {t("edit")}
+                      </EditButton>
+                      <DeleteButton
+                        onClick={(e) => handleSectionDelete(e, section.id)}
+                      >
                         {t("delete")}
                       </DeleteButton>
                     </ButtonsContainer>
-                    {showSectionModal && section.id === sectionIdForDelete &&
+                    {showSectionModal && section.id === sectionIdForDelete && (
                       <PopUpModal
                         key={index}
                         position={modalPosition}
-                        fixedTextFields={[<p>Are you sure you want to delete this section?</p>]}
+                        fixedTextFields={[
+                          <p>Are you sure you want to delete this section?</p>,
+                        ]}
                         buttons={[
                           <button onClick={handleCancel}>{t("cancel")}</button>,
                           <button onClick={handleConfirmDelete}>
                             {t("delete")}
                           </button>,
                         ]}
-                      >
-                      </PopUpModal>
-                    }
+                      ></PopUpModal>
+                    )}
                   </div>
-                  {showEditSectionModal &&
+                  {showEditSectionModal && (
                     <EditSectionForm
                       hideModalFunction={hideEditSectionForm}
                       clickOverlay={() => {
@@ -241,7 +258,7 @@ export default function ContestCriteria() {
                       sections={sections}
                       setSections={setSections}
                     />
-                  }
+                  )}
                 </Section>
               </>
             );
@@ -275,12 +292,16 @@ export default function ContestCriteria() {
                 <InnerText>{standard.label}</InnerText>
                 <div>
                   <ButtonsContainer>
-                    <EditButton onClick={() => {
-                      handleEditStandardClick(standard.id)
-                    }}>{t("edit")}</EditButton>
+                    <EditButton
+                      onClick={() => {
+                        handleEditStandardClick(standard.id);
+                      }}
+                    >
+                      {t("edit")}
+                    </EditButton>
                     <DeleteButton
                       onClick={(e) => {
-                        handleCriteriaDelete(e, standard.id)
+                        handleCriteriaDelete(e, standard.id);
                       }}
                     >
                       {t("delete")}
@@ -290,29 +311,30 @@ export default function ContestCriteria() {
                     <PopUpModal
                       key={index}
                       position={modalPosition}
-                      fixedTextFields={[<p>Are you sure you want to delete this criteria?</p>]}
+                      fixedTextFields={[
+                        <p>Are you sure you want to delete this criteria?</p>,
+                      ]}
                       buttons={[
                         <button onClick={handleCancel}>{t("cancel")}</button>,
                         <button onClick={handleConfirmStandardDelete}>
                           {t("delete")}
                         </button>,
                       ]}
-                    >
-                    </PopUpModal>
+                    ></PopUpModal>
                   )}
-                  {showEditStandardModal && standardIdForUpdate === standard.id &&
-                    <CriteriaForm
-                      hideModalFunction={hideEditStandardForm}
-                      clickOverlay={() => {
-                        setShowEditStandardModal(false);
-                      }}
-                      sections={sections}
-                      standards={standards}
-                      setStandards={setStandards}
-                      standardIdForUpdate={standardIdForUpdate}
-                    />
-
-                  }
+                  {showEditStandardModal &&
+                    standardIdForUpdate === standard.id && (
+                      <CriteriaForm
+                        hideModalFunction={hideEditStandardForm}
+                        clickOverlay={() => {
+                          setShowEditStandardModal(false);
+                        }}
+                        sections={sections}
+                        standards={standards}
+                        setStandards={setStandards}
+                        standardIdForUpdate={standardIdForUpdate}
+                      />
+                    )}
                 </div>
               </Criteria>
             );

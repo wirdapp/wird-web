@@ -6,11 +6,11 @@ import {
   Title,
   ArgumentAxis,
   ValueAxis,
-  Tooltip
+  Tooltip,
 } from "@devexpress/dx-react-chart-material-ui";
 import { Animation } from "@devexpress/dx-react-chart";
 import { H5 } from "../../Students/setPasswordStudent/SetPasswordStudent.styles";
-import { EventTracker } from '@devexpress/dx-react-chart';
+import { EventTracker } from "@devexpress/dx-react-chart";
 
 export default function TotalByLabelChart({ selectedUser }) {
   const [chartData, setChartData] = useState([]);
@@ -19,11 +19,13 @@ export default function TotalByLabelChart({ selectedUser }) {
   function Content({ text, targetItem, ...restProps }) {
     const displayText = chartData[targetItem?.point]?.point_template__label;
 
-    return <Tooltip.Content // we had to get the Content from the Tooltip because it seems to be a higher order component.
-      {...restProps}
-      text={displayText}
-      targetItem={targetItem}
-    />
+    return (
+      <Tooltip.Content // we had to get the Content from the Tooltip because it seems to be a higher order component.
+        {...restProps}
+        text={displayText}
+        targetItem={targetItem}
+      />
+    );
   }
 
   useEffect(() => {
@@ -36,7 +38,7 @@ export default function TotalByLabelChart({ selectedUser }) {
         },
         (err) => {
           console.log("ERROR: " + JSON.stringify(err.response.data));
-        }
+        },
       );
     } else {
       setChartData([]);
@@ -61,7 +63,7 @@ export default function TotalByLabelChart({ selectedUser }) {
 
   return (
     <div style={{ width: "auto" }}>
-      <Chart data={chartData} >
+      <Chart data={chartData}>
         <ArgumentAxis showLabels={false} />
         <ValueAxis max={1000} />
 
@@ -76,8 +78,11 @@ export default function TotalByLabelChart({ selectedUser }) {
 
         <Animation />
 
-        <Tooltip contentComponent={Content} targetItem={targetItem} onTargetItemChange={setTargetItem} />
-
+        <Tooltip
+          contentComponent={Content}
+          targetItem={targetItem}
+          onTargetItemChange={setTargetItem}
+        />
       </Chart>
     </div>
   );

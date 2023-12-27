@@ -134,7 +134,7 @@ export default function AddStandardForm(props) {
         }
         setClassColor("red");
         setMessages(errMessages);
-      }
+      },
     );
   };
 
@@ -143,7 +143,7 @@ export default function AddStandardForm(props) {
       setSelectedSection({});
     } else {
       setSelectedSection(
-        props.sections.filter((section) => section.id === e.target.value)[0]
+        props.sections.filter((section) => section.id === e.target.value)[0],
       );
     }
   };

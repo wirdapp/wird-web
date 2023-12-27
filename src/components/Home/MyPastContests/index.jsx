@@ -42,8 +42,6 @@ import DefaultMyPastContests, {
   TopRanksSection,
   SeeContestResult,
   ParticipantsNumbers,
-
-
 } from "./MyPastContests.styles";
 
 function MyPastContests() {
@@ -138,10 +136,8 @@ function MyPastContests() {
                     </Top3RankDiv>
                   </ParticipantsNumbersRanks>
                 </ParticipantsNumbers>
-                
               </TopRanksSection>
               <SeeContestResult>See Contest Result</SeeContestResult>
-
             </TopRanksAndParticipants>
           </TopRank>
         </LeftPastContests>
@@ -219,11 +215,9 @@ function MyPastContests() {
                     </Top3RankDiv>
                   </ParticipantsNumbersRanks>
                 </ParticipantsNumbers>
-             
               </TopRanksSection>
 
               <SeeContestResult>See Contest Result</SeeContestResult>
-
             </TopRanksAndParticipants>
           </TopRank>
         </LeftPastContests>
