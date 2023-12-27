@@ -18,6 +18,7 @@ import {
 import * as AuthApi from "../../services/auth/api";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { handleErorr } from "hooks/handleError/index.js";
 
 function Signup() {
   const [username, setUsername] = useState("");
@@ -147,16 +148,9 @@ function Signup() {
         navigate("/login");
       }, 2000);
     } catch (err) {
-      let errMessages = [];
-      errMessages.push(["Sign up was not completed successfully"]);
-      if (err.response.data) {
-        let obj = err.response.data;
-        Object.keys(obj).forEach((e) => {
-          errMessages.push(`${obj[e]} : ${e}`);
-        });
-      }
-      setClassColor("red");
-      setMessages(errMessages);
+      const {errMessages}=handleErorr(err)
+      setMessages([...errMessages])
+      setClassColor("red")
     }
   };
 
@@ -320,7 +314,7 @@ function Signup() {
           {
             messages?.map?.((message, index) => {
               return (
-                <DivPass className={classColor} key={index}>
+                <DivPass className={classColor} key={message}>
                   {message}
                 </DivPass>
               );

@@ -15,6 +15,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Loader from "../Loader";
 import { useTranslation } from "react-i18next";
 import { login } from "../../services/auth/session";
+import { handleErorr } from "hooks/handleError";
 
 function Login() {
   const { t } = useTranslation();
@@ -22,8 +23,10 @@ function Login() {
   const [username, setUsername] = useState(" ");
   const [password, setPassword] = useState(" ");
   const [loading, setLoading] = useState(false);
+  const [messages, setMessages] = useState([]);
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const location = useLocation();
+  const [classColor, setClassColor] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,7 +38,11 @@ function Login() {
           : "/dashboard",
       );
     } catch (err) {
-      console.log("Failed to login : ", err?.response?.data || err);
+  //TODO: needing to implemnet as custom hook to handle all forms
+  const {errMessages}=handleErorr(err)
+    setMessages([...errMessages])
+    setClassColor("red")
+   
     }
   };
 
@@ -111,6 +118,14 @@ function Login() {
           {/* <PageLink href="https://www.facebook.com/Wird.Competition/" target="_blank">
             هل تواجه مشكلة تقنية أو نسيت كلمة المرور؟ تواصل مع الدعم الفني
           </PageLink> */}
+           {
+            messages?.map?.((message, index) => {
+              return (
+                <DivPass className={classColor} key={message}>
+                  {message}
+                </DivPass>
+              );
+            })}
           <InputSubmit type="submit" value="login">
             {t("login")}
           </InputSubmit>
