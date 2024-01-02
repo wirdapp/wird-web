@@ -18,6 +18,8 @@ import {
 import * as AuthApi from "../../services/auth/api";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useHandleErorr } from "hooks/handleError/index.js";
+
 
 function Signup() {
   const [username, setUsername] = useState("");
@@ -26,14 +28,15 @@ function Signup() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [retypePassword, setRetypePassword] = useState("");
-  const [classColor, setClassColor] = useState("");
+
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [messages, setMessages] = useState([]);
+
   const [showErrorMessageMatch, setShowErrorMessageMatch] = useState(false);
   const [isValidUserName, setValidUserName] = useState(true);
   const [photo, setPhoto] = useState(null);
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { messages, classColor, handleError,changeColor,createSpecificMessage }=useHandleErorr()
   // const [accessCode, setAccessCode] = useState("");
   // const [contestName, setContestName] = useState("");
   // const [activeParticipantButton, setActiveParticipantButton] =
@@ -44,8 +47,9 @@ function Signup() {
   // const [isCreator, setCreator] = useState(false);
 
   useEffect(() => {
-    setClassColor("");
-    setMessages([]);
+    createSpecificMessage("")
+    changeColor("")
+   
   }, [username, password, retypePassword, email]); //accessCode, contestName]);
 
   useEffect(() => {
@@ -114,12 +118,14 @@ function Signup() {
 
     if (password !== retypePassword) {
       setShowErrorMessageMatch(true);
-      setClassColor("red");
+      changeColor("red")
+
       return;
     }
 
     if (!isValidUserName) {
-      setClassColor("red");
+      changeColor("red")
+
       return;
     }
 
@@ -137,26 +143,18 @@ function Signup() {
 
     try {
       const res = await AuthApi.signup(formData, false);
-      setClassColor("green");
-      setMessages(["Successfully signed up"]);
+  
+      changeColor("green")
+      createSpecificMessage("Successfully signed up")
 
       setTimeout(() => {
-        setClassColor("");
-        setMessages([]);
+      
         form.target.reset();
         navigate("/login");
       }, 2000);
     } catch (err) {
-      let errMessages = [];
-      errMessages.push(["Sign up was not completed successfully"]);
-      if (err.response.data) {
-        let obj = err.response.data;
-        Object.keys(obj).forEach((e) => {
-          errMessages.push(`${obj[e]} : ${e}`);
-        });
-      }
-      setClassColor("red");
-      setMessages(errMessages);
+      handleError(err)
+   
     }
   };
 
@@ -320,7 +318,7 @@ function Signup() {
           {
             messages?.map?.((message, index) => {
               return (
-                <DivPass className={classColor} key={index}>
+                <DivPass className={classColor} key={message}>
                   {message}
                 </DivPass>
               );
