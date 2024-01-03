@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Loader from "components/Loader";
-import { retrieveAdmins } from "services/adminsServices";
 import { ReactComponent as SearchIcons2 } from "assets/icons/search2.svg";
 import { useTranslation } from "react-i18next";
 
@@ -21,12 +20,12 @@ import ContestModeratorDefault, {
 import ModeratorCard from "./ModeratorCard";
 // import {retrieveContestInfo} from "../../services/competitionsServices";
 import { DivPass } from "../ResetPassword/ResetPassword.styles";
-import AddAdminModal from "./AddAdminModal";
 import { useDashboardData } from "../../util/routes-data";
 import { usePageTitle } from "../shared/page-title";
+import { MembersApi } from "../../services/members/api";
 
 const ContestModerator = () => {
-  const { currentUser } = useDashboardData();
+  const { currentUser, currentContest } = useDashboardData();
   const { t } = useTranslation();
 
   usePageTitle(t("admins"));
@@ -35,49 +34,33 @@ const ContestModerator = () => {
   const [loading, setLoading] = useState(false);
   const [admins, setAdmins] = useState([]);
   const [adminSearchText, setAdminSearchText] = useState("");
-  // const [currentContest, setCurrentContest] = useState({});
-  // const [otherContests, setOtherContests] = useState([]);
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [modalState, setModalState] = useState(false);
   const [newAdminUsername, setNewAdminUsername] = useState("");
 
-  useEffect(() => {
-    // retrieveContestInfo((res)=>{
-    //   setCurrentContest(res?.data?.filter(contest => contest.id ===  context.getAdminInfo().contest?.id));
-    //   setOtherContests(res?.data?.filter(contest => contest.id !==  context.getAdminInfo().contest?.id));
-    // });
+  const fetchAdmins = async (search) => {
+    setLoading(true);
+    try {
+      const data = await MembersApi.getAdmins(search);
+      setAdmins(data.results);
+    } catch (err) {
+      console.log("Failing", err);
+    }
+    setLoading(false);
+  };
 
-    retrieveAdmins(
-      (res) => {
-        setAdmins(res?.data);
-        setLoading(false);
-        console.log("this is result>>", res?.data?.results);
-      },
-      (err) => {
-        setLoading(false);
-        console.log("Failing", err);
-      },
-    );
+  useEffect(() => {
+    fetchAdmins();
   }, []);
 
   const handleAdminSearchTextChange = (e) => {
     setAdminSearchText(e.target.value);
   };
 
-  const handleAdminSearchClick = () => {
+  const handleAdminSearchClick = async () => {
     setLoading(true);
-    retrieveAdmins(
-      (res) => {
-        setAdmins(res?.data);
-        setLoading(false);
-      },
-      (err) => {
-        setLoading(false);
-        console.log("Failing", err);
-      },
-      adminSearchText,
-    );
+    await fetchAdmins(adminSearchText);
     setIsExpanded(false);
   };
 
@@ -89,12 +72,21 @@ const ContestModerator = () => {
     if (newAdminUsername.length === 0) {
       return;
     }
-    setModalState(true);
+    MembersApi.addAdminToContest(newAdminUsername, currentContest.id)
+      .then(() => {
+        setNewAdminUsername("");
+        setShowErrorMessage(false);
+        fetchAdmins();
+      })
+      .catch((err) => {
+        setErrorMessage(err.response.data.detail);
+        setShowErrorMessage(true);
+      });
   };
 
   const getAdminsNumber = () => {
     return admins.some(
-      (admin) => admin.person.username === currentUser?.person?.username,
+      (admin) => admin.person_info.username === currentUser?.username,
     )
       ? admins.length - 1
       : admins.length;
@@ -132,20 +124,19 @@ const ContestModerator = () => {
                 value={adminSearchText.length === 0 ? "" : adminSearchText}
                 isExpanded={isExpanded}
               />
-              {/* <LightText onClick={() => setIsExpanded(!isExpanded)}>
-                {t("search")}
-              </LightText> */}
               <SearchIcons2 onClick={handleAdminSearchClick} />
             </ModeratorSearchContainer>
           </RowContainer>
 
           {admins
-            .filter((admin) => admin.person.username !== currentUser.username)
+            .filter(
+              (admin) => admin.person_info.username !== currentUser.username,
+            )
             .map((person, idx) => {
               return (
                 <ModeratorCard
                   key={idx}
-                  person={person.person}
+                  person={person.person_info}
                   admins={admins}
                   setAdmins={setAdmins}
                 />
@@ -170,19 +161,6 @@ const ContestModerator = () => {
           </SearchInputContainer>
           {showErrorMessage && (
             <DivPass className="red">{errorMessage}</DivPass>
-          )}
-          {modalState && (
-            <AddAdminModal
-              clickOverlay={() => {
-                setModalState(false);
-              }}
-              turnOff={() => {
-                setModalState(false);
-              }}
-              newAdminUsername={newAdminUsername}
-              setShowErrorMessage={setShowErrorMessage}
-              setErrorMessage={setErrorMessage}
-            />
           )}
         </AddModeratorContainer>
       </ContentContainer>

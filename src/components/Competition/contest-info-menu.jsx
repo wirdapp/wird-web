@@ -3,15 +3,16 @@ import { Squares2X2Icon } from "@heroicons/react/24/outline";
 import styled from "@emotion/styled";
 import { colors } from "../../styles";
 import { Dropdown } from "../../ui/dropdown";
-import { ChevronDownIcon, LinkIcon } from "@heroicons/react/20/solid";
+import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { List, ListItem, MenuTitle } from "../shared/Navbar/navbar.styles";
 import { PlusCircleIcon, UserPlusIcon } from "@heroicons/react/24/solid";
 import { CreateContestPopup } from "./create-contest-popup";
 import { JoinContestPopup } from "./join-contest-popup";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Button } from "../../ui/button";
 import * as ContestsApi from "../../services/contests/api";
+import { CopyButton } from "../../ui/copy-button";
+import { getInviteLink } from "../../services/contests/utils";
 
 const StyledContestName = styled.span`
   @media (max-width: 500px) {
@@ -54,8 +55,9 @@ const StyledCurrentContestWrapper = styled.div`
   .contest-details {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 8px;
     align-items: flex-start;
+    width: 100%;
 
     button {
       font-size: 12px;
@@ -64,6 +66,17 @@ const StyledCurrentContestWrapper = styled.div`
         width: 14px;
       }
     }
+  }
+
+  .invite-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: ${colors.darkGrey};
+    padding: 8px;
+    background-color: ${colors.white};
+    border-radius: 4px;
+    width: 100%;
   }
 `;
 
@@ -108,13 +121,14 @@ export const ContestInfoMenu = () => {
           <>
             <StyledCurrentContestWrapper>
               <div className="contest-details">
-                <div>
-                  {t("join-code")}: <code>{currentContest?.contest_id}</code>
+                {t("join-code")}:
+                <div className="invite-link">
+                  <code>{currentContest?.contest_id}</code>
+                  <CopyButton value={currentContest.contest_id} />
                 </div>
-                <Button variant="link">
+                <CopyButton value={getInviteLink(currentContest.contest_id)}>
                   {t("copy-link")}
-                  <LinkIcon />
-                </Button>
+                </CopyButton>
               </div>
             </StyledCurrentContestWrapper>
             <hr />

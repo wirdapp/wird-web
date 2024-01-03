@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import styled from "@emotion/styled";
 import { colors } from "../styles";
-import { CheckIcon, LinkIcon } from "@heroicons/react/20/solid";
+import { CheckIcon } from "@heroicons/react/20/solid";
 import { Button } from "./button";
 import { useTranslation } from "react-i18next";
+import { ClipboardDocumentIcon } from "@heroicons/react/24/outline";
 
 const StyledCopyButtonWrapper = styled.div`
   button {
@@ -25,7 +26,7 @@ const StyledCopyButtonWrapper = styled.div`
   }
 `;
 
-export const CopyButton = ({ value }) => {
+export const CopyButton = ({ value, children }) => {
   const [copied, setCopied] = useState(false);
   const { t } = useTranslation();
 
@@ -46,7 +47,8 @@ export const CopyButton = ({ value }) => {
         </span>
       ) : (
         <Button variant="link" onClick={onCopy}>
-          <LinkIcon />
+          {children}
+          <ClipboardDocumentIcon />
         </Button>
       )}
     </StyledCopyButtonWrapper>

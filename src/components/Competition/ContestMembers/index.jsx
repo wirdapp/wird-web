@@ -12,44 +12,37 @@ import TopRank, {
   TopRanksAndParticipants,
   TotalOfMembers,
 } from "./ContestMembers.styles";
-import { retrieveAdmins } from "../../../services/adminsServices";
-import { retrieveStudents } from "../../../services/studentsServices";
 import NumberAndAbbreviationOfNames from "../../shared/NumberAndAbbreviationOfNames";
 import { EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 import { useTranslation } from "react-i18next";
+import { MembersApi } from "../../../services/members/api";
+import { Role } from "../../../util/ContestPeople_Role";
+import { GroupsApi } from "../../../services/groups/api";
 
 function ContestMembers({ contest }) {
   const [admins, setAdmins] = useState([]);
   const [students, setStudents] = useState([]);
+  const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
 
   useEffect(() => {
     setLoading(true);
-
-    retrieveAdmins(
-      (res) => {
-        setAdmins([...res.data]);
-      },
-      (err) => {
-        console.log(
-          "Failed to retrieve admins: " + JSON.stringify(err.response.data),
+    Promise.all([
+      MembersApi.getUsers().then((data) => {
+        setStudents(data.results.filter((u) => u.contest_role === Role.MEMBER));
+        setAdmins(
+          data.results.filter((u) =>
+            [Role.ADMIN, Role.SUPER_ADMIN].includes(u.contest_role),
+          ),
         );
-      },
-    );
-
-    retrieveStudents(
-      (res) => {
-        setStudents(res.data);
-        setLoading(false);
-      },
-      (err) => {
-        console.log(
-          "Failed to retrieve students: " + JSON.stringify(err.response.data),
-        );
-        setLoading(false);
-      },
-    );
+      }),
+      GroupsApi.getGroups().then((data) => {
+        setGroups(data);
+      }),
+    ]).finally(() => {
+      setLoading(false);
+    });
   }, []);
 
   return (
@@ -110,7 +103,7 @@ function ContestMembers({ contest }) {
 
           <ParticipantsNumbers>
             <TotalOfMembers>
-              {loading ? <EllipsisHorizontalIcon /> : contest.group_count}
+              {loading ? <EllipsisHorizontalIcon /> : groups.length}
             </TotalOfMembers>
           </ParticipantsNumbers>
         </ParticipantsMember>

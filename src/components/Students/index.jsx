@@ -5,7 +5,7 @@ import {
   retrieveStudents,
 } from "../../services/studentsServices";
 import Loader from "../Loader";
-import { isSuperAdmin } from "../../util/ContestPeople_Role";
+import { isSuperAdmin, Role } from "../../util/ContestPeople_Role";
 import { ReactComponent as SearchIcons2 } from "assets/icons/search2.svg";
 import { useTranslation } from "react-i18next";
 import StudentsContainer, {
@@ -21,6 +21,7 @@ import WaitingCard from "./WaitingCard";
 import Participants from "./ParticipantsMember";
 import { useDashboardData } from "../../util/routes-data";
 import { usePageTitle } from "../shared/page-title";
+import { MembersApi } from "../../services/members/api";
 
 export default function Students() {
   const { currentUser } = useDashboardData();
@@ -36,37 +37,20 @@ export default function Students() {
   const [hasPermission, setPermission] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isStudentsDisplayed, setIsStudentsDisplayed] = useState(true);
-  const [membersNumber, setMembersNumber] = useState(0);
   const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     setLoading(true);
-    retrieveDeactivatedMembers(
-      (res) => {
-        if (res && res.status === 200) {
-          setDeactivatedStudents(res.data);
-        }
-      },
-      (err) => {
-        console.log(
-          "Failed to retrieve deactivated students: " +
-            JSON.stringify(err?.response?.data),
-        );
-      },
-    );
-
-    retrieveStudents(
-      (res) => {
-        setStudents(res.data);
-        setLoading(false);
-      },
-      (err) => {
-        console.log(
-          "Failed to retrieve students: " + JSON.stringify(err?.response?.data),
-        );
-        setLoading(false);
-      },
-    );
+    Promise.all([
+      MembersApi.getMembers(Role.DEACTIVATED).then((data) => {
+        setDeactivatedStudents(data.results);
+      }),
+      MembersApi.getMembers(Role.MEMBER).then((data) => {
+        setStudents(data.results);
+      }),
+    ]).finally(() => {
+      setLoading(false);
+    });
   }, []);
 
   useEffect(() => {
@@ -188,7 +172,6 @@ export default function Students() {
                 <SearchIcons2 onClick={handleSearchClick} />
               </StudentSearchContainer>
             </RowContainer>
-
             {isStudentsDisplayed
               ? students.map((student, idx) => {
                   return (

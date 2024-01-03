@@ -80,8 +80,7 @@ export const ManageAnnouncements = () => {
   const handleAnnouncementSubmit = async (e) => {
     e.preventDefault();
     const newAnnouncements = [...announcements, newAnnouncement.trim()];
-    await updateContest(currentContest.id, {
-      ...currentContest,
+    await updateContest({
       announcements: newAnnouncements,
     });
     setAnnouncments(newAnnouncements);

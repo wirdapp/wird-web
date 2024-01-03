@@ -5,8 +5,8 @@ export const getContests = async () => {
   return data;
 };
 
-export async function updateContest(contestId, contest) {
-  const { data } = await axios.put(`/contests/${contestId}/`, contest);
+export async function updateContest(dataToUpdate) {
+  const { data } = await axios.patch(`/contests/current/`, dataToUpdate);
   return data;
 }
 

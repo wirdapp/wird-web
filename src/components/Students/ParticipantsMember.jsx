@@ -1,22 +1,15 @@
 import React from "react";
-import SeeMore from "../../assets/icons/Home/SeeMore.svg";
 
-import TopRank, {
-  TopRanksAndParticipants,
-  ParticipantsMember,
-  TopRanksSection,
-  ParticipantsTitels,
-  ParticipantsNumbers,
-  ParticipantsTitelsAtHome,
-  SeeAll,
-  SeeAllP,
-  SeeAllIcon,
-  TotalOfMembers,
+import {
   MemberImgsAndNumNumbers,
-  MembersImgs,
-  MemberNumbers,
   MembersImg,
+  MembersImgs,
+  ParticipantsMember,
+  ParticipantsNumbers,
+  ParticipantsTitels,
+  ParticipantsTitelsAtHome,
   ShowButton,
+  TotalOfMembers,
 } from "./ParticipantsMember.styles";
 import { useTranslation } from "react-i18next";
 
@@ -29,7 +22,7 @@ function Participants({ title, showButton, onClick, length }) {
       </ParticipantsTitels>
 
       <ParticipantsNumbers>
-        <TotalOfMembers>{length ? length : 1}</TotalOfMembers>
+        <TotalOfMembers>{length}</TotalOfMembers>
         {showButton ? (
           <ShowButton onClick={onClick}>{t("show")}</ShowButton>
         ) : (
@@ -53,4 +46,5 @@ function Participants({ title, showButton, onClick, length }) {
     </ParticipantsMember>
   );
 }
+
 export default Participants;
