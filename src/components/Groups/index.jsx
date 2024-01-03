@@ -30,6 +30,7 @@ import { ReactComponent as AddGroupIcon } from "../../assets/icons/addGroupIcon.
 import { colors } from "styles";
 import { useTranslation } from "react-i18next";
 import { useDashboardData } from "../../util/routes-data";
+import { usePageTitle } from "../shared/page-title";
 
 export default function Groups() {
   const { currentUser } = useDashboardData();
@@ -47,6 +48,8 @@ export default function Groups() {
   const [editGroupFormOpen, setEditGroupFormOpen] = useState(false);
   const [groupIdToEdit, setGroupIdToEdit] = useState("");
   const { t } = useTranslation();
+
+  usePageTitle(t("groups"));
 
   useEffect(() => {
     setLoading(true);

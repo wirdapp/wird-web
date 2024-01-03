@@ -23,11 +23,13 @@ import ModeratorCard from "./ModeratorCard";
 import { DivPass } from "../ResetPassword/ResetPassword.styles";
 import AddAdminModal from "./AddAdminModal";
 import { useDashboardData } from "../../util/routes-data";
+import { usePageTitle } from "../shared/page-title";
 
 const ContestModerator = () => {
   const { currentUser } = useDashboardData();
-
   const { t } = useTranslation();
+
+  usePageTitle(t("admins"));
   const [isExpanded, setIsExpanded] = useState(false);
 
   const [loading, setLoading] = useState(false);

@@ -7,7 +7,7 @@ import HomeBanner from "./HomeBanner";
 import TopRanks from "./TopRanks";
 import { retrieveStudents } from "../../services/studentsServices";
 import { useDashboardData } from "../../util/routes-data";
-import { PageTitle } from "../shared/page-title";
+import { usePageTitle } from "../shared/page-title";
 import { useTranslation } from "react-i18next";
 
 function Home() {
@@ -46,26 +46,25 @@ function Home() {
     );
   }, []);
 
+  usePageTitle(t("home-page"));
+
   if (loading) {
     return <Loader />;
   }
 
   return (
-    <>
-      <PageTitle>{t("home-page")}</PageTitle>
-      <HomeContainer>
-        <HomeBanner
-          name={
-            currentUser?.first_name?.length > 0
-              ? currentUser.first_name + " " + currentUser.last_name
-              : "Admin"
-          }
-          dayNumber={"1"}
-        />
-        {/* <DaysSlider /> */}
-        <TopRanks students={students} topMembers={topMembers} />
-      </HomeContainer>
-    </>
+    <HomeContainer>
+      <HomeBanner
+        name={
+          currentUser?.first_name?.length > 0
+            ? currentUser.first_name + " " + currentUser.last_name
+            : "Admin"
+        }
+        dayNumber={"1"}
+      />
+      {/* <DaysSlider /> */}
+      <TopRanks students={students} topMembers={topMembers} />
+    </HomeContainer>
   );
 }
 

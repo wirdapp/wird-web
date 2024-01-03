@@ -32,6 +32,7 @@ import { destroySession } from "../../../services/auth/session";
 import { Dropdown } from "../../../ui/dropdown";
 import { Button } from "../../../ui/button";
 import { ContestInfoMenu } from "../../Competition/contest-info-menu";
+import { useLayoutContext } from "../../layout/DashboardLayout";
 
 function Nav() {
   const { i18n } = useTranslation();
@@ -43,6 +44,7 @@ function Nav() {
   const [showUserInfo, setShowUserInfo] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { pageTitle } = useLayoutContext();
 
   const handleToggle = () => {
     setSidebarOpen(!sidebarOpen);
@@ -67,7 +69,7 @@ function Nav() {
             <Button className="menu-button" onClick={handleToggle}>
               <SidebarIcon style={{ width: "16px" }} />
             </Button>
-            <StyledPageTitle id="dashboard-page-title" />
+            <StyledPageTitle>{pageTitle}</StyledPageTitle>
           </LeftNavItems>
           <RightNavItems>
             <ContestInfoMenu />

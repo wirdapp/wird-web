@@ -18,7 +18,7 @@ import {
   TopStudentsSpan,
   WarbSlider,
 } from "./TopStudents.styles";
-import { PageTitle } from "../shared/page-title";
+import { usePageTitle } from "../shared/page-title";
 import { useTranslation } from "react-i18next";
 import { useDashboardData } from "../../util/routes-data";
 import { getFullName, getInitials } from "../../util/user-utils";
@@ -91,6 +91,7 @@ export default function TopStudents() {
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
   const { currentContest } = useDashboardData();
+  usePageTitle(t("leaders-board"));
 
   if (loading) {
     return (
@@ -103,7 +104,6 @@ export default function TopStudents() {
   let last = 1;
   return (
     <LeaderBoardMain>
-      <PageTitle>{t("leaders-board")}</PageTitle>
       {currentContest && (
         <div>
           <LeaderBoardMainTitel>

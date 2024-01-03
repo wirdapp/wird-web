@@ -1,11 +1,7 @@
-import { createPortal } from "react-dom";
+import { useLayoutContext } from "../layout/DashboardLayout";
 
-export const PageTitle = ({ children }) => {
-  if (document.getElementById("dashboard-page-title") === null) {
-    return null;
-  }
-  return createPortal(
-    children,
-    document.getElementById("dashboard-page-title"),
-  );
+export const usePageTitle = (title) => {
+  const { setPageTitle } = useLayoutContext();
+
+  setPageTitle(title);
 };

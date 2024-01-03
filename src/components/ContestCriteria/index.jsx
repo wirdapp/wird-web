@@ -26,6 +26,7 @@ import CriteriaForm from "./CriteriaForm";
 import AddSectionForm from "./AddSectionForm";
 import { useTranslation } from "react-i18next";
 import EditSectionForm from "./EditSectionForm";
+import { usePageTitle } from "../shared/page-title";
 
 export default function ContestCriteria() {
   const [loading, setLoading] = useState(false);
@@ -45,6 +46,7 @@ export default function ContestCriteria() {
   const [currentSelectedDays, setCurrentSelectedDays] = useState([]);
 
   const { t } = useTranslation();
+  usePageTitle(t("criterias"));
 
   useEffect(() => {
     retrieveSections(

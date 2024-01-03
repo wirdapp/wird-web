@@ -20,11 +20,14 @@ import ParticipantCard from "./ParticipantCard";
 import WaitingCard from "./WaitingCard";
 import Participants from "./ParticipantsMember";
 import { useDashboardData } from "../../util/routes-data";
+import { usePageTitle } from "../shared/page-title";
 
 export default function Students() {
   const { currentUser } = useDashboardData();
 
   const { t } = useTranslation();
+  usePageTitle(t("students"));
+
   const [students, setStudents] = useState([]);
   const [deactivatedStudents, setDeactivatedStudents] = useState([]);
   const [isExpanded, setIsExpanded] = useState(false);

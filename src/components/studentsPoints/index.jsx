@@ -18,6 +18,7 @@ import { DropdownListItem } from "../shared/styles";
 import TableData from "./table";
 import Loader from "../Loader";
 import { useTranslation } from "react-i18next";
+import { usePageTitle } from "../shared/page-title";
 
 export default function StudentsPoints() {
   const [Students, setStudents] = useState(null);
@@ -26,6 +27,8 @@ export default function StudentsPoints() {
   const [studentsResultsFlag, SetStudentsResultsFlag] = useState(true);
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
+
+  usePageTitle(t("results-page"));
 
   useEffect(() => {
     setLoading(true);
