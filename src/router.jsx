@@ -29,8 +29,7 @@ import Signup from "./components/Signup";
 import ResetPassword from "./components/ResetPassword";
 import ForgotPassword from "./components/ForgotPassword";
 import { ReactComponent as WirdLogo } from "assets/icons/Shared/wirdLogo.svg";
-import { getCurrentContest } from "./services/contests/utils";
-import { getContests } from "./services/contests/api";
+import { currentContest, getContests } from "./services/contests/api";
 import { Helmet } from "react-helmet";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -128,7 +127,7 @@ export const router = createBrowserRouter([
 
           try {
             data.contests = await getContests();
-            data.currentContest = getCurrentContest(data.contests);
+            data.currentContest = await currentContest();
           } catch (e) {
             console.log(`Failed to get current contest: ${e}`);
             data.currentContest = null;

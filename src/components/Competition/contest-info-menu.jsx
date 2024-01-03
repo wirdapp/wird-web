@@ -11,7 +11,7 @@ import { JoinContestPopup } from "./join-contest-popup";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "../../ui/button";
-import { changeCurrentContest } from "../../services/contests/utils";
+import * as ContestsApi from "../../services/contests/api";
 
 const StyledContestName = styled.span`
   @media (max-width: 500px) {
@@ -79,9 +79,10 @@ export const ContestInfoMenu = () => {
 
   const switchContest = async (contest) => {
     try {
-      changeCurrentContest(contest.id);
-      window.location.reload();
+      await ContestsApi.switchContest(contest.id);
+      // window.location.reload();
     } catch (err) {
+      console.error(err);
       console.log(`Failed to switch contest: ${err}`);
     }
   };

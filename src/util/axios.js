@@ -52,7 +52,7 @@ export const requestInterceptor = (config) => {
 
 export const errorInterceptor = async (error) => {
   // if error is not about token invalid, reject normally
-  if (error.response.data?.code !== "token_not_valid")
+  if (error.response?.data?.code !== "token_not_valid")
     return Promise.reject(error);
 
   // if not in SkipAuthHeader, reject normally
