@@ -17,6 +17,7 @@ export default {
   save: "حفظ",
   readonly: "قراءة فقط",
   "no-contest-yet-msg": "ليس لديك أي مسابقات نشطة",
+  "no-contest-yet": "ليس لديك مسابقات",
   "delete-this-announcement": "حذف هذا الإعلان",
   "name-label": "الاسم",
   "code-label": "الكود",

@@ -4,6 +4,7 @@ import {
   getSession,
   updateSessionToken,
 } from "../services/auth/session";
+import i18n from "../i18n";
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -13,6 +14,7 @@ const axios = Axios.create({
   defaults: {
     headers: {
       "Content-Type": "application/json",
+      "Accept-Language": i18n.language || "ar",
     },
   },
 });
@@ -33,6 +35,8 @@ export async function tryRefreshTokens(refreshToken) {
 }
 
 export const requestInterceptor = (config) => {
+  config.headers["Accept-Language"] = i18n.language || "ar";
+
   if (SkipAuthHeader.includes(config.url)) {
     config.withCredentials = false;
     return config;

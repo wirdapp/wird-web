@@ -31,6 +31,9 @@ import ForgotPassword from "./components/ForgotPassword";
 import { ReactComponent as WirdLogo } from "assets/icons/Shared/wirdLogo.svg";
 import { getCurrentContest } from "./services/contests/utils";
 import { getContests } from "./services/contests/api";
+import { Helmet } from "react-helmet";
+import React from "react";
+import { useTranslation } from "react-i18next";
 
 function ErrorBoundary() {
   let error = useRouteError();
@@ -57,10 +60,24 @@ function ErrorBoundary() {
   );
 }
 
+const MainLayout = () => {
+  const { i18n } = useTranslation();
+
+  return (
+    <>
+      <Helmet>
+        <html lang={i18n.language || "en"} dir={i18n.dir()} />
+        <meta charSet="utf-8" />
+      </Helmet>
+      <Outlet />
+    </>
+  );
+};
+
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <Outlet />,
+    element: <MainLayout />,
     errorElement: <ErrorBoundary />,
     children: [
       {

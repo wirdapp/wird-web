@@ -56,6 +56,11 @@ export const Button = styled.button`
         width: 16px;
         height: 16px;
       }
+
+      &:disabled {
+        background-color: ${colors.lightGrey};
+        color: ${colors.darkGrey};
+      }
     `;
   }}
 `;

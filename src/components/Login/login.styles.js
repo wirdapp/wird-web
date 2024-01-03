@@ -10,7 +10,7 @@ import {
 export default styled.div`
   display: flex;
   margin: 0;
-  padding: 0;
+  padding: 8px;
   background: ${colors.lightWheat};
   height: 100vh;
   overflow: hidden;
@@ -18,24 +18,19 @@ export default styled.div`
 export const DivCenter = styled.div`
   margin: auto;
   /* margin-top: 2rem;
-    margin-bottom: 2rem; */
-  width: 38rem;
-  background: white;
-  border-radius: 0.625rem;
+                          margin-bottom: 2rem; */
+  width: 100%;
+  max-width: 500px;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
   padding: 2.25rem;
   gap: 1.25rem;
 
   background: #ffffff;
   border-radius: 1.5rem;
   height: 40.25rem;
-  @media (max-width: 43.75rem) {
-    width: 19rem;
-  }
 `;
 
 export const Form = styled(DefaultForm)`
@@ -225,4 +220,14 @@ export const InputSubmit = styled(DefaultInputSubmit)`
     width: 14.375rem;
     height: 3.125rem;
   }
+`;
+
+export const StyledErrorsList = styled.div`
+  font-size: 12px;
+  font-weight: 500;
+  background: ${colors.lightRed};
+  margin-bottom: 16px;
+  padding: 16px;
+  border-radius: 8px;
+  color: ${colors.red};
 `;

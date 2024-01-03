@@ -1,160 +1,89 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { DivTxtField } from "../shared/styles.js";
 import SignupFormContainer, {
   DivCenter,
   DivFileField,
-  DivPass,
   FileFormInput,
+  InlineFormError,
 } from "../Signup/Signup.styles";
 import {
   Form,
-  FormInput,
   HeadLogIn,
-  InputSubmit,
   SignupNow,
   SignupNowAccount,
+  StyledErrorsList,
   TitleLogin,
 } from "../Login/login.styles";
 import * as AuthApi from "../../services/auth/api";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useHandleErorr } from "hooks/handleError/index.js";
-
+import { useHandleError } from "hooks/handleError/index.js";
+import { Input } from "../../ui/input";
+import { Button } from "../../ui/button";
+import { login } from "../../services/auth/session";
 
 function Signup() {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [retypePassword, setRetypePassword] = useState("");
-
-  const [phoneNumber, setPhoneNumber] = useState("");
-
+  const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [loading, setLoading] = useState(false);
   const [showErrorMessageMatch, setShowErrorMessageMatch] = useState(false);
   const [isValidUserName, setValidUserName] = useState(true);
-  const [photo, setPhoto] = useState(null);
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { messages, classColor, handleError,changeColor,createSpecificMessage }=useHandleErorr()
-  // const [accessCode, setAccessCode] = useState("");
-  // const [contestName, setContestName] = useState("");
-  // const [activeParticipantButton, setActiveParticipantButton] =
-  //   useState("#FBF9F7");
-  // const [activeCreatorButton, setActiveCreatorButton] = useState("#F9EAEA");
-
-  //  TODO: Uncomment when it's ready
-  // const [isCreator, setCreator] = useState(false);
-
-  useEffect(() => {
-    createSpecificMessage("")
-    changeColor("")
-   
-  }, [username, password, retypePassword, email]); //accessCode, contestName]);
-
-  useEffect(() => {
-    setShowErrorMessageMatch(false);
-  }, [password, retypePassword]);
-
-  // const activeCreator = () => {
-  //   setCreator(true);
-  //   setActiveParticipantButton("#F9EAEA");
-  //   setActiveCreatorButton("#FBF9F7");
-  // };
-  //
-  // const activeParticipant = () => {
-  //   setCreator(false);
-  //   setActiveParticipantButton("#FBF9F7");
-  //   setActiveCreatorButton("#F9EAEA");
-  // };
+  const { messages, handleError } = useHandleError();
 
   const handleChangeUsername = (e) => {
+    const value = e.target.value;
     let regex = new RegExp("^[\u0621-\u064Aa-zA-Z0-9+-.@_]*$");
-    if (!regex.test(e.target.value)) {
+    if (!regex.test(value)) {
       setValidUserName(false);
     } else {
       setValidUserName(true);
     }
-    setUsername(e.target.value);
   };
 
-  const handleChangeEmail = (e) => {
-    setEmail(e.target.value);
-  };
-
-  // const handleChangeContestName = (e) => {
-  //   setContestName(e.target.value);
-  // };
-  //
-  // const handleChangeAccessCode = (e) => {
-  //   setAccessCode(e.target.value);
-  // };
-
-  const handleChangeFirstName = (e) => {
-    setFirstName(e.target.value);
-  };
-
-  const handleChangeLastName = (e) => {
-    setLastName(e.target.value);
-  };
-
-  const handleChangePassword = (e) => {
-    setPassword(e.target.value);
-  };
-  const handlePhoneNumberChange = (e) => {
-    setPhoneNumber(e.target.value);
+  const handlePasswordChange = (e) => {
+    const value = e.target.value;
+    setPassword(value);
+    if (passwordConfirm.length > 0 && value !== passwordConfirm) {
+      setShowErrorMessageMatch(true);
+    } else {
+      setShowErrorMessageMatch(false);
+    }
   };
 
   const handleRetypePassword = (e) => {
-    setRetypePassword(e.target.value);
-  };
-
-  const handlePhotoChange = (e) => {
-    setPhoto(e.target.files[0]);
-  };
-
-  const handleSubmit = async (form) => {
-    form.preventDefault();
-
-    if (password !== retypePassword) {
+    const value = e.target.value;
+    setPasswordConfirm(value);
+    if (value !== password) {
       setShowErrorMessageMatch(true);
-      changeColor("red")
+    } else {
+      setShowErrorMessageMatch(false);
+    }
+  };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (showErrorMessageMatch || !isValidUserName) {
       return;
     }
 
-    if (!isValidUserName) {
-      changeColor("red")
-
+    if (password !== passwordConfirm) {
+      setShowErrorMessageMatch(true);
       return;
     }
 
-    let formData = new FormData();
-    formData.append("password1", password);
-    formData.append("password2", retypePassword);
-    formData.append("username", username);
-    formData.append("first_name", firstName);
-    formData.append("last_name", lastName);
-    formData.append("phone_number", phoneNumber);
-    formData.append("email", email);
-    if (photo && photo.name && photo.name.length > 0) {
-      formData.append("profile_photo", photo);
-    }
-
+    const formData = new FormData(e.target);
+    setLoading(true);
     try {
-      const res = await AuthApi.signup(formData, false);
-  
-      changeColor("green")
-      createSpecificMessage("Successfully signed up")
-
-      setTimeout(() => {
-      
-        form.target.reset();
-        navigate("/login");
-      }, 2000);
+      await AuthApi.signup(formData, false);
+      await login(formData.get("username"), formData.get("password1"));
+      navigate("/dashboard");
     } catch (err) {
-      handleError(err)
-   
+      handleError(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -169,58 +98,10 @@ function Signup() {
           </SignupNowAccount>
         </HeadLogIn>
 
-        {/*TODO: Uncomment when it's ready*/}
-
-        {/*<CreatorOrParticipant>*/}
-        {/*  <CreatorOrParticipantDiv*/}
-        {/*    onClick={activeCreator}*/}
-        {/*    style={{ background: `${activeParticipantButton}` }}*/}
-        {/*  >*/}
-        {/*    <CreatorOrParticipantSpan>*/}
-        {/*      <TitleCreatorOrParticipant>I’m Creator</TitleCreatorOrParticipant>*/}
-        {/*      <ContentCreatorOrParticipant>*/}
-        {/*        For educators and supervisors*/}
-        {/*      </ContentCreatorOrParticipant>*/}
-        {/*    </CreatorOrParticipantSpan>*/}
-        {/*  </CreatorOrParticipantDiv>*/}
-
-        {/*  <CreatorOrParticipantDiv*/}
-        {/*    onClick={activeParticipant}*/}
-        {/*    style={{ background: `${activeCreatorButton}` }}*/}
-        {/*  >*/}
-        {/*    <CreatorOrParticipantSpan>*/}
-        {/*      <TitleCreatorOrParticipant>*/}
-        {/*        I’m Participant*/}
-        {/*      </TitleCreatorOrParticipant>*/}
-        {/*      <ContentCreatorOrParticipant>*/}
-        {/*        For kids and students*/}
-        {/*      </ContentCreatorOrParticipant>*/}
-        {/*    </CreatorOrParticipantSpan>*/}
-        {/*  </CreatorOrParticipantDiv>*/}
-        {/*</CreatorOrParticipant>*/}
-
-        {/*<MediaOneLine>*/}
-        {/*  <MediaLogIn>*/}
-        {/*    {" "}*/}
-        {/*    <img src={AppleLogo} alt="AppleLogo" />*/}
-        {/*  </MediaLogIn>*/}
-        {/*  <MediaLogIn>*/}
-        {/*    {" "}*/}
-        {/*    <img src={GoogleLogo} alt="GoogleLogo" />*/}
-        {/*  </MediaLogIn>*/}
-        {/*  <MediaLogIn>*/}
-        {/*    <img src={FBLogo} alt="FBLogo" />*/}
-        {/*  </MediaLogIn>*/}
-        {/*</MediaOneLine>*/}
-
-        {/*/!* <HeadLogIn> *!/*/}
-        {/*/!* <img src={WirdLogo} alt='' /> *!/*/}
-        {/*<OrWayToLogIn>Or</OrWayToLogIn>*/}
-        {/*/!* </HeadLogIn> *!/*/}
-
         <Form onSubmit={handleSubmit}>
           <DivTxtField>
-            <FormInput
+            <Input
+              name="username"
               onChange={handleChangeUsername}
               type="text"
               placeholder={t("userNameKey")}
@@ -228,32 +109,13 @@ function Signup() {
             />
           </DivTxtField>
           {!isValidUserName && (
-            <DivPass className={classColor}>{t("userNameDisclimar")}</DivPass>
+            <InlineFormError>{t("userNameDisclimar")}</InlineFormError>
           )}
 
-          {/*TODO: Uncomment when it's ready*/}
-          {/*{isCreator ? (*/}
-          {/*  <DivTxtField>*/}
-          {/*    <FormInput*/}
-          {/*      onChange={handleChangeContestName}*/}
-          {/*      type="text"*/}
-          {/*      placeholder="Contest name"*/}
-          {/*      required*/}
-          {/*    />*/}
-          {/*  </DivTxtField>*/}
-          {/*) : (*/}
-          {/*  <DivTxtField>*/}
-          {/*    <FormInput*/}
-          {/*      onChange={handleChangeAccessCode}*/}
-          {/*      type="text"*/}
-          {/*      placeholder="Access code"*/}
-          {/*    />*/}
-          {/*  </DivTxtField>*/}
-          {/*)}*/}
-
           <DivTxtField>
-            <FormInput
-              onChange={handleChangePassword}
+            <Input
+              name="password1"
+              onChange={handlePasswordChange}
               placeholder={t("passwordKey")}
               type="password"
               required
@@ -261,7 +123,8 @@ function Signup() {
           </DivTxtField>
 
           <DivTxtField>
-            <FormInput
+            <Input
+              name="password2"
               onChange={handleRetypePassword}
               placeholder={t("retypePassword")}
               type="password"
@@ -269,12 +132,14 @@ function Signup() {
             />
           </DivTxtField>
           {showErrorMessageMatch && (
-            <DivPass className="red">{t("retypePasswordDisclimar")}</DivPass>
+            <InlineFormError className="red">
+              {t("retypePasswordDisclimar")}
+            </InlineFormError>
           )}
 
           <DivTxtField>
-            <FormInput
-              onChange={handleChangeFirstName}
+            <Input
+              name="first_name"
               placeholder={t("firstName")}
               type="text"
               required
@@ -282,8 +147,8 @@ function Signup() {
           </DivTxtField>
 
           <DivTxtField>
-            <FormInput
-              onChange={handleChangeLastName}
+            <Input
+              name="last_name"
               placeholder={t("lastName")}
               type="text"
               required
@@ -291,16 +156,12 @@ function Signup() {
           </DivTxtField>
 
           <DivTxtField>
-            <FormInput
-              onChange={handleChangeEmail}
-              type="text"
-              placeholder={t("emailAddress")}
-            />
+            <Input name="email" type="text" placeholder={t("emailAddress")} />
           </DivTxtField>
 
           <DivTxtField>
-            <FormInput
-              onChange={handlePhoneNumberChange}
+            <Input
+              name="phone_number"
               type="text"
               placeholder={t("phoneNumber")}
             />
@@ -308,24 +169,32 @@ function Signup() {
 
           <DivFileField>
             {t("profilePhoto")}
-            <FileFormInput type="file" onChange={handlePhotoChange} />
+            <FileFormInput name="profile_photo" type="file" />
           </DivFileField>
           <br />
 
           {/* <PageLink href="https://www.facebook.com/Wird.Competition/" target="_blank">
             هل تواجه مشكلة تقنية أو نسيت كلمة المرور؟ تواصل مع الدعم الفني
           </PageLink> */}
-          {
-            messages?.map?.((message, index) => {
-              return (
-                <DivPass className={classColor} key={message}>
-                  {message}
-                </DivPass>
-              );
-            })}
-          <InputSubmit type="submit" value="login">
+          {messages?.length > 0 && (
+            <StyledErrorsList>
+              {messages?.map?.((message, index) => {
+                return (
+                  <div className="red" key={message}>
+                    {message}
+                  </div>
+                );
+              })}
+            </StyledErrorsList>
+          )}
+          <Button
+            variant="primary"
+            type="submit"
+            value="login"
+            disabled={loading}
+          >
             {t("signUp")}
-          </InputSubmit>
+          </Button>
         </Form>
       </DivCenter>
     </SignupFormContainer>

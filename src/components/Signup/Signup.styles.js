@@ -13,11 +13,9 @@ import {
 } from "../Students/setPasswordStudent/SetPasswordStudent.styles";
 
 export default styled.div`
-  display: flex;
   margin: auto;
-  padding: 0;
+  padding: 8px;
   background: #fdfdfb;
-  height: auto;
   /* height: 54.3125rem; */
 `;
 
@@ -69,8 +67,8 @@ export const CreatorOrParticipantDiv = styled.button`
   background: #f9eaea;
 
   /* :focus {
-    background: #FBF9F7;
-  } */
+                          background: #FBF9F7;
+                        } */
 
   @media (max-width: 43.75rem) {
     padding: 1.125rem 0.9375rem;
@@ -168,11 +166,21 @@ export const DivPass = styled(DefaultDivPass)`
   margin-bottom: 1rem;
 `;
 
+export const InlineFormError = styled.div`
+  color: #ff0000;
+  font-size: 10px;
+  margin-top: 0;
+  margin-bottom: 8px;
+`;
+
 export const DivCenter = styled(DefaultDivCenter)`
-  margin-top: auto;
+  margin: 32px auto;
+  width: 100%;
+  max-width: 500px;
+
+  background: #ffffff;
+  border-radius: 1.5rem;
   height: auto;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
 `;
 
 export const DivFileField = styled(DefaultDivFileField)`

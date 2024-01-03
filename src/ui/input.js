@@ -7,7 +7,7 @@ export const Input = styled.input`
   width: 100%;
   height: 48px;
   background: #ffffff;
-  border: 2px solid ${colors.lightRed};
+  border: 2px solid ${colors.lightGrey};
   border-radius: 10px;
   text-align: start;
   transition: all 0.2s ease-in-out;
@@ -23,7 +23,7 @@ export const TextArea = styled.textarea`
   padding: 16px 24px;
   width: 100%;
   background: #ffffff;
-  border: 2px solid ${colors.lightRed};
+  border: 2px solid ${colors.lightGrey};
   border-radius: 10px;
   text-align: start;
   transition: all 0.2s ease-in-out;

@@ -84,50 +84,61 @@ export const ContestInfoMenu = () => {
     } catch (err) {
       console.log(`Failed to switch contest: ${err}`);
     }
-  };    
+  };
 
   return (
     <>
       <Dropdown
         title={
           <>
-            <Squares2X2Icon />
-            <StyledContestName>{currentContest?.name}</StyledContestName>
+            {currentContest ? (
+              <>
+                <Squares2X2Icon />
+                <StyledContestName>{currentContest?.name}</StyledContestName>
+              </>
+            ) : (
+              t("no-contest-yet")
+            )}
             <ChevronDownIcon />
           </>
         }
       >
-        <StyledCurrentContestWrapper>
-          <div className="contest-details">
-            <div>
-              {t("join-code")}: <code>{currentContest?.contest_id}</code>
-            </div>
-            <Button variant="link">
-              {t("copy-link")}
-              <LinkIcon />
-            </Button>
-          </div>
-        </StyledCurrentContestWrapper>
+        {currentContest && (
+          <>
+            <StyledCurrentContestWrapper>
+              <div className="contest-details">
+                <div>
+                  {t("join-code")}: <code>{currentContest?.contest_id}</code>
+                </div>
+                <Button variant="link">
+                  {t("copy-link")}
+                  <LinkIcon />
+                </Button>
+              </div>
+            </StyledCurrentContestWrapper>
+            <hr />
+          </>
+        )}
         {otherContests.length > 0 && (
           <>
-            <hr />
             <div className="menu-group">
               <div className="menu-group-title">{t("switch-contest")}</div>
               <List>
-                {otherContests?.map?.((contest) =>{
+                {otherContests?.map?.((contest) => {
                   return (
-                  <ListItem
-                    key={contest?.id}
-                    onClick={() => switchContest(contest)}
-                  >
-                    <MenuTitle>{contest?.name}</MenuTitle>
-                  </ListItem>
-                )})}
+                    <ListItem
+                      key={contest?.id}
+                      onClick={() => switchContest(contest)}
+                    >
+                      <MenuTitle>{contest?.name}</MenuTitle>
+                    </ListItem>
+                  );
+                })}
               </List>
             </div>
+            <hr />
           </>
         )}
-        <hr />
         <List>
           <ListItem onClick={() => setCreateContestOpen(true)}>
             <PlusCircleIcon />

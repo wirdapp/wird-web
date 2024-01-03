@@ -2,21 +2,20 @@ import React, { useState } from "react";
 import LoginFormContainer, {
   DivCenter,
   Form,
-  FormInput,
   HeadLogIn,
-  InputSubmit,
   SignupNow,
   SignupNowAccount,
+  StyledErrorsList,
   TitleLogin,
 } from "./login.styles";
 
-import { DivPass, DivTxtField } from "../shared/styles";
+import { DivTxtField } from "../shared/styles";
 import { useLocation, useNavigate } from "react-router-dom";
-import Loader from "../Loader";
 import { useTranslation } from "react-i18next";
 import { login } from "../../services/auth/session";
-import { useHandleErorr } from "hooks/handleError";
-
+import { useHandleError } from "hooks/handleError";
+import { Input } from "../../ui/input";
+import { Button } from "../../ui/button";
 
 function Login() {
   const { t } = useTranslation();
@@ -26,10 +25,10 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const location = useLocation();
 
-
-  const { messages, classColor, handleError }=useHandleErorr()
+  const { messages, classColor, handleError } = useHandleError();
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       await login(username, password);
       navigate(
@@ -38,10 +37,9 @@ function Login() {
           : "/dashboard",
       );
     } catch (err) {
-
-     handleError(err)
-
-   
+      handleError(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -52,19 +50,12 @@ function Login() {
     setPassword(e.target.value);
   };
 
-  if (loading) {
-    return (
-      <main>
-        <Loader />
-      </main>
-    );
-  }
-
   return (
     <LoginFormContainer>
       <DivCenter>
         <HeadLogIn>
           <TitleLogin>{`${t("login")}`}</TitleLogin>
+          <br />
           <SignupNowAccount>
             {t("notAccount")}{" "}
             <SignupNow href="/signup">{t("signUpKey")}</SignupNow>
@@ -93,20 +84,22 @@ function Login() {
 
         <Form onSubmit={handleSubmit}>
           <DivTxtField>
-            <FormInput
-              onChange={handleChangeUsername}
+            <Input
               type="text"
-              placeholder="Username"
+              id="username"
+              onChange={handleChangeUsername}
               required
+              placeholder={t("username")}
             />
           </DivTxtField>
 
           <DivTxtField>
-            <FormInput
-              onChange={handleChangePassowrd}
-              placeholder="Password"
+            <Input
               type="password"
+              id="password"
+              onChange={handleChangePassowrd}
               required
+              placeholder={t("password")}
             />
           </DivTxtField>
 
@@ -117,17 +110,20 @@ function Login() {
           {/* <PageLink href="https://www.facebook.com/Wird.Competition/" target="_blank">
             هل تواجه مشكلة تقنية أو نسيت كلمة المرور؟ تواصل مع الدعم الفني
           </PageLink> */}
-           {
-            messages?.map?.((message, index) => {
-              return (
-                <DivPass className={classColor} key={message}>
-                  {message}
-                </DivPass>
-              );
-            })}
-          <InputSubmit type="submit" value="login">
+          {messages.length > 0 && (
+            <StyledErrorsList>
+              {messages?.map?.((message, index) => {
+                return (
+                  <div className={classColor} key={message}>
+                    {message}
+                  </div>
+                );
+              })}
+            </StyledErrorsList>
+          )}
+          <Button variant="primary" type="submit" disabled={loading}>
             {t("login")}
-          </InputSubmit>
+          </Button>
         </Form>
 
         {/*TODO: Uncomment when it's ready*/}

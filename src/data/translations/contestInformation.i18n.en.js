@@ -17,6 +17,7 @@ export default {
   save: "Save",
   readonly: "Read Only",
   "no-contest-yet-msg": "You don't have any active contests",
+  "no-contest-yet": "No contests",
   "delete-this-announcement": "Delete this announcement",
   "name-label": "Name",
   "code-label": "Code",
