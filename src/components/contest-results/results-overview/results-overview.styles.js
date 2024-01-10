@@ -3,7 +3,6 @@ import { colors } from "../../../styles";
 
 export const StyledOverviewWrapper = styled.div`
   padding: 16px;
-  background: ${colors.lightGrey};
   border-radius: 8px;
 
   h3 {
@@ -260,7 +259,6 @@ export const StyledSkeletonWrapper = styled.div`
   flex-direction: column;
   gap: 24px;
   padding: 32px;
-  background: ${colors.lightGrey};
 
   .ant-skeleton,
   .skeleton-chart,

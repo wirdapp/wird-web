@@ -28,6 +28,7 @@ export const UserInfoMenu = () => {
 
   return (
     <Dropdown
+      arrow
       trigger={["click"]}
       overlayClassName={css`
         width: 200px;

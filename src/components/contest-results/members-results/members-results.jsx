@@ -1,115 +1,177 @@
 import React, { useEffect, useState } from "react";
 import { MembersSelect } from "./members-select";
-import { DatePicker, Empty, Form, Spin } from "antd";
-import styled from "@emotion/styled";
+import {
+  Avatar,
+  Button,
+  Card,
+  Col,
+  Empty,
+  Flex,
+  Form,
+  Row,
+  Skeleton,
+  Space,
+  Statistic,
+  Typography,
+} from "antd";
 import { useSearchParams } from "react-router-dom";
-import dayjs from "dayjs";
 import { ContestResultsApi } from "../../../services/contest-results/api";
-
-const StyledMembersResultsWrapper = styled.div`
-  display: flex;
-  gap: 16px;
-  flex-direction: column;
-
-  @media (min-width: 768px) {
-    flex-direction: row;
-  }
-
-  .side-filters {
-    width: 100%;
-    max-width: 350px;
-    @media (min-width: 768px) {
-      width: 200px;
-      padding-inline-end: 16px;
-      border-inline-end: 1px solid #e8e8e8;
-    }
-  }
-
-  .main-content {
-    width: 100%;
-    min-height: 500px;
-    @media (min-width: 768px) {
-      width: calc(100% - 200px);
-    }
-
-    .ant-empty {
-      margin-top: 100px;
-    }
-
-    .spinner-wrapper {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 250px;
-    }
-  }
-`;
+import { StyledMembersResultsWrapper } from "./members-results.styles";
+import { getInitials } from "../../../util/user-utils";
+import { colors } from "../../../styles";
+import { useTranslation } from "react-i18next";
+import { MemberScorePerDayChart } from "./member-score-per-day-chart";
+import { MemberScorePerCategoryChart } from "./member-score-per-category-chart";
+import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
+import { DailySubmissionsPopup } from "./daily-submissions-popup";
 
 export const MembersResults = () => {
+  const [form] = Form.useForm();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [filters, setFilters] = useState({
-    user_id: searchParams.get("user_id"),
-    date: searchParams.get("date")
-      ? dayjs(searchParams.get("date"))
-      : undefined,
-  });
   const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState([]);
+  const [result, setResult] = useState(undefined);
+  const [dailySubmissionsPopupOpen, setDailySubmissionsPopupOpen] =
+    useState(false);
+  const { t, i18n } = useTranslation();
 
-  const onValuesChange = (_, values) => {
-    const nextFilters = { ...filters, ...values };
-    setFilters(nextFilters);
-    setSearchParams(new URLSearchParams(nextFilters));
+  const loadMemberResults = async (userId) => {
+    setLoading(true);
+    try {
+      const res = await ContestResultsApi.getMemberResults(userId);
+      setResult(res);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onValuesChange = async (_, values) => {
+    setSearchParams(new URLSearchParams({ user_id: values.userId }));
+    await loadMemberResults(values.userId);
   };
 
   useEffect(() => {
-    if (!filters.user_id || !filters.date) {
-      setLoading(false);
-      setResults([]);
-      return;
+    if (searchParams.has("user_id")) {
+      form.setFieldsValue({ userId: searchParams.get("user_id") });
+      loadMemberResults(searchParams.get("user_id"));
     }
-    setLoading(true);
-    ContestResultsApi.getResults(filters)
-      .then((res) => {
-        setResults(res.results);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [filters]);
+  }, [searchParams]);
 
   return (
     <StyledMembersResultsWrapper>
       <div className="side-filters">
         <Form
+          form={form}
           layout="vertical"
           onValuesChange={onValuesChange}
-          initialValues={filters}
+          initialValues={{ userId: searchParams.get("user_id") }}
         >
-          <Form.Item label="Select a person" name="user_id">
-            <MembersSelect />
-          </Form.Item>
-          <Form.Item label="Select day" name="date">
-            <DatePicker style={{ width: "100%" }} />
+          <Form.Item label={t("selectMember")} name="userId">
+            <MembersSelect placeholder={t("selectMember")} />
           </Form.Item>
         </Form>
       </div>
       <div className="main-content">
-        {loading ? (
-          <div className="spinner-wrapper">
-            <Spin size="large" />
-          </div>
-        ) : (
-          <>
-            {results.length ? (
-              <span>results here</span>
+        {result || loading ? (
+          <Flex vertical gap={48}>
+            {loading ? (
+              <Space size="large" align="center">
+                <Skeleton.Avatar active size={64} />
+                <Skeleton.Input active />
+              </Space>
             ) : (
-              <Empty
-                image={Empty.PRESENTED_IMAGE_SIMPLE}
-                description="Select a person and a day to see results"
-              />
+              <Space size="large" align="center">
+                <Avatar
+                  style={{
+                    backgroundColor: colors.yellow,
+                    color: colors.white,
+                  }}
+                  size={64}
+                >
+                  {getInitials(result)}
+                </Avatar>
+                <Space direction="vertical">
+                  <Typography.Title level={3} style={{ marginBottom: 0 }}>
+                    {result.first_name} {result.last_name}
+                  </Typography.Title>
+                  <Typography.Text>{result.username}</Typography.Text>
+                </Space>
+              </Space>
             )}
-          </>
+            <Row gutter={16}>
+              <Col xs={24} sm={12} xl={6}>
+                <Card bordered={false} style={{ height: "100%" }}>
+                  <Statistic
+                    title={t("totalPoints")}
+                    value={result?.total_points}
+                    loading={loading}
+                  />
+                </Card>
+              </Col>
+              <Col xs={24} sm={12} xl={6}>
+                <Card bordered={false} style={{ height: "100%" }}>
+                  <Statistic
+                    title={t("rank")}
+                    value={result?.rank}
+                    loading={loading}
+                  />
+                </Card>
+              </Col>
+              <Col xs={24} sm={12} xl={6}>
+                <Card bordered={false} style={{ height: "100%" }}>
+                  <Space gap={8} direction="vertical">
+                    <Typography.Text type="secondary">
+                      {t("submissions")}
+                    </Typography.Text>
+                    <Button
+                      size="small"
+                      onClick={() => setDailySubmissionsPopupOpen(true)}
+                      disabled={loading}
+                      icon={
+                        i18n.dir() === "rtl" ? (
+                          <ArrowLeftIcon />
+                        ) : (
+                          <ArrowRightIcon />
+                        )
+                      }
+                    >
+                      {t("viewSubmissionsPerDay")}
+                    </Button>
+                  </Space>
+                </Card>
+              </Col>
+            </Row>
+            <Row gutter={24}>
+              <Col xs={24} lg={12}>
+                <Card
+                  bordered={false}
+                  title={t("pointsPerDay")}
+                  loading={loading}
+                >
+                  <MemberScorePerDayChart data={result?.days} />
+                </Card>
+              </Col>
+              <Col xs={24} lg={12}>
+                <Card
+                  bordered={false}
+                  title={t("scorePerCategory")}
+                  loading={loading}
+                >
+                  <MemberScorePerCategoryChart data={result?.scores} />
+                </Card>
+              </Col>
+            </Row>
+            <DailySubmissionsPopup
+              open={dailySubmissionsPopupOpen}
+              onClose={() => setDailySubmissionsPopupOpen(false)}
+            />
+          </Flex>
+        ) : (
+          <Empty
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+            description="Select a person and a day to see results"
+          />
         )}
       </div>
     </StyledMembersResultsWrapper>

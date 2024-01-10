@@ -3,7 +3,7 @@ import { Select } from "antd";
 import { MembersApi } from "../../../services/members/api";
 import { getFullName } from "../../../util/user-utils";
 
-export const MembersSelect = ({ value, onChange }) => {
+export const MembersSelect = ({ value, onChange, ...props }) => {
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -20,6 +20,7 @@ export const MembersSelect = ({ value, onChange }) => {
 
   return (
     <Select
+      {...props}
       loading={loading}
       options={members.map((member) => ({
         label: getFullName(member.person_info),
@@ -29,7 +30,6 @@ export const MembersSelect = ({ value, onChange }) => {
       onChange={onChange}
       showSearch
       optionFilterProp="label"
-      placeholder="Select a person"
     />
   );
 };
