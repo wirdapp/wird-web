@@ -1,35 +1,37 @@
 import React from "react";
 import { usePageTitle } from "../shared/page-title";
 import { useTranslation } from "react-i18next";
-import { Tabs } from "../../ui/tabs";
-import { ResultsOverview } from "./results-overview";
+import { Tabs } from "antd";
+import { ResultsOverview } from "./results-overview/results-overview";
 import { AnimatedPage } from "../../ui/animated-page";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { MembersResults } from "./members-results/members-results";
 
 export const ContestResults = () => {
   const { t } = useTranslation();
   usePageTitle(t("results-page"));
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { tab: tabParam } = useParams();
+  const navigate = useNavigate();
 
   const onTabChange = (tab) => {
-    setSearchParams({ tab });
+    navigate(`../results/${tab}`);
   };
 
   return (
     <AnimatedPage>
       <Tabs
-        activeKey={searchParams.get("tab") || "results"}
+        activeKey={tabParam}
         onChange={onTabChange}
         items={[
           {
-            key: "results",
-            title: t("results-overview"),
-            content: <ResultsOverview />,
+            key: "overview",
+            label: t("results-overview"),
+            children: <ResultsOverview />,
           },
           {
             key: "members",
-            title: t("results-members"),
-            content: <span>Submissions</span>,
+            label: t("results-members"),
+            children: <MembersResults />,
           },
         ]}
       />

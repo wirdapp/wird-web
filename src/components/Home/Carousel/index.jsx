@@ -1,15 +1,14 @@
 import React, { useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
 import Carousel from "react-bootstrap/Carousel";
 import { CarouselStyle } from "./CarouselStatistics.styles.js";
 import {
-  IntroductionSection,
-  IntroductionDiv,
-  WirdLogoInHome,
-  IntroductionSectionDiv,
-  WirdMinIntroduction,
-  Introduction,
   BorderBottom,
+  Introduction,
+  IntroductionDiv,
+  IntroductionSection,
+  IntroductionSectionDiv,
+  WirdLogoInHome,
+  WirdMinIntroduction,
 } from "../../shared/styles";
 import WirdLogo from "../../../assets/Logo/WirdLogosvg.svg";
 

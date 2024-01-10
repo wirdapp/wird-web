@@ -81,3 +81,29 @@ code {
     visibility: visible;
   }
 }
+
+[dir="rtl"] .ant-tabs .ant-tabs-tab + .ant-tabs-tab {
+  margin-left: 0;
+  margin-right: 32px;
+}
+
+.ant-btn {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+
+  .ant-btn-icon {
+    margin: 0 !important;
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+a.ant-btn {
+  text-decoration: none;
+}

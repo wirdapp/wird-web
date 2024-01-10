@@ -76,7 +76,7 @@ function Sidebar() {
             <FileTxtIcon />
             <MenuItem>{t("text-inputs")}</MenuItem>
           </MenuLink>
-          <MenuLink to="/dashboard/results" title={t("results-page")}>
+          <MenuLink to="/dashboard/results/overview" title={t("results-page")}>
             <ResultsIcon />
             <MenuItem>{t("results-page")}</MenuItem>
           </MenuLink>

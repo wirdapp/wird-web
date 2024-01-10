@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { colors } from "../../styles";
+import { colors } from "../../../styles";
 
 export const StyledOverviewWrapper = styled.div`
   padding: 16px;
@@ -210,6 +210,7 @@ export const StyledTop3Cell = styled.div`
 
   .top-3-wrapper {
     > div {
+      display: inline-flex;
       margin-inline-start: 4px;
       transition: margin-inline-start 0.2s ease-in-out;
 
@@ -251,5 +252,35 @@ export const StyledChartTooltip = styled.div`
     height: 12px;
     border-radius: 50%;
     margin-inline-end: 8px;
+  }
+`;
+
+export const StyledSkeletonWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 32px;
+  background: ${colors.lightGrey};
+
+  .ant-skeleton,
+  .skeleton-chart,
+  .skeleton-list-item {
+    width: 100% !important;
+    border-radius: 20px !important;
+  }
+
+  .skeleton-chart {
+    height: 150px !important;
+  }
+
+  .skeleton-list {
+    margin-top: 16px;
+    display: flex;
+    gap: 24px;
+    flex-direction: column;
+  }
+
+  .skeleton-list-item {
+    height: 60px !important;
   }
 `;

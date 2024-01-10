@@ -147,8 +147,6 @@ export const UserInfoWrapper = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid ${colors.lightRed};
 `;
 
 export const List = styled.ul`

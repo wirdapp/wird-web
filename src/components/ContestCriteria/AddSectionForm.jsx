@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import ReactDom from "react-dom";
 import Container, {
-  TextInputField,
   AddButton,
   Overlay,
+  TextInputField,
 } from "./AddCriteriaForm.styled";
-import InputField from "./InputField";
 import { useTranslation } from "react-i18next";
 import { addSection } from "../../services/standardServices";
 import { DivPass } from "../ResetPassword/ResetPassword.styles";
+import { Form, Input } from "antd";
 
 export default function PopUpModal({
   hideModalFunction,
@@ -73,11 +73,9 @@ export default function PopUpModal({
           placeholder={t("enter-title")}
           onChange={handleLabelChange}
         />
-        <InputField
-          type={"number"}
-          label={t("section-order")}
-          onChange={handlePositionChange}
-        />
+        <Form.Item label={t("section-order")}>
+          <Input onChange={handlePositionChange} />
+        </Form.Item>
         <AddButton onClick={handleAddNewSection}>{t("add-section")}</AddButton>
         {successAddedSectionMsg.length > 0 && (
           <DivPass className="green">{successAddedSectionMsg}</DivPass>

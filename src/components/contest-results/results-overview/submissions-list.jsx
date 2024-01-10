@@ -1,42 +1,32 @@
 import React, { useEffect, useState } from "react";
-import { ContestResultsApi } from "../../services/contest-results/api";
-import { useTranslation } from "react-i18next";
 import {
   StyledDayCell,
-  StyledOverviewWrapper,
   StyledResultsOverviewHeader,
   StyledResultsOverviewListWrapper,
   StyledSubmissionCountCell,
   StyledTop3Cell,
 } from "./results-overview.styles";
-import { CalendarIcon } from "@heroicons/react/24/outline";
-import { Badge } from "../../ui/badge";
-import { Avatar } from "../shared/Avatar";
-import { useNavigate } from "react-router-dom";
-import { SubmissionsCountChart } from "./submissions-count-chart";
-import dayjs from "dayjs";
 import { cx } from "@emotion/css";
+import dayjs from "dayjs";
+import { CalendarIcon } from "@heroicons/react/24/outline";
+import { Avatar } from "../../shared/Avatar";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { Badge, Tooltip } from "antd";
 
-export const ResultsOverview = () => {
+export const SubmissionsList = ({ results }) => {
   const { t } = useTranslation();
-  const [results, setResults] = useState([]);
   const navigate = useNavigate();
   const [topOverflow, setTopOverflow] = useState(false);
   const [bottomOverflow, setBottomOverflow] = useState(false);
   const listRef = React.useRef(null);
 
   useEffect(() => {
-    ContestResultsApi.getResults().then((res) => {
-      setResults(res.results);
-    });
-  }, []);
-
-  useEffect(() => {
     const todayItem = document.querySelector(
       ".results-overview-list-item.today",
     );
     if (todayItem) {
-      todayItem.scrollIntoView({ behavior: "smooth", block: "center" });
+      listRef.current.scrollTop = todayItem.offsetTop - 150;
     }
   }, [results]);
 
@@ -51,16 +41,14 @@ export const ResultsOverview = () => {
     return () => {
       list.removeEventListener("scroll", handleScroll);
     };
-  }, [listRef.current]);
+  }, []);
 
   const navigateToUserResults = (user) => {
-    navigate({ search: `?user_id=${user.id}&tab=members` });
+    navigate(`../results/members?user_id=${user.id}`);
   };
 
   return (
-    <StyledOverviewWrapper>
-      <h3>{t("contest-submissions")}</h3>
-      <SubmissionsCountChart chartData={results} />
+    <>
       <StyledResultsOverviewHeader>
         <StyledDayCell>{t("day")}</StyledDayCell>
         <StyledSubmissionCountCell>
@@ -109,21 +97,34 @@ export const ResultsOverview = () => {
                   <span>
                     {result.submissions_count} {t("of")} {result.total_members}
                   </span>
-                  <Badge variant="secondary" size="small">
-                    {(result.submissions_count / result.total_members) * 100}%
-                  </Badge>
+                  <Badge
+                    color={
+                      result.submissions_count / result.total_members === 1
+                        ? "green"
+                        : result.submissions_count > 0
+                          ? "orange"
+                          : "grey"
+                    }
+                    count={`${
+                      (result.submissions_count / result.total_members) * 100
+                    }%`}
+                  />
                 </StyledSubmissionCountCell>
                 <StyledTop3Cell>
                   <div className="mobile-label">{t("top-3")}:</div>
                   <div className="top-3-wrapper">
                     {result.top_three?.map((user, userIndex) => (
-                      <Avatar
+                      <Tooltip
                         key={user.id}
-                        user={user}
-                        colorIndex={resultIndex * 3 + userIndex}
-                        style={{ cursor: "pointer" }}
-                        onClick={() => navigateToUserResults(user)}
-                      />
+                        title={`${user?.first_name} ${user?.last_name}`}
+                      >
+                        <Avatar
+                          user={user}
+                          colorIndex={resultIndex * 3 + userIndex}
+                          style={{ cursor: "pointer" }}
+                          onClick={() => navigateToUserResults(user)}
+                        />
+                      </Tooltip>
                     ))}
                   </div>
                 </StyledTop3Cell>
@@ -132,6 +133,6 @@ export const ResultsOverview = () => {
           })}
         </div>
       </StyledResultsOverviewListWrapper>
-    </StyledOverviewWrapper>
+    </>
   );
 };

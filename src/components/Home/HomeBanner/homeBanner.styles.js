@@ -66,6 +66,7 @@ export const ContentAndImgs = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
+  overflow: hidden;
   @media (max-width: 43.75rem) {
   }
 `;

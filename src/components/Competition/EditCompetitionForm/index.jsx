@@ -1,56 +1,27 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { updateContest } from "../../../services/competitionsServices";
 
 import { ParticipantsTitelsAtHome } from "../ContestMembers/ContestMembers.styles";
 import {
-  ButtonStyle,
-  Form,
-  OverflowScrolling,
+  EditContestFormWrapper,
   ParticipantsNumbers,
 } from "./EditCompetition.styles";
 
 import { DivPass } from "../../Admins/Admins.styles";
-import InputField from "../../ContestCriteria/InputField";
-import { Checkbox } from "../../../ui/checkbox";
-import { css } from "@emotion/css";
+import { Button, Checkbox, Form, Input, Space } from "antd";
 
 export default function EditCompetitionForm({ contest, onChange }) {
   const { t } = useTranslation();
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [showStanding, setShowStanding] = useState(true);
-  const [readOnlyMode, setReadOnlyMode] = useState(false);
   const [messages, setMessages] = useState([]);
   const [classColor, setClassColor] = useState("");
 
-  useEffect(() => {
-    resetForm();
-  }, []);
-
-  const resetForm = () => {
-    setName(contest.name);
-    setDescription(contest.description);
-    setReadOnlyMode(contest.readonly_mode);
-    setShowStanding(contest.show_standings);
-  };
-  const handleUpdateContest = () => {
-    let data = {
-      name: name,
-      description: description,
-      show_standings: showStanding,
-      readonly_mode: readOnlyMode,
-    };
-
+  const handleUpdateContest = (values) => {
     updateContest(
       contest.id,
-      data,
+      values,
       (res) => {
         if (res?.status === 200) {
-          contest.name = name;
-          contest.readonly_mode = readOnlyMode;
-          contest.show_standings = showStanding;
-
           setClassColor("green");
           setMessages([t("contest-has-been-edited-successfully")]);
         }
@@ -70,60 +41,44 @@ export default function EditCompetitionForm({ contest, onChange }) {
     );
   };
 
-  const handleShowStandingChange = (e) => {
-    setShowStanding(e.target.checked);
-  };
-
-  const handleReadOnlyChange = (e) => {
-    setReadOnlyMode(e.target.checked);
-  };
-
-  const handleNameChange = (e) => {
-    setName(e.target.value);
-    onChange({ ...contest, name: e.target.value });
-  };
-
-  const handleDescriptionChange = (e) => {
-    setDescription(e.target.value);
-    onChange({ ...contest, description: e.target.value });
-  };
-
   return (
-    <Form>
+    <EditContestFormWrapper>
       <ParticipantsNumbers>
         <ParticipantsTitelsAtHome>
           {t("contest-information")}
         </ParticipantsTitelsAtHome>
 
-        <OverflowScrolling>
-          <InputField
-            type="text"
+        <Form
+          onFinish={handleUpdateContest}
+          labelCol={{ span: 4 }}
+          wrapperCol={{ span: 20 }}
+          initialValues={contest}
+          style={{ width: "100%" }}
+        >
+          <Form.Item
             label={t("name-label")}
-            onChange={handleNameChange}
-            value={name}
-          />
-          <InputField
-            type={"text"}
-            label={t("description-label")}
-            onChange={handleDescriptionChange}
-            value={description}
-          />
-          <div
-            className={css`
-              padding-inline-start: 90px;
-            `}
+            name="name"
+            rules={[{ required: true, message: t("requiredField") }]}
           >
-            <Checkbox
-              label={t("active-announcements")}
-              checked={showStanding}
-              onChange={handleShowStandingChange}
-            />
-            <Checkbox
-              label={t("readonly")}
-              checked={readOnlyMode}
-              onChange={handleReadOnlyChange}
-            />
-          </div>
+            <Input placeholder={t("name-label")} />
+          </Form.Item>
+          <Form.Item label={t("description-label")} name="description">
+            <Input placeholder={t("description-label")} />
+          </Form.Item>
+          <Form.Item
+            name="show_standings"
+            wrapperCol={{ offset: 4, span: 20 }}
+            valuePropName="checked"
+          >
+            <Checkbox>{t("active-announcements")}</Checkbox>
+          </Form.Item>
+          <Form.Item
+            name="readonly_mode"
+            wrapperCol={{ offset: 4, span: 20 }}
+            valuePropName="checked"
+          >
+            <Checkbox>{t("readonly")}</Checkbox>
+          </Form.Item>
 
           {messages.length > 0 &&
             messages.map((message, index) => {
@@ -134,9 +89,16 @@ export default function EditCompetitionForm({ contest, onChange }) {
               );
             })}
 
-          <ButtonStyle onClick={handleUpdateContest}>{t("update")}</ButtonStyle>
-        </OverflowScrolling>
+          <Form.Item wrapperCol={{ offset: 4, span: 20 }}>
+            <Space>
+              <Button htmlType="submit" type="primary">
+                {t("update")}
+              </Button>
+              <Button htmlType="reset">{t("reset")}</Button>
+            </Space>
+          </Form.Item>
+        </Form>
       </ParticipantsNumbers>
-    </Form>
+    </EditContestFormWrapper>
   );
 }

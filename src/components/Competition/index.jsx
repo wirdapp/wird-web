@@ -9,9 +9,9 @@ import { NoContestYet } from "./no-contest-yet";
 import { getInviteLink } from "../../services/contests/utils";
 import { ManageAnnouncements } from "./manage-announcements";
 import styled from "@emotion/styled";
-import { CopyButton } from "../../ui/copy-button";
 import { Squares2X2Icon } from "@heroicons/react/24/outline";
 import { AnimatedPage } from "../../ui/animated-page";
+import { Typography } from "antd";
 
 const StyledContestEditWrapper = styled.div`
   display: flex;
@@ -38,13 +38,14 @@ export default function Competition() {
               <h2>{contest.name}</h2>
               {contest.description && <h3>{contest.description}</h3>}
               <div className="invite-link">
-                {t("join-code")}: <span>{contest.contest_id}</span>
-                <CopyButton value={contest.contest_id} />
+                {t("join-code")}:{" "}
+                <Typography.Text copyable>{contest.contest_id}</Typography.Text>
               </div>
               <div className="invite-link">
                 {t("copy-link")}:{" "}
-                <span>{getInviteLink(contest.contest_id)}</span>
-                <CopyButton value={getInviteLink(contest.contest_id)} />
+                <Typography.Text copyable>
+                  {getInviteLink(contest.contest_id)}
+                </Typography.Text>
               </div>
             </div>
           </div>

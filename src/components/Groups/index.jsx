@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
 import AddGroupForm from "./AddGroupForm";
 import EditGroupForm from "./EditGroupForm";
 import { retrieveStudents } from "../../services/studentsServices";

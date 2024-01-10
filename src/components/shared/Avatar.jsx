@@ -3,7 +3,6 @@ import { getInitials } from "../../util/user-utils";
 import { UserIcon } from "@heroicons/react/20/solid";
 import styled from "@emotion/styled";
 import { blankUserBackgroundColors, colors } from "../../styles";
-import { Tooltip } from "../../ui/tooltip";
 import { cx } from "@emotion/css";
 import { shadeColor } from "../../util/colors";
 
@@ -40,14 +39,12 @@ const StyledAvatar = styled.div`
 
 export const Avatar = ({ user, colorIndex, className, ...props }) => {
   return (
-    <Tooltip overlay={`${user?.first_name} ${user?.last_name}`}>
-      <StyledAvatar
-        className={cx("user-avatar", className)}
-        colorIndex={colorIndex}
-        {...props}
-      >
-        {getInitials(user) ?? <UserIcon />}
-      </StyledAvatar>
-    </Tooltip>
+    <StyledAvatar
+      className={cx("user-avatar", className)}
+      colorIndex={colorIndex}
+      {...props}
+    >
+      {getInitials(user) ?? <UserIcon />}
+    </StyledAvatar>
   );
 };

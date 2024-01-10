@@ -1,41 +1,33 @@
 import React, { useState } from "react";
 import LoginFormContainer, {
   DivCenter,
-  Form,
   HeadLogIn,
   SignupNow,
   SignupNowAccount,
   StyledErrorsList,
   TitleLogin,
 } from "./login.styles";
-
-import { DivTxtField } from "../shared/styles";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { login } from "../../services/auth/session";
 import { useHandleError } from "hooks/handleError";
-import { Input } from "../../ui/input";
-import { Button } from "../../ui/button";
+import { Button, Form, Input } from "antd";
+import { AuthPageFooter } from "../shared/auth-page-footer";
+import { ReactComponent as WirdLogo } from "assets/icons/Shared/wirdLogo.svg";
 
 function Login() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   let navigate = useNavigate();
-  const [username, setUsername] = useState(" ");
-  const [password, setPassword] = useState(" ");
   const [loading, setLoading] = useState(false);
   const location = useLocation();
 
   const { messages, classColor, handleError } = useHandleError();
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (values) => {
     setLoading(true);
     try {
-      await login(username, password);
-      navigate(
-        location?.state?.redirectTo?.length > 0
-          ? location.state.redirectTo
-          : "/dashboard",
-      );
+      await login(values.username, values.password);
+      const searchParams = new URLSearchParams(location.search);
+      navigate(searchParams.get("redirectTo") ?? "/dashboard");
     } catch (err) {
       handleError(err);
     } finally {
@@ -43,19 +35,12 @@ function Login() {
     }
   };
 
-  const handleChangeUsername = (e) => {
-    setUsername(e.target.value);
-  };
-  const handleChangePassowrd = (e) => {
-    setPassword(e.target.value);
-  };
-
   return (
     <LoginFormContainer>
       <DivCenter>
         <HeadLogIn>
+          <WirdLogo />
           <TitleLogin>{`${t("login")}`}</TitleLogin>
-          <br />
           <SignupNowAccount>
             {t("notAccount")}{" "}
             <SignupNow href="/signup">{t("signUpKey")}</SignupNow>
@@ -82,26 +67,32 @@ function Login() {
         {/*<OrWayToLogIn>Or</OrWayToLogIn>*/}
         {/*/!* </HeadLogIn> *!/*/}
 
-        <Form onSubmit={handleSubmit}>
-          <DivTxtField>
-            <Input
-              type="text"
-              id="username"
-              onChange={handleChangeUsername}
-              required
-              placeholder={t("username")}
-            />
-          </DivTxtField>
+        <Form onFinish={handleSubmit} layout="vertical">
+          <Form.Item
+            name="username"
+            rules={[
+              {
+                required: true,
+                message: t("requiredField"),
+              },
+            ]}
+            label={t("username")}
+          >
+            <Input size="large" placeholder={t("username")} />
+          </Form.Item>
 
-          <DivTxtField>
-            <Input
-              type="password"
-              id="password"
-              onChange={handleChangePassowrd}
-              required
-              placeholder={t("password")}
-            />
-          </DivTxtField>
+          <Form.Item
+            name="password"
+            rules={[
+              {
+                required: true,
+                message: t("requiredField"),
+              },
+            ]}
+            label={t("passwordKey")}
+          >
+            <Input.Password size="large" placeholder={t("passwordKey")} />
+          </Form.Item>
 
           {/* TODO: style the error message */}
           {/* {showErrorMessage && (
@@ -121,7 +112,14 @@ function Login() {
               })}
             </StyledErrorsList>
           )}
-          <Button variant="primary" type="submit" disabled={loading}>
+          <Button
+            style={{ marginTop: "24px" }}
+            type="primary"
+            htmlType="submit"
+            disabled={loading}
+            size="large"
+            block
+          >
             {t("login")}
           </Button>
         </Form>
@@ -131,6 +129,7 @@ function Login() {
         {/*  Or<SignupNow href="/forgot-password"> Forgot Password</SignupNow>*/}
         {/*</SignupNowAccount>*/}
       </DivCenter>
+      <AuthPageFooter />
     </LoginFormContainer>
   );
 }

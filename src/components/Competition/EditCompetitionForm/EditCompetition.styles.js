@@ -12,19 +12,9 @@ export default styled.div`
   width: 100%;
 `;
 
-export const Form = styled.form`
+export const EditContestFormWrapper = styled.div`
   display: flex;
   width: 100%;
-  /* max-width: 42rem; */
-  flex-direction: row;
-  gap: 16px;
-  justify-content: normal;
-
-  @media (max-width: 56.25rem) {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
 `;
 
 export const ParticipantsNumbers = styled(DefaultParticipantsNumbers)`

@@ -11,7 +11,7 @@ import {
 } from "recharts";
 import { StyledChartTooltip } from "./results-overview.styles";
 import { useTranslation } from "react-i18next";
-import { colors } from "../../styles";
+import { colors } from "../../../styles";
 import dayjs from "dayjs";
 import { Fragment } from "react";
 

@@ -1,13 +1,10 @@
 import React from "react";
-import { Modal } from "../../ui/modal";
-import { Button } from "../../ui/button";
 import { useTranslation } from "react-i18next";
-import { Input, TextArea } from "../../ui/input";
 import styled from "@emotion/styled";
 import { PlusCircleIcon } from "@heroicons/react/20/solid";
-import { css } from "@emotion/css";
 import { createContest } from "../../services/competitionsServices";
 import { isAxiosError } from "axios";
+import { DatePicker, Form, Input, Modal } from "antd";
 
 const StyledFormItem = styled.div`
   display: flex;
@@ -20,45 +17,12 @@ export const CreateContestPopup = ({ visible, onClose }) => {
   const { t } = useTranslation();
   const [errors, setErrors] = React.useState({});
   const [submitting, setSubmitting] = React.useState(false);
+  const [form] = Form.useForm();
 
-  const validate = (formData) => {
-    const nextErrors = {};
-    if (!formData.get("contest_id")) {
-      nextErrors.contest_id = t("contest-code-required-error");
-    } else if (formData.get("contest_id").length < 6) {
-      nextErrors.contest_id = t("contest-code-invalid-error");
-    }
-    if (!formData.get("name")) {
-      nextErrors.name = t("name-required-error");
-    }
-    if (!formData.get("start_date")) {
-      nextErrors.start_date = t("start-date-required-error");
-    } else {
-      if (new Date(formData.get("start_date")) < new Date()) {
-        nextErrors.start_date = t("start-date-invalid-error");
-      }
-      if (!formData.get("end_date")) {
-        nextErrors.end_date = t("end-date-required-error");
-      } else if (
-        new Date(formData.get("end_date")) <
-        new Date(formData.get("start_date"))
-      ) {
-        nextErrors.end_date = t("end-date-invalid-error");
-      }
-    }
-    setErrors(nextErrors);
-    return Object.keys(nextErrors).length === 0;
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const data = new FormData(e.target);
-
-    if (!validate(data)) return;
-
+  const handleSubmit = async (values) => {
     setSubmitting(true);
     try {
-      const result = await createContest(data);
+      const result = await createContest(values);
       console.log(result);
       onClose?.();
     } catch (error) {
@@ -72,125 +36,91 @@ export const CreateContestPopup = ({ visible, onClose }) => {
   };
 
   return (
-    <Modal title={t("create-contest")} onClose={onClose} visible={visible}>
-      <form onSubmit={handleSubmit}>
-        <StyledFormItem>
-          <label htmlFor="contest_id">{t("contest-code")}</label>
-          <Input
-            type="text"
-            id="contest_id"
-            name="contest_id"
-            placeholder={t("contest-code")}
-            required
-            minLength={6}
-          />
-          {errors.contest_id && (
-            <span
-              className={css`
-                color: red;
-              `}
-            >
-              {errors.contest_id}
-            </span>
-          )}
-        </StyledFormItem>
-        <StyledFormItem>
-          <label htmlFor="name">{t("name-label")}</label>
-          <Input
-            type="text"
-            id="name"
-            name="name"
-            placeholder={t("name-label")}
-            required
-          />
-          {errors.name && (
-            <span
-              className={css`
-                color: red;
-              `}
-            >
-              {errors.name}
-            </span>
-          )}
-        </StyledFormItem>
-        <StyledFormItem>
-          <label htmlFor="description">{t("contest-description")}</label>
-          <TextArea
-            id="description"
-            name="description"
-            placeholder={t("contest-description")}
-            rows={2}
-          />
-          {errors.description && (
-            <span
-              className={css`
-                color: red;
-              `}
-            >
-              {errors.description}
-            </span>
-          )}
-        </StyledFormItem>
-        <StyledFormItem>
-          <label htmlFor="start_date">{t("start-date")}</label>
-          <Input
-            type="date"
-            id="start_date"
-            name="start_date"
-            placeholder={t("start-date")}
-            required
-          />
-          {errors.start_date && (
-            <span
-              className={css`
-                color: red;
-              `}
-            >
-              {errors.start_date}
-            </span>
-          )}
-        </StyledFormItem>
-        <StyledFormItem>
-          <label htmlFor="end_date">{t("end-date")}</label>
-          <Input
-            type="date"
-            id="end_date"
-            name="end_date"
-            placeholder={t("end-date")}
-            required
-          />
-          {errors.end_date && (
-            <span
-              className={css`
-                color: red;
-              `}
-            >
-              {errors.end_date}
-            </span>
-          )}
-        </StyledFormItem>
-
-        <div
-          className={css`
-            display: flex;
-            gap: 16px;
-            flex-direction: row-reverse;
-          `}
+    <Modal
+      title={t("create-contest")}
+      onCancel={onClose}
+      open={visible}
+      onOk={() => form.submit()}
+      okText={t("create-contest")}
+      okButtonProps={{
+        icon: <PlusCircleIcon style={{ width: 16 }} />,
+        loading: submitting,
+      }}
+      cancelText={t("cancel")}
+    >
+      <Form
+        style={{ padding: "32px 0" }}
+        form={form}
+        onFinish={handleSubmit}
+        layout="vertical"
+        disabled={submitting}
+      >
+        <Form.Item
+          name="contest_id"
+          label={t("contest-code")}
+          required
+          rules={[
+            { required: true, message: t("contest-code-required-error") },
+            { min: 6, message: t("contest-code-invalid-error") },
+          ]}
+          validateStatus={errors.contest_id ? "error" : undefined}
+          help={errors.contest_id}
         >
-          <Button variant="primary" type="submit" disabled={submitting}>
-            {t("create-contest")}
-            <PlusCircleIcon />
-          </Button>
-          <Button
-            variant="default"
-            onClick={onClose}
-            type="button"
-            disabled={submitting}
-          >
-            {t("cancel")}
-          </Button>
-        </div>
-      </form>
+          <Input placeholder={t("contest-code")} />
+        </Form.Item>
+        <Form.Item
+          label={t("contest-name")}
+          name="name"
+          required
+          rules={[
+            { required: true, message: t("contest-name-required-error") },
+          ]}
+          validateStatus={errors.name ? "error" : undefined}
+          help={errors.name}
+        >
+          <Input placeholder={t("name-label")} />
+        </Form.Item>
+        <Form.Item
+          label={t("contest-description")}
+          name="description"
+          validateStatus={errors.description ? "error" : undefined}
+          help={errors.description}
+        >
+          <Input.TextArea placeholder={t("contest-description")} rows={2} />
+        </Form.Item>
+        <Form.Item
+          label={t("start-date")}
+          name="start_date"
+          required
+          rules={[{ required: true, message: t("start-date-required-error") }]}
+          validateStatus={errors.start_date ? "error" : undefined}
+          help={errors.start_date}
+        >
+          <DatePicker placeholder={t("start-date")} />
+        </Form.Item>
+        <Form.Item
+          label={t("end-date")}
+          name="end_date"
+          dependencies={["start_date"]}
+          required
+          rules={[
+            { required: true, message: t("end-date-required-error") },
+            // rule to make sure this value is after start_date
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (!value || getFieldValue("start_date").isBefore(value)) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(new Error(t("end-date-invalid-error")));
+              },
+            }),
+          ]}
+          validateStatus={errors.end_date ? "error" : undefined}
+          help={errors.end_date}
+        >
+          <DatePicker placeholder={t("end-date")} />
+        </Form.Item>
+      </Form>
     </Modal>
   );
 };

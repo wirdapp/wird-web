@@ -2,12 +2,10 @@ import { useDashboardData } from "../../util/routes-data";
 import { useState } from "react";
 import styled from "@emotion/styled";
 import { colors } from "../../styles";
-import { Button } from "../../ui/button";
 import { useTranslation } from "react-i18next";
-import { Modal } from "../../ui/modal";
-import { TextArea } from "../../ui/input";
 import { TrashIcon } from "@heroicons/react/20/solid";
 import { updateContest } from "../../services/contests/api";
+import { Button, Input, Modal } from "antd";
 
 const StyledAnnouncementWrapper = styled.div`
   width: 100%;
@@ -110,7 +108,7 @@ export const ManageAnnouncements = () => {
               <li key={index}>
                 {announcement}
                 <Button
-                  variant="link"
+                  type="text"
                   onClick={() => handleAnnouncementDelete(index)}
                 >
                   <TrashIcon />
@@ -122,15 +120,18 @@ export const ManageAnnouncements = () => {
       </div>
       <Modal
         title={t("make-an-announcement")}
-        visible={announcementFormVisible}
-        onClose={() => setAnnouncementFormVisible(false)}
+        open={announcementFormVisible}
+        onCancel={() => setAnnouncementFormVisible(false)}
+        onOk={handleAnnouncementSubmit}
+        okText={t("submit")}
+        cancelText={t("cancel")}
       >
-        <TextArea
+        <Input.TextArea
+          placeholder={t("announcement-placeholder")}
           rows={5}
           onChange={handleAnnouncementChange}
           value={newAnnouncement}
         />
-        <Button onClick={handleAnnouncementSubmit}>{t("submit")}</Button>
       </Modal>
     </StyledAnnouncementWrapper>
   );

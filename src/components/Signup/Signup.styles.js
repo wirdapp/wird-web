@@ -11,12 +11,19 @@ import {
   DivFileField as DefaultDivFileField,
   FileFormInput as DefaultFileFormInput,
 } from "../Students/setPasswordStudent/SetPasswordStudent.styles";
+import { colors } from "../../styles";
 
 export default styled.div`
-  margin: auto;
-  padding: 8px;
   background: #fdfdfb;
-  /* height: 54.3125rem; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin: 0;
+  padding: 32px 8px;
+  background: ${colors.lightWheat};
+  min-height: 100vh;
 `;
 
 export const HeadSignup = styled.div`

@@ -1,13 +1,6 @@
 import React, { useState } from "react";
-import { DivTxtField } from "../shared/styles.js";
-import SignupFormContainer, {
-  DivCenter,
-  DivFileField,
-  FileFormInput,
-  InlineFormError,
-} from "../Signup/Signup.styles";
+import SignupFormContainer, { DivCenter } from "../Signup/Signup.styles";
 import {
-  Form,
   HeadLogIn,
   SignupNow,
   SignupNowAccount,
@@ -17,71 +10,36 @@ import {
 import * as AuthApi from "../../services/auth/api";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useHandleError } from "hooks/handleError/index.js";
-import { Input } from "../../ui/input";
-import { Button } from "../../ui/button";
 import { login } from "../../services/auth/session";
+import { Button, Form, Input, Upload } from "antd";
+import { isAxiosError } from "axios";
+import { ArrowUpTrayIcon } from "@heroicons/react/24/outline";
+import { AuthPageFooter } from "../shared/auth-page-footer";
+import { ReactComponent as WirdLogo } from "assets/icons/Shared/wirdLogo.svg";
+
+const usernameRegex = new RegExp("^[\u0621-\u064Aa-zA-Z0-9+-.@_]*$");
 
 function Signup() {
-  const [password, setPassword] = useState("");
-  const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
-  const [showErrorMessageMatch, setShowErrorMessageMatch] = useState(false);
-  const [isValidUserName, setValidUserName] = useState(true);
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { messages, handleError } = useHandleError();
+  const [errors, setErrors] = useState({});
+  const [fileList, setFileList] = useState([]);
 
-  const handleChangeUsername = (e) => {
-    const value = e.target.value;
-    let regex = new RegExp("^[\u0621-\u064Aa-zA-Z0-9+-.@_]*$");
-    if (!regex.test(value)) {
-      setValidUserName(false);
-    } else {
-      setValidUserName(true);
-    }
-  };
-
-  const handlePasswordChange = (e) => {
-    const value = e.target.value;
-    setPassword(value);
-    if (passwordConfirm.length > 0 && value !== passwordConfirm) {
-      setShowErrorMessageMatch(true);
-    } else {
-      setShowErrorMessageMatch(false);
-    }
-  };
-
-  const handleRetypePassword = (e) => {
-    const value = e.target.value;
-    setPasswordConfirm(value);
-    if (value !== password) {
-      setShowErrorMessageMatch(true);
-    } else {
-      setShowErrorMessageMatch(false);
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (showErrorMessageMatch || !isValidUserName) {
-      return;
-    }
-
-    if (password !== passwordConfirm) {
-      setShowErrorMessageMatch(true);
-      return;
-    }
-
-    const formData = new FormData(e.target);
+  const onFinish = async (values) => {
+    setErrors({});
     setLoading(true);
     try {
-      await AuthApi.signup(formData, false);
-      await login(formData.get("username"), formData.get("password1"));
+      await AuthApi.signup(values, false);
+      await login(values.username, values.password1);
       navigate("/dashboard");
     } catch (err) {
-      handleError(err);
+      if (isAxiosError(err)) {
+        setErrors(err.response.data);
+      } else {
+        setErrors({ non_field_errors: [err.message] });
+      }
     } finally {
       setLoading(false);
     }
@@ -91,6 +49,7 @@ function Signup() {
     <SignupFormContainer>
       <DivCenter>
         <HeadLogIn>
+          <WirdLogo />
           <TitleLogin>{t("signUp")}</TitleLogin>
           <SignupNowAccount>
             {t("alreadyHaveAccount")}
@@ -98,87 +57,144 @@ function Signup() {
           </SignupNowAccount>
         </HeadLogIn>
 
-        <Form onSubmit={handleSubmit}>
-          <DivTxtField>
-            <Input
-              name="username"
-              onChange={handleChangeUsername}
-              type="text"
-              placeholder={t("userNameKey")}
-              required
-            />
-          </DivTxtField>
-          {!isValidUserName && (
-            <InlineFormError>{t("userNameDisclimar")}</InlineFormError>
-          )}
+        <Form
+          form={form}
+          onFinish={onFinish}
+          disabled={loading}
+          layout="vertical"
+          validateMessages={{
+            required: t("requiredField"),
+          }}
+        >
+          <Form.Item
+            label={t("userNameKey")}
+            required
+            rules={[
+              { required: true },
+              {
+                pattern: usernameRegex,
+                message: t("userNameDisclimar"),
+              },
+            ]}
+            name="username"
+            validateStatus={errors.username ? "error" : undefined}
+            help={errors.username}
+          >
+            <Input size="large" placeholder={t("userNameKey")} />
+          </Form.Item>
 
-          <DivTxtField>
-            <Input
-              name="password1"
-              onChange={handlePasswordChange}
-              placeholder={t("passwordKey")}
-              type="password"
-              required
-            />
-          </DivTxtField>
+          <Form.Item
+            label={t("passwordKey")}
+            required
+            rules={[{ required: true }]}
+            name="password1"
+            validateStatus={errors.password1 ? "error" : undefined}
+            help={errors.password1 ?? undefined}
+          >
+            <Input.Password size="large" placeholder={t("passwordKey")} />
+          </Form.Item>
 
-          <DivTxtField>
-            <Input
-              name="password2"
-              onChange={handleRetypePassword}
-              placeholder={t("retypePassword")}
-              type="password"
-              required
-            />
-          </DivTxtField>
-          {showErrorMessageMatch && (
-            <InlineFormError className="red">
-              {t("retypePasswordDisclimar")}
-            </InlineFormError>
-          )}
+          <Form.Item
+            label={t("retypePassword")}
+            required
+            rules={[
+              {
+                required: true,
+              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue("password1") === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    new Error(t("retypePasswordDisclimar")),
+                  );
+                },
+              }),
+            ]}
+            name="password2"
+            validateStatus={errors.password2 ? "error" : undefined}
+            help={errors.password2 ?? undefined}
+          >
+            <Input.Password size="large" placeholder={t("retypePassword")} />
+          </Form.Item>
 
-          <DivTxtField>
-            <Input
-              name="first_name"
-              placeholder={t("firstName")}
-              type="text"
-              required
-            />
-          </DivTxtField>
+          <Form.Item
+            label={t("firstName")}
+            name="first_name"
+            validateStatus={errors.first_name ? "error" : undefined}
+            help={errors.first_name ?? undefined}
+          >
+            <Input size="large" placeholder={t("firstName")} />
+          </Form.Item>
 
-          <DivTxtField>
-            <Input
-              name="last_name"
-              placeholder={t("lastName")}
-              type="text"
-              required
-            />
-          </DivTxtField>
+          <Form.Item
+            label={t("lastName")}
+            name="last_name"
+            validateStatus={errors.last_name ? "error" : undefined}
+            help={errors.last_name ?? undefined}
+          >
+            <Input placeholder={t("lastName")} size="large" />
+          </Form.Item>
 
-          <DivTxtField>
-            <Input name="email" type="text" placeholder={t("emailAddress")} />
-          </DivTxtField>
+          <Form.Item
+            label={t("emailAddress")}
+            required
+            rules={[{ required: true }]}
+            name="email"
+            validateStatus={errors.email ? "error" : undefined}
+            help={errors.email ?? undefined}
+          >
+            <Input size="large" placeholder={t("emailAddress")} />
+          </Form.Item>
 
-          <DivTxtField>
-            <Input
-              name="phone_number"
-              type="text"
-              placeholder={t("phoneNumber")}
-            />
-          </DivTxtField>
+          <Form.Item
+            label={t("phoneNumber")}
+            name="phone_number"
+            validateStatus={errors.phone_number ? "error" : undefined}
+            help={errors.phone_number ?? undefined}
+          >
+            <Input size="large" placeholder={t("phoneNumber")} />
+          </Form.Item>
 
-          <DivFileField>
-            {t("profilePhoto")}
-            <FileFormInput name="profile_photo" type="file" />
-          </DivFileField>
+          <Form.Item
+            name="profile_photo"
+            label={t("profilePhoto")}
+            valuePropName="fileList"
+            getValueFromEvent={(e) => {
+              if (Array.isArray(e)) {
+                return e;
+              }
+              return e?.fileList;
+            }}
+          >
+            <Upload
+              listType="picture-circle"
+              accept="image/*"
+              multiple={false}
+              fileList={fileList}
+              beforeUpload={(file) => {
+                setFileList([file]);
+                return false;
+              }}
+              onRemove={() => setFileList([])}
+            >
+              {fileList.length === 0 && (
+                <button style={{ border: 0, background: "none" }} type="button">
+                  <ArrowUpTrayIcon style={{ width: 16 }} />
+                  <div style={{ marginTop: 8 }}>Upload</div>
+                </button>
+              )}
+            </Upload>
+          </Form.Item>
           <br />
 
           {/* <PageLink href="https://www.facebook.com/Wird.Competition/" target="_blank">
             هل تواجه مشكلة تقنية أو نسيت كلمة المرور؟ تواصل مع الدعم الفني
           </PageLink> */}
-          {messages?.length > 0 && (
+          {errors.non_field_errors?.length > 0 && (
             <StyledErrorsList>
-              {messages?.map?.((message, index) => {
+              {errors.non_field_errors?.map?.((message, index) => {
                 return (
                   <div className="red" key={message}>
                     {message}
@@ -188,15 +204,18 @@ function Signup() {
             </StyledErrorsList>
           )}
           <Button
-            variant="primary"
-            type="submit"
+            size="large"
+            type="primary"
+            htmlType="submit"
             value="login"
-            disabled={loading}
+            loading={loading}
+            block
           >
             {t("signUp")}
           </Button>
         </Form>
       </DivCenter>
+      <AuthPageFooter />
     </SignupFormContainer>
   );
 }

@@ -1,23 +1,23 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ReactDom from "react-dom";
 import Container, {
-  TextInputField,
+  AddButton,
   DropDown,
   Option,
-  AddButton,
   Overlay,
+  TextInputField,
 } from "./AddCriteriaForm.styled";
-import InputField from "./InputField";
 import { useTranslation } from "react-i18next";
 import { addStandard, updateStandard } from "../../services/standardServices";
 import {
+  Container as NumInputContainer,
   InputField as NumInputField,
   TextLabel,
-  Container as NumInputContainer,
 } from "./InputField.styled";
 import { DivMultiselect } from "../Standards/AddStandardForm/AddStandardForm.styles";
 import Multiselect from "multiselect-react-dropdown";
 import { DivPass } from "../Admins/Admins.styles";
+import { Checkbox, InputNumber } from "antd";
 
 export default function PopUpModal({
   position,
@@ -333,9 +333,8 @@ export default function PopUpModal({
         />
         <NumInputContainer>
           <TextLabel>{t("criteria-order")}</TextLabel>
-          <InputField
-            type="number"
-            min="1"
+          <InputNumber
+            min={1}
             onChange={handleOrderChange}
             value={order + ""}
           />
@@ -395,12 +394,12 @@ export default function PopUpModal({
           </NumInputContainer>
         )}
 
-        <InputField
-          type={"checkbox"}
-          label={t("limited")}
+        <Checkbox
           onChange={handleCustomDaysCheckboxChange}
           checked={isCustomDaysChecked}
-        />
+        >
+          {t("limited")}
+        </Checkbox>
         {isCustomDaysChecked && (
           <DivMultiselect>
             <Multiselect
@@ -416,18 +415,12 @@ export default function PopUpModal({
             />
           </DivMultiselect>
         )}
-        <InputField
-          type={"checkbox"}
-          label={t("show-criteria")}
-          onChange={handleShownCheckboxChange}
-          checked={isShown}
-        />
-        <InputField
-          type={"checkbox"}
-          label={t("activate-criteria")}
-          onChange={handleActiveCheckboxChange}
-          checked={isActive}
-        />
+        <Checkbox onChange={handleShownCheckboxChange} checked={isShown}>
+          {t("show-criteria")}
+        </Checkbox>
+        <Checkbox onChange={handleActiveCheckboxChange} checked={isActive}>
+          {t("activate-criteria")}
+        </Checkbox>
         {messages.length > 0 &&
           messages.map((message, index) => {
             return (

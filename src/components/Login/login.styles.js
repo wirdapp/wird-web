@@ -9,14 +9,17 @@ import {
 
 export default styled.div`
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
   margin: 0;
-  padding: 8px;
+  padding: 32px 8px;
   background: ${colors.lightWheat};
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
 `;
 export const DivCenter = styled.div`
-  margin: auto;
+  margin: 0 auto;
   /* margin-top: 2rem;
                           margin-bottom: 2rem; */
   width: 100%;
@@ -30,7 +33,6 @@ export const DivCenter = styled.div`
 
   background: #ffffff;
   border-radius: 1.5rem;
-  height: 40.25rem;
 `;
 
 export const Form = styled(DefaultForm)`
@@ -93,7 +95,7 @@ export const HeadLogIn = styled.div`
   justify-content: center;
   align-items: center;
   padding: 0.3125rem;
-  gap: 0.3125rem;
+  gap: 16px;
   border-radius: 1.5rem;
 `;
 export const TitleLogin = styled.div`
@@ -105,8 +107,6 @@ export const TitleLogin = styled.div`
   font-size: 1.875rem;
   line-height: 2.3125rem;
   text-align: center;
-
-  color: #000000;
 
   color: #000000;
 `;

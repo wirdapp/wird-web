@@ -178,7 +178,7 @@ export const router = createBrowserRouter([
             element: <ReviewOtherPoints />,
           },
           {
-            path: "results",
+            path: "results/:tab",
             element: <ContestResults />,
           },
           {

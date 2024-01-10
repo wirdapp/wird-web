@@ -24,8 +24,10 @@ export const createContest = async (formData) => {
   return data;
 };
 
-export const joinContest = async (formData) => {
-  const { data } = await axios.post("/join-contest/", formData);
+export const joinContest = async (code) => {
+  const { data } = await axios.post("/contests/join_contest/", {
+    contest_id: code,
+  });
   return data;
 };
 

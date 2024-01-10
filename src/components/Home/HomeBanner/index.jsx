@@ -18,10 +18,10 @@ import Banner, {
 } from "./homeBanner.styles";
 import { useDashboardData } from "../../../util/routes-data";
 import { JoinContestPopup } from "../../Competition/join-contest-popup";
-import { Button } from "../../../ui/button";
 import { CreateContestPopup } from "../../Competition/create-contest-popup";
 import { PlusCircleIcon } from "@heroicons/react/20/solid";
 import { css } from "@emotion/css";
+import { Button } from "antd";
 
 function HomeBanner(props) {
   const { currentContest } = useDashboardData();
@@ -48,7 +48,7 @@ function HomeBanner(props) {
           </TitleContent>
 
           {currentContest ? (
-            <Button variant="primary" href="/dashboard/results">
+            <Button href="/dashboard/results/overview">
               {t("see-contest-result")}
             </Button>
           ) : (
@@ -59,10 +59,7 @@ function HomeBanner(props) {
                 gap: 8px;
               `}
             >
-              <Button
-                variant="primary"
-                onClick={() => setCreateContestOpen(true)}
-              >
+              <Button onClick={() => setCreateContestOpen(true)}>
                 {t("create-contest")}
                 <PlusCircleIcon />
               </Button>

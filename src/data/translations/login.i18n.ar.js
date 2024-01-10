@@ -34,4 +34,6 @@ export default {
   passwordMatch: "كلمات المرور هذه غير متطابقة. حاول ثانية.",
   resetPassWord: "إعادة تعيين كلمة المرور الآن",
   wirdSupport: "دعم وِرد",
+  requiredField: "هذا الحقل مطلوب",
+  copyrightFooterMsg: "\u00A9 جميع الحقوق محفوظة لتطبيق ورد 2024",
 };

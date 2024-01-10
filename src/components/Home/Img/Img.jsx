@@ -1,17 +1,15 @@
 import React from "react";
 
-import "bootstrap/dist/css/bootstrap.min.css";
-
 // import Carousel from 'react-bootstrap/Carousel'
 import {
-  Stylecom,
-  IntroductionSection,
-  IntroductionDiv,
-  WirdLogoInHome,
-  IntroductionSectionDiv,
-  WirdMinIntroduction,
-  Introduction,
   BorderBottom,
+  Introduction,
+  IntroductionDiv,
+  IntroductionSection,
+  IntroductionSectionDiv,
+  Stylecom,
+  WirdLogoInHome,
+  WirdMinIntroduction,
 } from "./Img.styles.js";
 import WirdLogo from "../../../assets/Logo/WirdLogosvg.svg";
 
