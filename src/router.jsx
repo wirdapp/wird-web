@@ -31,8 +31,11 @@ import ForgotPassword from "./components/ForgotPassword";
 import { ReactComponent as WirdLogo } from "assets/icons/Shared/wirdLogo.svg";
 import { currentContest, getContests } from "./services/contests/api";
 import { Helmet } from "react-helmet";
-import React from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import "dayjs/locale/ar";
+import "dayjs/locale/en";
+import dayjs from "dayjs";
 
 function ErrorBoundary() {
   let error = useRouteError();
@@ -61,6 +64,14 @@ function ErrorBoundary() {
 
 const MainLayout = () => {
   const { i18n } = useTranslation();
+
+  useEffect(() => {
+    if (i18n.language === "ar") {
+      dayjs.locale("ar");
+    } else {
+      dayjs.locale("en");
+    }
+  }, [i18n.language]);
 
   return (
     <>

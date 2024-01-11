@@ -57,4 +57,7 @@ export default {
   deleteCriterion: "هل تريد حذف هذا المعييار؟",
   noStandard: "لا يوجد معايير",
   chooseStandard: "يجب عليك اختيار معيار لتعديله",
+  preview: "معاينة",
+  "no-criterias-added": "لا يوجد معايير مضافة",
+  "section-name": "اسم القسم",
 };
