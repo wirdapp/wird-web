@@ -27,7 +27,10 @@ export const ContestCriteriaApi = {
     return data;
   },
   async updateCriteria(id, criteria) {
-    const { data } = await axios.put(`/admin_panel/criteria/${id}/`, criteria);
+    const { data } = await axios.patch(
+      `/admin_panel/criteria/${id}/`,
+      criteria,
+    );
     return data;
   },
   async deleteCriteria(id) {

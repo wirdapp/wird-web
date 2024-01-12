@@ -1,6 +1,6 @@
 import { createContext, useContext, useMemo } from "react";
-import { useContestSections } from "./use-contest-sections";
-import { useContestCriteria } from "./use-contest-criteria";
+import { useContestSections } from "./sections/use-contest-sections";
+import { useContestCriteria } from "./criteria/use-contest-criteria";
 
 const ContestCriteriaContext = createContext({
   sections: {

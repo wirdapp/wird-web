@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ContestCriteriaApi } from "../../services/contest-criteria/api";
+import { ContestCriteriaApi } from "../../../services/contest-criteria/api";
 
 export function useContestCriteria({ messageApi } = {}) {
   const [criteriaItems, setCriteriaItems] = useState([]);

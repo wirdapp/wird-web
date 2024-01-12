@@ -3,7 +3,7 @@ import { css } from "@emotion/css";
 import { useTranslation } from "react-i18next";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { SectionListItem } from "./section-list-item";
-import { useContestCriteriaContext } from "./contest-criteria-context";
+import { useContestCriteriaContext } from "../contest-criteria-context";
 import { Button, Card, Flex, Form, Input, Space } from "antd";
 import { PlusCircleIcon, PlusIcon } from "@heroicons/react/24/outline"; // a little function to help us with reordering the result
 
@@ -24,7 +24,10 @@ export const SectionsList = () => {
   const handleAddSection = async (values) => {
     setAdding(true);
     try {
-      await sections.add(values.label);
+      await sections.add({
+        label: values.label,
+        position: sections.items.length,
+      });
     } finally {
       setAdding(false);
     }
@@ -83,7 +86,11 @@ export const SectionsList = () => {
           )}
         </Droppable>
       </DragDropContext>
-      <Card>
+      <Card
+        className={css`
+          border-style: dashed;
+        `}
+      >
         <Form
           layout="vertical"
           onFinish={handleAddSection}

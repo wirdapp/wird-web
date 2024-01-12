@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Collapse, Input, message, Popconfirm, Space } from "antd";
 import { css } from "@emotion/css";
 import { Bars2Icon } from "@heroicons/react/24/solid";
@@ -7,14 +7,15 @@ import { useTranslation } from "react-i18next";
 import {
   CheckIcon,
   ChevronLeftIcon,
+  ChevronRightIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { TrashIcon } from "@heroicons/react/20/solid";
-import { useContestCriteriaContext } from "./contest-criteria-context";
-import { SectionCriteriaList } from "./section-criteria-list";
+import { useContestCriteriaContext } from "../contest-criteria-context";
+import { SectionCriteriaList } from "../criteria/section-criteria-list";
 
-const expandIconClassName = (isActive) => css`
-  transform: rotate(${isActive ? -90 : 0}deg);
+const expandIconClassName = (isActive, isRtl) => css`
+  transform: rotate(${isActive ? (isRtl ? -90 : 90) : 0}deg);
   width: 16px;
   transition: transform 0.3s ease-in-out;
 `;
@@ -24,9 +25,9 @@ const ExpandIcon = ({ isActive }) => {
   const isRtl = i18n.dir() === "rtl";
 
   return isRtl ? (
-    <ChevronLeftIcon className={expandIconClassName(isActive)} />
+    <ChevronLeftIcon className={expandIconClassName(isActive, isRtl)} />
   ) : (
-    <ChevronLeftIcon className={expandIconClassName(isActive)} />
+    <ChevronRightIcon className={expandIconClassName(isActive, isRtl)} />
   );
 };
 
@@ -36,7 +37,7 @@ export const SectionListItem = ({ section, index, onSectionChange }) => {
   const [expanded, setExpanded] = useState(true);
   const [sectionLabel, setSectionLabel] = useState(section.label);
   const [updating, setUpdating] = useState(false);
-  const { criteria, sections } = useContestCriteriaContext();
+  const { sections } = useContestCriteriaContext();
 
   useEffect(() => {
     setSectionLabel(section.label);
@@ -69,11 +70,6 @@ export const SectionListItem = ({ section, index, onSectionChange }) => {
   };
 
   const onNameUpdate = () => handleSectionUpdate({ label: sectionLabel });
-
-  const sectionCriteriaItems = useMemo(
-    () => criteria.items.filter((s) => s.sectionId === section.id) ?? [],
-    [criteria, section.id],
-  );
 
   return (
     <Draggable draggableId={section.id} index={index}>
@@ -133,6 +129,7 @@ export const SectionListItem = ({ section, index, onSectionChange }) => {
                 extra: (
                   <Space>
                     <Button
+                      size="small"
                       type="text"
                       {...provided.dragHandleProps}
                       className={css`
@@ -147,13 +144,16 @@ export const SectionListItem = ({ section, index, onSectionChange }) => {
                       okText={t("yes")}
                       cancelText={t("no")}
                     >
-                      <Button type="text" ghost danger icon={<TrashIcon />} />
+                      <Button
+                        size="small"
+                        type="text"
+                        danger
+                        icon={<TrashIcon />}
+                      />
                     </Popconfirm>
                   </Space>
                 ),
-                children: (
-                  <SectionCriteriaList criteriaItems={sectionCriteriaItems} />
-                ),
+                children: <SectionCriteriaList section={section} />,
               },
             ]}
           />
