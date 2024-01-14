@@ -89,4 +89,5 @@ export default {
   "section-added": "تم إضافة القسم بنجاح",
   yes: "نعم",
   no: "لا",
+  points: "نقاط",
 };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Checkbox, Empty, Flex, Input, InputNumber, Radio, Switch } from "antd";
 import { css } from "@emotion/css";
 import { useContestCriteriaContext } from "./contest-criteria-context";
@@ -8,6 +8,11 @@ import { useTranslation } from "react-i18next";
 export const ContestPreview = () => {
   const { t } = useTranslation();
   const { sections, criteria } = useContestCriteriaContext();
+
+  const sortedSections = useMemo(
+    () => sections.items.sort((a, b) => a.position - b.position),
+    [sections.items],
+  );
 
   return (
     <Flex
@@ -27,7 +32,7 @@ export const ContestPreview = () => {
           description={t("no-sections")}
         />
       )}
-      {sections.items.map((section) => {
+      {sortedSections.map((section) => {
         const sectionCriteria = criteria.items
           .filter((c) => c.section === section.id)
           .sort((a, b) => a.order_in_section - b.order_in_section);

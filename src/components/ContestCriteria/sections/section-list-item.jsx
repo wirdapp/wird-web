@@ -13,6 +13,7 @@ import {
 import { TrashIcon } from "@heroicons/react/20/solid";
 import { useContestCriteriaContext } from "../contest-criteria-context";
 import { SectionCriteriaList } from "../criteria/section-criteria-list";
+import { colors } from "../../../styles";
 
 const expandIconClassName = (isActive, isRtl) => css`
   transform: rotate(${isActive ? (isRtl ? -90 : 90) : 0}deg);
@@ -84,6 +85,9 @@ export const SectionListItem = ({ section, index, onSectionChange }) => {
             expandIcon={({ isActive }) => <ExpandIcon isActive={isActive} />}
             collapsible="icon"
             className={css`
+              background: ${colors.lightYellow};
+              border: 1px solid ${colors.yellow};
+
               .ant-collapse-header {
                 align-items: center !important;
               }

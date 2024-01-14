@@ -38,6 +38,13 @@ export function useContestSections() {
     setSections(newSections);
   };
 
+  const saveAll = async (newSections) => {
+    setSections(newSections);
+    return Promise.all(
+      newSections.map((section) => update(section.id, section)),
+    );
+  };
+
   return {
     items: sections,
     setItems: setSections,
@@ -45,5 +52,6 @@ export function useContestSections() {
     add,
     update,
     remove,
+    saveAll,
   };
 }

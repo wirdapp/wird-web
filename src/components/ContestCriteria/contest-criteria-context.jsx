@@ -9,6 +9,7 @@ const ContestCriteriaContext = createContext({
     add: () => {},
     update: () => {},
     remove: () => {},
+    saveAll: () => {},
     loading: false,
   },
   criteria: {
@@ -17,6 +18,7 @@ const ContestCriteriaContext = createContext({
     add: () => {},
     update: () => {},
     remove: () => {},
+    saveAll: () => {},
     loading: false,
   },
   loading: false,
