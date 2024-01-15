@@ -20,12 +20,15 @@ export function useContestCriteria({ messageApi } = {}) {
   }, []);
 
   const add = async (criteria) => {
-    const criteriaData = await ContestCriteriaApi.addCriteria(criteria);
+    const criteriaData = await ContestCriteriaApi.addCriteria({ criteria });
     setCriteriaItems([...criteriaItems, criteriaData]);
   };
 
   const update = async (id, criteria) => {
-    const criteriaData = await ContestCriteriaApi.updateCriteria(id, criteria);
+    const criteriaData = await ContestCriteriaApi.updateCriteria({
+      id,
+      criteria,
+    });
     const index = criteriaItems.findIndex((criteria) => criteria.id === id);
     const newCriteriaItems = [...criteriaItems];
     newCriteriaItems[index] = criteriaData;
@@ -33,7 +36,7 @@ export function useContestCriteria({ messageApi } = {}) {
   };
 
   const remove = async (id) => {
-    await ContestCriteriaApi.deleteCriteria(id);
+    await ContestCriteriaApi.deleteCriteria({ id });
     const newCriteriaItems = criteriaItems.filter(
       (criteria) => criteria.id !== id,
     );

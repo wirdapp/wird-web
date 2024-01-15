@@ -5,10 +5,9 @@ import { retrieveTopMembers } from "../../services/competitionsServices";
 import Loader from "../Loader";
 import HomeBanner from "./HomeBanner";
 import TopRanks from "./TopRanks";
-import { retrieveStudents } from "../../services/studentsServices";
 import { useDashboardData } from "../../util/routes-data";
-import { usePageTitle } from "../shared/page-title";
 import { useTranslation } from "react-i18next";
+import { MembersApi } from "../../services/members/api";
 
 function Home() {
   const { currentUser, currentContest } = useDashboardData();
@@ -25,7 +24,7 @@ function Home() {
     retrieveTopMembers(
       (res) => {
         if (res && res.status === 200) {
-          setTopMembers(res.data.results);
+          setTopMembers(res.data.results ?? []);
         }
       },
       (err) => {
@@ -33,21 +32,14 @@ function Home() {
       },
     );
 
-    retrieveStudents(
-      (res) => {
-        if (res && res.status === 200) {
-          setStudents(res.data.results);
-          setLoading(false);
-        }
-      },
-      (err) => {
-        console.log("Failed to retrieve students : ", err.data);
+    MembersApi.getMembers()
+      .then((data) => {
+        setStudents(data.results);
+      })
+      .finally(() => {
         setLoading(false);
-      },
-    );
+      });
   }, []);
-
-  usePageTitle(t("home-page"));
 
   if (loading) {
     return <Loader />;

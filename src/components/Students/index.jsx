@@ -20,14 +20,12 @@ import ParticipantCard from "./ParticipantCard";
 import WaitingCard from "./WaitingCard";
 import Participants from "./ParticipantsMember";
 import { useDashboardData } from "../../util/routes-data";
-import { usePageTitle } from "../shared/page-title";
 import { MembersApi } from "../../services/members/api";
 
 export default function Students() {
   const { currentUser, currentContest } = useDashboardData();
 
   const { t } = useTranslation();
-  usePageTitle(t("students"));
 
   const [students, setStudents] = useState([]);
   const [deactivatedStudents, setDeactivatedStudents] = useState([]);
@@ -42,12 +40,10 @@ export default function Students() {
   useEffect(() => {
     setLoading(true);
     Promise.all([
-      MembersApi.getMembers(currentContest.id, Role.DEACTIVATED).then(
-        (data) => {
-          setDeactivatedStudents(data.results);
-        },
-      ),
-      MembersApi.getMembers(currentContest.id, Role.MEMBER).then((data) => {
+      MembersApi.getUsers({ role: Role.DEACTIVATED }).then((data) => {
+        setDeactivatedStudents(data.results);
+      }),
+      MembersApi.getMembers().then((data) => {
         setStudents(data.results);
       }),
     ]).finally(() => {

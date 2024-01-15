@@ -50,7 +50,7 @@ export const retrieveTopMembers = (successCallback, faiCallback) => {
   const currentContestId = getCurrentContestId();
   doRequest(
     null,
-    `/${currentContestId}/top-members/`,
+    `/admin_panel/${currentContestId}/leaderboard/`,
     {
       "Content-Type": "application/json",
     },

@@ -20,12 +20,12 @@ export function useContestSections() {
   }, []);
 
   const add = async (section) => {
-    const sectionData = await ContestCriteriaApi.addSection(section);
+    const sectionData = await ContestCriteriaApi.addSection({ section });
     setSections([...sections, sectionData]);
   };
 
   const update = async (id, section) => {
-    const sectionData = await ContestCriteriaApi.updateSection(id, section);
+    const sectionData = await ContestCriteriaApi.updateSection({ id, section });
     const index = sections.findIndex((section) => section.id === id);
     const newSections = [...sections];
     newSections[index] = sectionData;
@@ -33,7 +33,7 @@ export function useContestSections() {
   };
 
   const remove = async (id) => {
-    await ContestCriteriaApi.deleteSection(id);
+    await ContestCriteriaApi.deleteSection({ id });
     const newSections = sections.filter((section) => section.id !== id);
     setSections(newSections);
   };

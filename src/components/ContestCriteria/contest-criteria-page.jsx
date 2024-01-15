@@ -1,6 +1,5 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { usePageTitle } from "../shared/page-title";
 import { AnimatedPage } from "../../ui/animated-page";
 import { Col, Row, Typography } from "antd";
 import { css } from "@emotion/css";
@@ -10,7 +9,6 @@ import { ContestPreview } from "./contest-preview";
 
 export function ContestCriteria() {
   const { t } = useTranslation();
-  usePageTitle(t("criterias"));
 
   return (
     <AnimatedPage>
