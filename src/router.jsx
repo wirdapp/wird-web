@@ -129,6 +129,7 @@ export const router = createBrowserRouter([
               title: "home-page",
             }),
             element: <Home />,
+            errorElement: <ErrorBoundary />,
           },
           {
             path: "edit-profile",
@@ -136,6 +137,7 @@ export const router = createBrowserRouter([
               title: "edit-profile",
             }),
             element: <EditProfile />,
+            errorElement: <ErrorBoundary />,
           },
           {
             path: "competition",
@@ -143,6 +145,7 @@ export const router = createBrowserRouter([
               title: "contest-information",
             }),
             element: <Competition />,
+            errorElement: <ErrorBoundary />,
           },
           {
             path: "leaderboard",
@@ -150,6 +153,7 @@ export const router = createBrowserRouter([
               title: "leaders-board",
             }),
             element: <Leaderboard />,
+            errorElement: <ErrorBoundary />,
           },
           {
             path: "students",
@@ -157,6 +161,7 @@ export const router = createBrowserRouter([
               title: "students",
             }),
             element: <Students />,
+            errorElement: <ErrorBoundary />,
           },
           {
             path: "groups",
@@ -164,6 +169,7 @@ export const router = createBrowserRouter([
               title: "groups",
             }),
             element: <Groups />,
+            errorElement: <ErrorBoundary />,
           },
           {
             path: "admins",
@@ -171,6 +177,7 @@ export const router = createBrowserRouter([
               title: "admins",
             }),
             element: <ContestModerator />,
+            errorElement: <ErrorBoundary />,
           },
           {
             path: "contest-criteria",
@@ -178,6 +185,7 @@ export const router = createBrowserRouter([
               title: "criterias",
             }),
             element: <ContestCriteria />,
+            errorElement: <ErrorBoundary />,
           },
           {
             path: "review-other-points",
@@ -185,6 +193,7 @@ export const router = createBrowserRouter([
               title: "text-inputs",
             }),
             element: <ReviewOtherPoints />,
+            errorElement: <ErrorBoundary />,
           },
           {
             path: "results/:tab",
@@ -192,6 +201,7 @@ export const router = createBrowserRouter([
               title: "results-page",
             }),
             element: <ContestResults />,
+            errorElement: <ErrorBoundary />,
           },
           {
             path: "export-points",
@@ -199,6 +209,7 @@ export const router = createBrowserRouter([
               title: "export-points",
             }),
             element: <ExportPoints />,
+            errorElement: <ErrorBoundary />,
           },
         ],
       },

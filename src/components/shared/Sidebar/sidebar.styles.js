@@ -6,8 +6,7 @@ export const SideBarContainer = styled.aside`
   animation-duration: 0.2s;
   background-color: ${colors.warmWheat};
   text-align: center;
-  border-radius: 1.5rem;
-  margin: 8px;
+  margin: 8px 0;
   flex: 0 1 300px;
 
   & svg {
@@ -28,7 +27,7 @@ export const SideBarContainer = styled.aside`
   }
 
   > div {
-    padding: 16px;
+    padding: 8px;
   }
 `;
 
