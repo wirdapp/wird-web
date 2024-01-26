@@ -41,10 +41,10 @@ export default function Students() {
     setLoading(true);
     Promise.all([
       MembersApi.getUsers({ role: Role.DEACTIVATED }).then((data) => {
-        setDeactivatedStudents(data.results);
+        setDeactivatedStudents(data);
       }),
       MembersApi.getMembers().then((data) => {
-        setStudents(data.results);
+        setStudents(data);
       }),
     ]).finally(() => {
       setLoading(false);

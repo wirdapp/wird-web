@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { joinContest } from "../../services/competitionsServices";
+import { ContestsApi } from "../../services/contests/api";
 import { Form, Input, Modal } from "antd";
 
 export const JoinContestPopup = ({ visible, onClose }) => {
@@ -9,7 +9,7 @@ export const JoinContestPopup = ({ visible, onClose }) => {
 
   const handleSubmit = async (values) => {
     try {
-      const result = await joinContest(values.code);
+      const result = await ContestsApi.joinContest(values.code);
       console.log(result);
     } catch (error) {
       console.log(error);

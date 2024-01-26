@@ -4,7 +4,7 @@ import styled from "@emotion/styled";
 import { colors } from "../../styles";
 import { useTranslation } from "react-i18next";
 import { TrashIcon } from "@heroicons/react/20/solid";
-import { updateContest } from "../../services/contests/api";
+import { ContestsApi } from "../../services/contests/api";
 import { Button, Input, Modal } from "antd";
 
 const StyledAnnouncementWrapper = styled.div`
@@ -78,7 +78,7 @@ export const ManageAnnouncements = () => {
   const handleAnnouncementSubmit = async (e) => {
     e.preventDefault();
     const newAnnouncements = [...announcements, newAnnouncement.trim()];
-    await updateContest({
+    await ContestsApi.updateContest({
       announcements: newAnnouncements,
     });
     setAnnouncments(newAnnouncements);

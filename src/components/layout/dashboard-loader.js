@@ -6,7 +6,7 @@ import {
 import { redirect } from "react-router-dom";
 import * as AuthApi from "../../services/auth/api";
 import { isSuperAdmin } from "../../util/ContestPeople_Role";
-import { getContests } from "../../services/contests/api";
+import { ContestsApi } from "../../services/contests/api";
 import { getCurrentContest } from "../../services/contests/utils";
 
 export async function dashboardLoader({ request }) {
@@ -27,7 +27,7 @@ export async function dashboardLoader({ request }) {
   }
 
   try {
-    data.contests = await getContests();
+    data.contests = await ContestsApi.getContests();
     data.currentContest = await getCurrentContest(data.contests);
   } catch (e) {
     console.log(`Failed to get current contest: ${e}`);

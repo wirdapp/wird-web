@@ -28,5 +28,10 @@ export default {
     noData: "No data",
     criteriaTitle: "Criteria",
     answer: "Answer",
+    noSubmissions: "No submissions for this day",
+    selectDate: "Select date",
   },
+  "no-results": "No results",
+  failedToSave: "Failed to save",
+  back: "Back",
 };

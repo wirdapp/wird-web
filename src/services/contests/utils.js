@@ -1,4 +1,5 @@
 import Cookies from "js-cookie";
+import { ContestsApi } from "./api";
 
 export function getCurrentContestId() {
   return Cookies.get("currentContest");
@@ -8,13 +9,10 @@ export function changeCurrentContest(contestId) {
   Cookies.set("currentContest", contestId, { path: "/" });
 }
 
-export function getCurrentContest(contests = []) {
-  const currentContestId = getCurrentContestId();
-  if (!currentContestId && contests.length > 0) {
-    changeCurrentContest(contests[0].id);
-    return contests[0];
-  }
-  return contests.find((contest) => contest.id === currentContestId);
+export async function getCurrentContest(contests = []) {
+  const currentContestId = getCurrentContestId() || contests[0]?.id;
+  if (!currentContestId) return null;
+  return ContestsApi.getContestDetails(currentContestId);
 }
 
 export function getInviteLink(contestId) {

@@ -2,7 +2,6 @@ import styled from "@emotion/styled";
 import { colors } from "../../../styles";
 
 export const StyledOverviewWrapper = styled.div`
-  padding: 16px;
   border-radius: 8px;
 
   h3 {
@@ -258,7 +257,6 @@ export const StyledSkeletonWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 24px;
-  padding: 32px;
 
   .ant-skeleton,
   .skeleton-chart,

@@ -1,20 +1,11 @@
 import React from "react";
-import {
-  Checkbox,
-  Empty,
-  Flex,
-  Form,
-  Input,
-  InputNumber,
-  Radio,
-  Switch,
-} from "antd";
+import { Empty, Flex, Form } from "antd";
 import { css } from "@emotion/css";
-import { FieldTypes } from "../../services/contest-criteria/consts";
 import { useTranslation } from "react-i18next";
 import { AnimatePresence, motion } from "framer-motion";
 import { useContestSections } from "./sections/use-contest-sections";
 import { useContestCriteria } from "./criteria/use-contest-criteria";
+import { CriterionField } from "./criterion-field";
 
 export const ContestPreview = () => {
   const { t } = useTranslation();
@@ -117,41 +108,7 @@ export const ContestPreview = () => {
                     key={c.id}
                     extra={c.description}
                   >
-                    {c.resourcetype === FieldTypes.Text &&
-                      (c.allow_multiline ? (
-                        <Input.TextArea placeholder={c.label} />
-                      ) : (
-                        <Input placeholder={c.label} />
-                      ))}
-                    {c.resourcetype === FieldTypes.Number && (
-                      <InputNumber
-                        defaultValue={c.lower_bound || 0}
-                        min={c.lower_bound}
-                        max={c.upper_bound}
-                      />
-                    )}
-                    {c.resourcetype === FieldTypes.Checkbox && (
-                      <Switch
-                        checkedChildren={c.checked_label ?? t("yes")}
-                        unCheckedChildren={c.unchecked_label ?? t("no")}
-                      />
-                    )}
-                    {c.resourcetype === FieldTypes.MultipleChoices && (
-                      <Checkbox.Group
-                        options={c.options.map((o) => ({
-                          label: o.label,
-                          value: o.id,
-                        }))}
-                      />
-                    )}
-                    {c.resourcetype === FieldTypes.Radio && (
-                      <Radio.Group
-                        options={c.options.map((o) => ({
-                          label: o.label,
-                          value: o.id,
-                        }))}
-                      />
-                    )}
+                    <CriterionField criterion={c} />
                   </Form.Item>
                 ))}
               </Form>

@@ -1,9 +1,4 @@
-import {
-  createBrowserRouter,
-  Outlet,
-  redirect,
-  useRouteError,
-} from "react-router-dom";
+import { createBrowserRouter, redirect } from "react-router-dom";
 import Login from "./components/Login";
 import { DashboardLayout } from "./components/layout/DashboardLayout";
 import Home from "./components/Home";
@@ -20,69 +15,12 @@ import { ContestResults } from "./components/contest-results";
 import Signup from "./components/Signup";
 import ResetPassword from "./components/ResetPassword";
 import ForgotPassword from "./components/ForgotPassword";
-import { ReactComponent as WirdLogo } from "assets/icons/Shared/wirdLogo.svg";
-import { Helmet } from "react-helmet";
-import React, { useEffect } from "react";
-import { useTranslation } from "react-i18next";
+import React from "react";
 import "dayjs/locale/ar";
 import "dayjs/locale/en";
-import dayjs from "dayjs";
 import { dashboardLoader } from "./components/layout/dashboard-loader";
-import { ConfigProvider } from "antd";
-import { lightTheme } from "./styles/antd-theme";
-import arLocale from "antd/locale/ar_EG";
-import enLocale from "antd/locale/en_US";
-
-function ErrorBoundary() {
-  let error = useRouteError();
-  console.error(error);
-  if (error.status === 404) {
-    return (
-      <div className="error-page">
-        <WirdLogo />
-        <hr />
-        <h2>404 Not Found</h2>
-        <p>Sorry, the page you are looking for does not exist.</p>
-        <a href="/dashboard">Go to Home</a>
-      </div>
-    );
-  }
-
-  // Uncaught ReferenceError: path is not defined
-  return (
-    <div className="error-page">
-      <WirdLogo />
-      <hr />
-      <h2>Something went wrong :(</h2>
-    </div>
-  );
-}
-
-const MainLayout = () => {
-  const { i18n } = useTranslation();
-
-  useEffect(() => {
-    if (i18n.language === "ar") {
-      dayjs.locale("ar");
-    } else {
-      dayjs.locale("en");
-    }
-  }, [i18n.language]);
-
-  return (
-    <ConfigProvider
-      theme={lightTheme}
-      locale={i18n.language === "ar" ? arLocale : enLocale}
-      direction={i18n.dir()}
-    >
-      <Helmet>
-        <html lang={i18n.language || "en"} dir={i18n.dir()} />
-        <meta charSet="utf-8" />
-      </Helmet>
-      <Outlet />
-    </ConfigProvider>
-  );
-};
+import { MainLayout } from "./ui/main-layout";
+import { ErrorBoundary } from "./ui/error-boundary";
 
 export const router = createBrowserRouter([
   {

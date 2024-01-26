@@ -3,7 +3,7 @@ import { Select } from "antd";
 import { MembersApi } from "../../../services/members/api";
 import { getFullName } from "../../../util/user-utils";
 
-export const MembersSelect = ({ value, onChange, ...props }) => {
+export const MembersSelect = ({ ...props }) => {
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -11,7 +11,12 @@ export const MembersSelect = ({ value, onChange, ...props }) => {
     setLoading(true);
     MembersApi.getUsers()
       .then((res) => {
-        setMembers(res.results);
+        setMembers(
+          res.map((member) => ({
+            value: member.id,
+            label: getFullName(member.person_info),
+          })),
+        );
       })
       .finally(() => {
         setLoading(false);
@@ -22,12 +27,7 @@ export const MembersSelect = ({ value, onChange, ...props }) => {
     <Select
       {...props}
       loading={loading}
-      options={members.map((member) => ({
-        label: getFullName(member.person_info),
-        value: member.uuid,
-      }))}
-      value={value}
-      onChange={onChange}
+      options={members}
       showSearch
       optionFilterProp="label"
     />

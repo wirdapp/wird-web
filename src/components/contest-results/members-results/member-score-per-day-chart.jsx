@@ -77,7 +77,7 @@ export const MemberScorePerDayChart = ({ data }) => {
           reversed={isRtl}
         />
         <Tooltip content={<CustomTooltip />} />
-        <Bar dataKey="total_points" fill={colors.orange} />
+        <Bar dataKey="points" fill={colors.orange} />
       </BarChart>
     </ResponsiveContainer>
   );

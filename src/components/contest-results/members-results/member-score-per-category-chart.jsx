@@ -34,9 +34,7 @@ const CustomActiveShape = (props) => {
 
   return (
     <g>
-      <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill}>
-        {payload.name}
-      </text>
+      <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill}></text>
       <Sector
         cx={cx}
         cy={cy}
@@ -77,7 +75,7 @@ const CustomActiveShape = (props) => {
         textAnchor={textAnchor}
         fill="#333"
       >
-        {payload.title}
+        {payload.contest_criterion__label}
       </text>
     </g>
   );
@@ -97,8 +95,8 @@ export const MemberScorePerCategoryChart = ({ data }) => {
           activeIndex={activeIndex}
           activeShape={CustomActiveShape}
           data={data}
-          dataKey="total_points"
-          nameKey="title"
+          dataKey="point_total"
+          nameKey="contest_criterion__label"
           cx="50%"
           cy="50%"
           outerRadius={80}

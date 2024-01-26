@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { HomeContainer } from "./home.styles";
-
-import { retrieveTopMembers } from "../../services/competitionsServices";
 import Loader from "../Loader";
 import HomeBanner from "./HomeBanner";
 import TopRanks from "./TopRanks";
@@ -21,20 +19,17 @@ function Home() {
     if (!currentContest) return;
     setLoading(true);
 
-    retrieveTopMembers(
-      (res) => {
-        if (res && res.status === 200) {
-          setTopMembers(res.data.results ?? []);
-        }
-      },
-      (err) => {
-        console.log("Failed to retrieve top members : ", err.data);
-      },
-    );
+    // MembersApi.getMembers()
+    //   .then((res) => {
+    //     setTopMembers(res ?? []);
+    //   })
+    //   .catch((err) => {
+    //     console.log("Failed to retrieve top members : ", err.data);
+    //   });
 
     MembersApi.getMembers()
       .then((data) => {
-        setStudents(data.results);
+        setStudents(data);
       })
       .finally(() => {
         setLoading(false);

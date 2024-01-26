@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "@emotion/styled";
 import { PlusCircleIcon } from "@heroicons/react/20/solid";
-import { createContest } from "../../services/competitionsServices";
+import { ContestsApi } from "../../services/contests/api";
 import { isAxiosError } from "axios";
 import { DatePicker, Form, Input, Modal } from "antd";
 import { changeCurrentContest } from "../../services/contests/utils";
@@ -26,7 +26,7 @@ export const CreateContestPopup = ({ visible, onClose }) => {
     values["end_date"] = values.end_date.format("YYYY-MM-DD");
 
     try {
-      const result = await createContest(values);
+      const result = await ContestsApi.createContest(values);
       changeCurrentContest(result.id);
       window.location.reload();
       onClose?.();

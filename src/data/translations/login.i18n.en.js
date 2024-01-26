@@ -36,5 +36,5 @@ export default {
   wirdSupport: "Wird Support",
   reviewText: "Review text entries",
   requiredField: "This field is required",
-  copyrightFooterMsg: "\u00A9 All rights reserved Wird.app 2024",
+  copyrightFooterMsg: "\u00A9 All rights reserved Wird.app - {{year}}",
 };

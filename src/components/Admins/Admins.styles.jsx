@@ -71,7 +71,6 @@ export const I = styled.i`
 
 export const DivPass = styled(DefaultDivPass)`
   word-break: break-word;
-  direction: rtl;
 `;
 
 export const Button = styled.button`

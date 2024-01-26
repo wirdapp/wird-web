@@ -28,5 +28,10 @@ export default {
     noData: "لا يوجد بيانات",
     criteriaTitle: "المعيار",
     answer: "الإجابة",
+    noSubmissions: "لا يوجد مشاركات لهذا اليوم",
+    selectDate: "اختر التاريخ",
   },
+  "no-results": "لا يوجد نتائج",
+  failedToSave: "فشل في الحفظ",
+  back: "رجوع",
 };

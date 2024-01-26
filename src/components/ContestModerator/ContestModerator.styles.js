@@ -30,7 +30,7 @@ export default styled(AnimatedPage)`
     gap: 8px;
     align-items: flex-start;
 
-    .invite-link {
+    .contest-detail-item {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;

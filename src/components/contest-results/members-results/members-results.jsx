@@ -17,13 +17,14 @@ import {
 import { useSearchParams } from "react-router-dom";
 import { ContestResultsApi } from "../../../services/contest-results/api";
 import { StyledMembersResultsWrapper } from "./members-results.styles";
-import { getInitials } from "../../../util/user-utils";
+import { getFullName, getInitials } from "../../../util/user-utils";
 import { colors } from "../../../styles";
 import { useTranslation } from "react-i18next";
 import { MemberScorePerDayChart } from "./member-score-per-day-chart";
 import { MemberScorePerCategoryChart } from "./member-score-per-category-chart";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
-import { DailySubmissionsPopup } from "./daily-submissions-popup";
+import { DailyUserSubmissions } from "./daily-user-submissions";
+import { AnimatePresence, motion } from "framer-motion";
 
 export const MembersResults = () => {
   const [form] = Form.useForm();
@@ -37,7 +38,7 @@ export const MembersResults = () => {
   const loadMemberResults = async (userId) => {
     setLoading(true);
     try {
-      const res = await ContestResultsApi.getMemberResults(userId);
+      const res = await ContestResultsApi.getMemberResults({ userId });
       setResult(res);
     } catch (error) {
       console.error(error);
@@ -47,16 +48,16 @@ export const MembersResults = () => {
   };
 
   const onValuesChange = async (_, values) => {
-    setSearchParams(new URLSearchParams({ user_id: values.userId }));
+    setSearchParams(new URLSearchParams(values));
     await loadMemberResults(values.userId);
   };
 
   useEffect(() => {
-    if (searchParams.has("user_id")) {
-      form.setFieldsValue({ userId: searchParams.get("user_id") });
-      loadMemberResults(searchParams.get("user_id"));
+    if (searchParams.has("userId")) {
+      form.setFieldsValue({ userId: searchParams.get("userId") });
+      loadMemberResults(searchParams.get("userId"));
     }
-  }, [searchParams]);
+  }, [form, searchParams]);
 
   return (
     <StyledMembersResultsWrapper>
@@ -65,7 +66,7 @@ export const MembersResults = () => {
           form={form}
           layout="vertical"
           onValuesChange={onValuesChange}
-          initialValues={{ userId: searchParams.get("user_id") }}
+          initialValues={{ userId: searchParams.get("userId") }}
         >
           <Form.Item label={t("selectMember")} name="userId">
             <MembersSelect placeholder={t("selectMember")} />
@@ -89,88 +90,111 @@ export const MembersResults = () => {
                   }}
                   size={64}
                 >
-                  {getInitials(result)}
+                  {getInitials(result.person_data)}
                 </Avatar>
                 <Space direction="vertical">
                   <Typography.Title level={3} style={{ marginBottom: 0 }}>
-                    {result.first_name} {result.last_name}
+                    {getFullName(result.person_data)}
                   </Typography.Title>
-                  <Typography.Text>{result.username}</Typography.Text>
+                  <Typography.Text>
+                    {result.person_data.username}
+                  </Typography.Text>
                 </Space>
               </Space>
             )}
-            <Row gutter={16}>
-              <Col xs={24} sm={12} xl={6} style={{ paddingBottom: 16 }}>
-                <Card bordered={false} style={{ height: "100%" }}>
-                  <Statistic
-                    title={t("totalPoints")}
-                    value={result?.total_points}
-                    loading={loading}
-                  />
-                </Card>
-              </Col>
-              <Col xs={24} sm={12} xl={6} style={{ paddingBottom: 16 }}>
-                <Card bordered={false} style={{ height: "100%" }}>
-                  <Statistic
-                    title={t("rank")}
-                    value={result?.rank}
-                    loading={loading}
-                  />
-                </Card>
-              </Col>
-              <Col xs={24} sm={12} xl={6} style={{ paddingBottom: 16 }}>
-                <Card bordered={false} style={{ height: "100%" }}>
-                  <Space gap={8} direction="vertical">
-                    <Typography.Text type="secondary">
-                      {t("submissions")}
-                    </Typography.Text>
-                    <Button
-                      size="small"
-                      onClick={() => setDailySubmissionsPopupOpen(true)}
-                      disabled={loading}
-                      icon={
-                        i18n.dir() === "rtl" ? (
-                          <ArrowLeftIcon />
-                        ) : (
-                          <ArrowRightIcon />
-                        )
-                      }
-                    >
-                      {t("viewSubmissionsPerDay")}
-                    </Button>
-                  </Space>
-                </Card>
-              </Col>
-            </Row>
-            <Row gutter={24}>
-              <Col xs={24} lg={12} style={{ paddingBottom: 24 }}>
-                <Card
-                  bordered={false}
-                  title={t("pointsPerDay")}
-                  loading={loading}
+            <AnimatePresence mode="wait">
+              {dailySubmissionsPopupOpen ? (
+                <motion.div
+                  key="daily-submissions"
+                  initial={{ opacity: 0, x: i18n.dir() === "rtl" ? -100 : 100 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: i18n.dir() === "rtl" ? -100 : 100 }}
+                  transition={{ duration: 0.1 }}
                 >
-                  <MemberScorePerDayChart data={result?.days} />
-                </Card>
-              </Col>
-              <Col xs={24} lg={12} style={{ paddingBottom: 24 }}>
-                <Card
-                  bordered={false}
-                  title={t("scorePerCategory")}
-                  loading={loading}
+                  <DailyUserSubmissions
+                    onBack={() => setDailySubmissionsPopupOpen(false)}
+                    userId={result?.person_data?.id}
+                  />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="member-results"
+                  initial={{ opacity: 0, x: i18n.dir() === "rtl" ? 100 : -100 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: i18n.dir() === "rtl" ? 100 : -100 }}
+                  transition={{ duration: 0.1 }}
                 >
-                  <MemberScorePerCategoryChart data={result?.scores} />
-                </Card>
-              </Col>
-            </Row>
-            <DailySubmissionsPopup
-              open={dailySubmissionsPopupOpen}
-              onClose={() => setDailySubmissionsPopupOpen(false)}
-            />
+                  <Row gutter={16}>
+                    <Col xs={24} sm={12} xl={6} style={{ paddingBottom: 16 }}>
+                      <Card bordered={false} style={{ height: "100%" }}>
+                        <Statistic
+                          title={t("totalPoints")}
+                          value={result?.total_points || 0}
+                          loading={loading}
+                        />
+                      </Card>
+                    </Col>
+                    <Col xs={24} sm={12} xl={6} style={{ paddingBottom: 16 }}>
+                      <Card bordered={false} style={{ height: "100%" }}>
+                        <Statistic
+                          title={t("rank")}
+                          value={result?.rank}
+                          loading={loading}
+                        />
+                      </Card>
+                    </Col>
+                    <Col xs={24} sm={12} xl={6} style={{ paddingBottom: 16 }}>
+                      <Card bordered={false} style={{ height: "100%" }}>
+                        <Space gap={8} direction="vertical">
+                          <Typography.Text type="secondary">
+                            {t("submissions")}
+                          </Typography.Text>
+                          <Button
+                            size="small"
+                            onClick={() => setDailySubmissionsPopupOpen(true)}
+                            disabled={loading}
+                            icon={
+                              i18n.dir() === "rtl" ? (
+                                <ArrowLeftIcon />
+                              ) : (
+                                <ArrowRightIcon />
+                              )
+                            }
+                          >
+                            {t("viewSubmissionsPerDay")}
+                          </Button>
+                        </Space>
+                      </Card>
+                    </Col>
+                  </Row>
+                  <Row gutter={16}>
+                    <Col xs={24} lg={12} style={{ paddingBottom: 24 }}>
+                      <Card
+                        bordered={false}
+                        title={t("pointsPerDay")}
+                        loading={loading}
+                      >
+                        <MemberScorePerDayChart data={result?.days} />
+                      </Card>
+                    </Col>
+                    <Col xs={24} lg={12} style={{ paddingBottom: 24 }}>
+                      <Card
+                        bordered={false}
+                        title={t("scorePerCategory")}
+                        loading={loading}
+                      >
+                        <MemberScorePerCategoryChart data={result?.scores} />
+                      </Card>
+                    </Col>
+                  </Row>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </Flex>
         ) : (
           <Empty
             image={Empty.PRESENTED_IMAGE_SIMPLE}
-            description="Select a person and a day to see results"
+            description="Select a person to see results"
           />
         )}
       </div>

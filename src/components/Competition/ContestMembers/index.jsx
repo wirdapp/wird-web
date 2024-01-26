@@ -30,9 +30,9 @@ function ContestMembers() {
     setLoading(true);
     Promise.all([
       MembersApi.getUsers().then((data) => {
-        setStudents(data.results.filter((u) => u.contest_role === Role.MEMBER));
+        setStudents(data.filter((u) => u.contest_role === Role.MEMBER));
         setAdmins(
-          data.results.filter((u) =>
+          data.filter((u) =>
             [Role.ADMIN, Role.SUPER_ADMIN].includes(u.contest_role),
           ),
         );

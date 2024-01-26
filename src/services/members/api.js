@@ -5,7 +5,7 @@ import { getCurrentContestId } from "../contests/utils";
 export const MembersApi = {
   getUsers: async ({ contestId, role, search } = {}) => {
     const cid = contestId ?? getCurrentContestId();
-    const res = await axios.get(`/admin_panel/${cid}/contest_members/`, {
+    const res = await axios.get(`/admin_panel/${cid}/members/`, {
       params: {
         contest_role: role,
         search,

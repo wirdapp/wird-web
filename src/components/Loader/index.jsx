@@ -1,14 +1,14 @@
 import React from "react";
-import Container, { LoaderAnimation } from "./loder.styles";
+import Container from "./loder.styles";
 import { useTranslation } from "react-i18next";
+import { Spin } from "antd";
 
 export default function Loader() {
   const { t } = useTranslation();
 
   return (
     <Container>
-      <LoaderAnimation />
-      <span>{t("loading")}</span>
+      <Spin size="large" tip={t("loading")} />
     </Container>
   );
 }

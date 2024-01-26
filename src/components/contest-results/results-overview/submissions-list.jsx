@@ -12,7 +12,8 @@ import { CalendarIcon } from "@heroicons/react/24/outline";
 import { Avatar } from "../../shared/Avatar";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Badge, Tooltip } from "antd";
+import { Space, Tooltip } from "antd";
+import { getFullName } from "../../../util/user-utils";
 
 export const SubmissionsList = ({ results }) => {
   const { t } = useTranslation();
@@ -72,7 +73,7 @@ export const SubmissionsList = ({ results }) => {
             const isAfterToday = dayjs().isBefore(result.date, "day");
             return (
               <div
-                key={result.index}
+                key={result.date}
                 className={cx("results-overview-list-item", {
                   today: isToday,
                   "after-today": isAfterToday,
@@ -84,39 +85,34 @@ export const SubmissionsList = ({ results }) => {
                   </div>
                   <div>
                     <div className="day-index">
-                      {t("day")} {result.index + 1}{" "}
+                      {t("day")} {resultIndex + 1}{" "}
                       {isToday && (
                         <span className="today-indicator">({t("today")})</span>
                       )}
                     </div>
-                    <div className="day-date">{result.date}</div>
+                    <div className="day-date">
+                      {dayjs(result.date).format("DD MMM YYYY")}
+                    </div>
                   </div>
                 </StyledDayCell>
                 <StyledSubmissionCountCell>
                   <div className="mobile-label">{t("no-of-submissions")}:</div>
-                  <span>
-                    {result.submissions_count} {t("of")} {result.total_members}
-                  </span>
-                  <Badge
-                    color={
-                      result.submissions_count / result.total_members === 1
-                        ? "green"
-                        : result.submissions_count > 0
-                          ? "orange"
-                          : "grey"
-                    }
-                    count={`${
-                      (result.submissions_count / result.total_members) * 100
-                    }%`}
-                  />
+                  <span>{result.submission_count}</span>
                 </StyledSubmissionCountCell>
                 <StyledTop3Cell>
                   <div className="mobile-label">{t("top-3")}:</div>
                   <div className="top-3-wrapper">
-                    {result.top_three?.map((user, userIndex) => (
+                    {result.top_three_by_day?.map((user, userIndex) => (
                       <Tooltip
                         key={user.id}
-                        title={`${user?.first_name} ${user?.last_name}`}
+                        title={
+                          <Space direction="vertical">
+                            <span>{getFullName(user)}</span>
+                            <span>
+                              {t("points")}: {user?.points}
+                            </span>
+                          </Space>
+                        }
                       >
                         <Avatar
                           user={user}
