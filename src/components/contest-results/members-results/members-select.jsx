@@ -9,7 +9,7 @@ export const MembersSelect = ({ ...props }) => {
 
   useEffect(() => {
     setLoading(true);
-    MembersApi.getUsers()
+    MembersApi.getMembers()
       .then((res) => {
         setMembers(
           res.map((member) => ({
