@@ -10,8 +10,13 @@ export function changeCurrentContest(contestId) {
 }
 
 export async function getCurrentContest(contests = []) {
-  const currentContestId = getCurrentContestId() || contests[0]?.id;
-  if (!currentContestId) return null;
+  let currentContestId = getCurrentContestId();
+  if (!contests.find((contest) => contest.id === currentContestId)) {
+    currentContestId = contests[0]?.id;
+  }
+  if (!currentContestId) {
+    return null;
+  }
   return ContestsApi.getContestDetails(currentContestId);
 }
 
