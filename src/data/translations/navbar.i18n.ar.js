@@ -1,10 +1,10 @@
 export default {
   logout: "تسجيل الخروج",
-  emailnotverified: "لم يتم تأكيد البريد الإلكتروني",
-  emailnotverifieddescription:
+  emailNotVerified: "لم يتم تأكيد البريد الإلكتروني",
+  emailNotVerifiedDescription:
     "تحتاج إلى تأكيد بريدك الإلكتروني <strong>{{email}}</strong> لتستطيع إنشاء مسابقة جديدة. يرجى التحقق من بريدك الإلكتروني والضغط على رابط التأكيد.",
-  didntreceiveemail: "لم تستلم رسالة التأكيد؟",
-  resendverificationemail: "إعادة إرسال",
+  didntReceiveEmail: "لم تستلم رسالة التأكيد؟",
+  resendVerificationEmail: "إعادة إرسال",
   verificationEmailSent: "تم إرسال رسالة التأكيد",
   emailAlreadySent: "يجب عليك الانتظار 15 دقيقة قبل إعادة إرسال رسالة التأكيد",
 };

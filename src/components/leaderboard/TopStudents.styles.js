@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { colors } from "styles";
-import { DropdownList, Span } from "../Admins/Admins.styles";
+import { Span } from "../Admins/Admins.styles";
 import {
   Top2Img as DefaultTop2Img,
   Top2Name as DefaultTop2Name,
@@ -8,17 +8,6 @@ import {
 } from "../Home/TopRanks/TopRanks.styles";
 import { AnimatedPage } from "../../ui/animated-page";
 import { css } from "@emotion/react";
-
-export const TopStudentsDropdownList = styled(DropdownList)`
-  width: 35rem;
-  @media (max-width: 500px) {
-    margin: 10px 0;
-    /* width: 100%; */
-    .dropdown-scroll-container {
-      max-height: 350px;
-    }
-  }
-`;
 
 export const TopStudentsSpan = styled(Span)`
   text-align: center;
@@ -194,11 +183,7 @@ export const AverageWrapper = styled.div`
 export const LeaderBoardMain = styled(AnimatedPage)`
   /* display: flex; */
   margin: auto;
-  flex-direction: column;
   max-width: 961px;
-  width: 90%;
-  display: flex;
-  gap: 32px;
 `;
 export const LeaderBoardMainTitel = styled.div`
   height: 19px;
