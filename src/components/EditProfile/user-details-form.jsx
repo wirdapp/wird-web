@@ -10,16 +10,21 @@ export const UserDetailsForm = ({ onSubmit }) => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
 
-  useEffect(() => {
+  const resetForm = () => {
     form.setFieldsValue({
       first_name: currentUser.first_name,
       last_name: currentUser.last_name,
     });
+  };
+
+  useEffect(() => {
+    resetForm();
   }, []);
 
   return (
     <Form
       onFinish={onSubmit}
+      onReset={resetForm}
       layout="vertical"
       form={form}
       style={{ flexGrow: 1 }}
@@ -47,7 +52,7 @@ export const UserDetailsForm = ({ onSubmit }) => {
           <Button type="primary" htmlType="submit">
             {t("save")}
           </Button>
-          <Button type="default" htmlType="reset">
+          <Button type="text" htmlType="reset">
             {t("cancel")}
           </Button>
         </Space>

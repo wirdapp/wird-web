@@ -60,7 +60,7 @@ export const ChangePasswordForm = () => {
           <Button type="primary" htmlType="submit">
             {t("save")}
           </Button>
-          <Button type="default" htmlType="reset">
+          <Button type="text" htmlType="reset">
             {t("cancel")}
           </Button>
         </Space>

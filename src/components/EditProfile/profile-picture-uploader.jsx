@@ -4,6 +4,7 @@ import { Avatar, message, Spin, Tooltip, Upload } from "antd";
 import { useDashboardData } from "../../util/routes-data";
 import { css } from "@emotion/css";
 import { colors } from "../../styles";
+import { useTranslation } from "react-i18next";
 
 const beforeUpload = (file) => {
   const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
@@ -18,6 +19,7 @@ const beforeUpload = (file) => {
 };
 
 export const ProfilePictureUploader = ({ onSubmit }) => {
+  const { t } = useTranslation();
   const { currentUser } = useDashboardData();
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState(currentUser?.profile_photo);
@@ -44,7 +46,7 @@ export const ProfilePictureUploader = ({ onSubmit }) => {
   );
 
   return (
-    <Tooltip title="Change profile picture" placement="bottom">
+    <Tooltip title={t("change-profile-photo")} placement="bottom">
       <Upload
         name="avatar"
         accept="image/*"
