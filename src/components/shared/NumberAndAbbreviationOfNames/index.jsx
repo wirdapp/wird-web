@@ -1,10 +1,7 @@
 import React from "react";
-import {
-  MemberImgsAndNumNumbers,
-  MemberNumbers,
-} from "../../Home/TopRanks/TopRanks.styles";
-import { getInitials } from "../../../util/user-utils";
-import { Avatar } from "antd";
+import { MemberImgsAndNumNumbers } from "../../Home/TopRanks/TopRanks.styles";
+import { getFullName, getInitials } from "../../../util/user-utils";
+import { Avatar, Tooltip } from "antd";
 
 const styles = [
   { background: "#FDD561", color: "black" },
@@ -15,19 +12,17 @@ const styles = [
 function NumberAndAbbreviationOfNames(props) {
   return (
     <MemberImgsAndNumNumbers>
-      <Avatar.Group>
-        {props.users.slice(0, 3).map((user, i) => {
+      <Avatar.Group maxCount={3}>
+        {props.users.map((user, i) => {
           return (
-            <Avatar key={i} style={styles[i]}>
-              {getInitials(user.person_info)}
-            </Avatar>
+            <Tooltip title={getFullName(user.person_info)}>
+              <Avatar key={i} style={styles[i]}>
+                {getInitials(user.person_info)}
+              </Avatar>
+            </Tooltip>
           );
         })}
       </Avatar.Group>
-
-      {props.users.length - 3 > 0 && (
-        <MemberNumbers>+{props.users.length - 3}</MemberNumbers>
-      )}
     </MemberImgsAndNumNumbers>
   );
 }

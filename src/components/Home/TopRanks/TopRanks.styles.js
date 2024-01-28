@@ -152,11 +152,7 @@ export const MemberImgsAndNumNumbers = styled.div`
   align-items: center;
   padding: 0rem;
   gap: 0;
-
-  width: 8.875rem;
-  height: 2.25rem;
-  @media (max-width: 31.25rem) {
-  }
+  margin-inline-start: auto;
 `;
 
 export const MembersImgs = styled.div`
