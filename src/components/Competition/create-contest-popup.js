@@ -16,7 +16,7 @@ export const CreateContestPopup = ({ visible, onClose }) => {
 
   const handleSubmit = async (values) => {
     if (!currentUser.email_verified) {
-      message.error(t("email-not-verified"));
+      message.error(t("emailnotverified"));
       return;
     }
     setSubmitting(true);
@@ -41,10 +41,16 @@ export const CreateContestPopup = ({ visible, onClose }) => {
     }
   };
 
+  const handleClose = () => {
+    setErrors({});
+    form.resetFields();
+    onClose?.();
+  };
+
   return (
     <Modal
       title={t("create-contest")}
-      onCancel={onClose}
+      onCancel={handleClose}
       open={visible}
       onOk={() => form.submit()}
       okText={t("create-contest")}
