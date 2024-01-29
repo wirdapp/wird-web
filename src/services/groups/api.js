@@ -1,8 +1,60 @@
 import axios from "../../util/axios";
+import {getCurrentContestId} from "../contests/utils";
 
 export const GroupsApi = {
-  async getGroups() {
-    const res = await axios.get("/admin_panel/groups/");
+  async getGroups(contestId) {
+    const cid = contestId ?? getCurrentContestId();
+    const res = await axios.get(`/admin_panel/${cid}/groups/`);
     return res.data;
+  },
+  async addGroup({ body, contestId }) {
+    const cid = contestId ?? getCurrentContestId();
+    const { data } = await axios.post(`/admin_panel/${cid}/groups/`, body);
+    return data;
+  },
+
+  async updateGroup({ id, body, contestId }) {
+    const cid = contestId ?? getCurrentContestId();
+    const { data } = await axios.patch(
+        `/admin_panel/${cid}/groups/${id}/`,
+        body,
+    );
+    return data;
+  },
+  async deleteGroup({ id, contestId }) {
+    const cid = contestId ?? getCurrentContestId();
+    const { data } = await axios.delete(`/admin_panel/${cid}/groups/${id}/`);
+    return data;
+  },
+
+  async getGroupMembers({ groupId, contestId }) {
+    const cid = contestId ?? getCurrentContestId();
+    const { data } = await axios.get(`/admin_panel/${cid}/groups/${groupId}/members/`);
+    return data;
+  },
+
+
+  async addMemberToGroup({ groupId, body, group_role, contestId }) {
+    body.group_role = 2;
+    return this.addGroupMember({groupId, body, contestId});
+  },
+
+  async addAdminToGroup({ groupId, body, group_role, contestId }) {
+    body.group_role = 1;
+    return this.addGroupMember({groupId, body, contestId});
+  },
+
+  async addGroupMember({ groupId, body, group_role, contestId }) {
+    const cid = contestId ?? getCurrentContestId();
+    body.group_role = group_role;
+    const { data } = await axios.post(`/admin_panel/${cid}/groups/${groupId}/members/`, body);
+    return data;
+  },
+
+
+  async removeGroupMember({ username, groupId, contestId }) {
+    const cid = contestId ?? getCurrentContestId();
+    const { data } = await axios.delete(`/admin_panel/${cid}/groups/${groupId}/members/${username}`);
+    return data;
   },
 };
