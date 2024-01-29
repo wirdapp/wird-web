@@ -2,7 +2,7 @@ export default {
   "add-group": "Add Group",
   groups: "Groups",
   "delete-confirm": "Confirm deletion",
-  "delete-msg": "Do You Want Delete This Group ?",
+  "delete-group-confirm-description": "Do you want to delete this group?",
   cancel: "Cancel",
   joined: "Joined on",
   participants: "Participants",
@@ -20,6 +20,7 @@ export default {
   "no-students": "There are no students",
   "select-moderator": "Select the Moderator",
   "enter-group-name": "Enter the New Group Name",
+  "group-name": "Group Name",
   "group-name-condition":
     "The Group Name must be less than or equal 30 charachters",
   adve: "Advertisement",

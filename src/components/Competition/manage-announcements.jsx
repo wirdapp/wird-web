@@ -30,7 +30,7 @@ const StyledAnnouncementWrapper = styled.div`
   }
 `;
 
-const StyledAnnouncementsList = styled.ul`
+export const StyledAnnouncementsList = styled.ul`
   list-style: none;
   padding: 16px 0;
   margin: 0;

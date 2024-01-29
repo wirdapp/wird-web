@@ -18,9 +18,9 @@ import { colors as themeColors } from "../../styles";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 import { ContestStatus } from "../../services/contests/utils";
 
-const colors = ["#503E9D", "#FB862C", "#FF5367", "#FDD561", "#FFBAC2"];
+export const colors = ["#503E9D", "#FB862C", "#FF5367", "#FDD561", "#FFBAC2"];
 
-function getColor(index) {
+export function getColor(index) {
   return colors[index % colors.length];
 }
 
