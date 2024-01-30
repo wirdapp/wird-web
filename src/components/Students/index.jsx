@@ -1,7 +1,6 @@
-import { Empty, Radio } from "antd";
+import { Empty, Radio, message } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { NotificationManager } from "react-notifications";
 import { MembersApi } from "../../services/members/api";
 import { Role } from "../../util/ContestPeople_Role";
 import Loader from "../Loader";
@@ -22,34 +21,17 @@ export default function Students() {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("")
-  const typeOfMembers = useRef(-1)
+  const typeOfMembers = useRef("")
 
 
 
   const callMemebersData = (page = 1) => {
     setLoading(true);
 
-    let apiCall
-
-    apiCall = typeOfMembers.current == Role.MEMBER ? MembersApi.getMembers :
-      typeOfMembers.current == Role.PENDING ? MembersApi.getPending :
-        typeOfMembers.current == -1 ? MembersApi.getAllMemebers :
-          MembersApi.getDeactivated
-
-
-    apiCall().then((data) => {
-
-      setStudents(data);
-
-    })
-      .catch(e => {
-        console.log("student error", e)
-      })
-
-      .finally(() => {
-
-        setLoading(false);
-      });
+    MembersApi.getUsers({ role: typeOfMembers.current })
+      .then((data) => setStudents(data))
+      .catch(e => console.log("student error", e))
+      .finally(() => setLoading(false));
   }
   useEffect(() => {
     callMemebersData()
@@ -61,11 +43,11 @@ export default function Students() {
     if (!search.length) return
     try {
       const res = await MembersApi.addUserToContest({ role: 3, username: search })
-      NotificationManager.success(t('notification.addStudent'));
+      message.success(t('notification.addStudent'));
 
     } catch (error) {
 
-      NotificationManager.error(t('notification.errorStudent'));
+      message.error(t('notification.errorStudent'));
     }
   }
 
@@ -103,7 +85,7 @@ export default function Students() {
             marginBottom: 16,
           }}
         >
-            <Radio.Button value="-1">{t("see-all")}</Radio.Button>
+            <Radio.Button value="">{t("see-all")}</Radio.Button>
             <Radio.Button value={`${Role.MEMBER}`}>{t("role.3")}</Radio.Button>
             <Radio.Button value={`${Role.PENDING}`}>{t("role.5")}</Radio.Button>
             <Radio.Button value={`${Role.DEACTIVATED}`}>{t("role.6")}</Radio.Button>

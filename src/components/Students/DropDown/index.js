@@ -1,14 +1,13 @@
 import { MembersApi } from "services/members/api";
 
-import { Dropdown, Space } from "antd";
-import { NotificationManager } from "react-notifications";
+import { Dropdown, Space, message } from "antd";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { Role, isAdmin, isDecativate, isMember, isMemberReadOnly, isOwner, isPending, isSuperAdmin } from "util/ContestPeople_Role";
 import { ReactComponent as ApproveIcon } from "../../../assets/icons/approve.svg";
 import { ReactComponent as MoreButton } from "../../../assets/icons/more-button.svg";
 import { ReactComponent as RejectIcon } from "../../../assets/icons/reject.svg";
 import { ReactComponent as ResultsIcon } from "../../../assets/icons/results.svg";
-import { useTranslation } from "react-i18next";
 
 const DropDownMenu=(props)=>{
     const navigate = useNavigate();
@@ -31,10 +30,10 @@ const DropDownMenu=(props)=>{
             icon:  <ResultsIcon  style={{ width: "20px", height: "20px", }} />,}
     }
 
-const otherRoles=isSuperAdmin(props.student?.contest_role)||
-isAdmin(props.student?.contest_role)||
-isMember(props.student?.contest_role)||
-isMemberReadOnly(props.student?.contest_role)
+        const otherRoles=isSuperAdmin(props.student?.contest_role)||
+        isAdmin(props.student?.contest_role)||
+        isMember(props.student?.contest_role)||
+        isMemberReadOnly(props.student?.contest_role)
 
     const items = [
         otherRoles&&dropDownItems.showResult,otherRoles&&dropDownItems.reject,
@@ -44,19 +43,19 @@ isMemberReadOnly(props.student?.contest_role)
     
       ];
 
-  const approveOrReject = async (pressData) => {
+    const approveOrReject = async (pressData) => {
  
    
      let role=pressData.key === 'approve'? Role.MEMBER : Role.DEACTIVATED
       try {
         const res = await MembersApi.approveOrRejectUserToContest({ role, username: props.name })
-        NotificationManager.success(t('notification.success'));
+        message.success(t('notification.success'));
         let studentsFiltered=props.students.filter((item)=>(item.person_info.username!==props.name)&& item)
 
         props.setStudents(studentsFiltered)
       } catch (error) {
       
-         NotificationManager.error(t('notification.error'));
+         message.error(t('notification.error'));
       }
 
   }
