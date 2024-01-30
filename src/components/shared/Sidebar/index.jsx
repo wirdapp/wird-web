@@ -28,7 +28,7 @@ function Sidebar() {
 
   useEffect(() => {
     if (currentUser) {
-      setPermission(isSuperAdmin(currentUser));
+      setPermission(isSuperAdmin(currentUser?.role));
     }
   }, [currentUser]);
 

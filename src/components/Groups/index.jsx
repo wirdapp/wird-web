@@ -90,16 +90,16 @@ export default function Groups() {
     if (students && students.length > 0) {
       students.map(
         (student) =>
-          (student["full_name"] =
-            student.person_info.first_name +
-            " " +
-            student.person_info.last_name),
+        (student["full_name"] =
+          student.person_info.first_name +
+          " " +
+          student.person_info.last_name),
       );
     }
   }, [students]);
 
   useEffect(() => {
-    setPermission(currentUser && isSuperAdmin(currentUser));
+    setPermission(currentUser && isSuperAdmin(currentUser?.role));
   }, [currentUser]);
 
   const handleOpenGroupModalChange = (groupId) => {
@@ -161,7 +161,7 @@ export default function Groups() {
     <GroupsContentDefault>
       <GroupsTitleLine>
         <BoldText>
-          {groups.length} {t("groups")}
+          {groups?.length} {t("groups")}
         </BoldText>
         <ActionButton
           name="add"
