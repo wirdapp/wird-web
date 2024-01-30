@@ -61,5 +61,7 @@ export default {
     error:"يرجى إعادة المحاولة لاحقا",
     addStudent:"اضيف بنجاح",
     errorStudent:"يرجى التحقق من الاسم"
-   }
+   },
+   approve:"موافقة",
+   reject:"رفض"
 };

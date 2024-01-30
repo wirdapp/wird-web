@@ -63,6 +63,8 @@ export default {
    error:"please re-try later",
    addStudent:"Added successfully",
    errorStudent:"Please check the name"
-  }
+  },
+  approve:"Approve",
+  reject:"Reject"
   
 };

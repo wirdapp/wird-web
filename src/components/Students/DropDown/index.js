@@ -16,18 +16,18 @@ const DropDownMenu=(props)=>{
 
     const dropDownItems={
         approve:     {
-            label: 'approve',
+            label: t('approve'),
             key: 'approve',
             icon: <ApproveIcon style={{ width: "20px", height: "20px" }} />,
           } ,
         reject:{
-              label: 'reject',
+              label: t('reject'),
               key: 'reject',
               icon: <RejectIcon style={{ width: "20px", height: "20px", }} />,
             },
     
             showResult:{    label: 'result',
-            key: 'result',
+            key: t('result'),
             icon:  <ResultsIcon  style={{ width: "20px", height: "20px", }} />,}
     }
 
