@@ -1,32 +1,33 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import styled from "@emotion/styled";
 import { PlusCircleIcon } from "@heroicons/react/20/solid";
-import { createContest } from "../../services/competitionsServices";
 import { isAxiosError } from "axios";
-import { DatePicker, Form, Input, Modal } from "antd";
+import { DatePicker, Form, Input, message, Modal } from "antd";
+import { ContestsApi } from "../../services/contests/api";
 import { changeCurrentContest } from "../../services/contests/utils";
-
-const StyledFormItem = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 24px;
-  gap: 8px;
-`;
+import { useDashboardData } from "../../util/routes-data";
 
 export const CreateContestPopup = ({ visible, onClose }) => {
+  const { currentUser } = useDashboardData();
   const { t } = useTranslation();
   const [errors, setErrors] = React.useState({});
   const [submitting, setSubmitting] = React.useState(false);
   const [form] = Form.useForm();
 
   const handleSubmit = async (values) => {
+    if (!currentUser.email_verified) {
+      message.error(t("emailnotverified"));
+      return;
+    }
     setSubmitting(true);
-    values["start_date"] = values.start_date.format("YYYY-MM-DD");
-    values["end_date"] = values.end_date.format("YYYY-MM-DD");
 
     try {
-      const result = await createContest(values);
+      const { daterange, ...rest } = values;
+      const result = await ContestsApi.createContest({
+        ...rest,
+        start_date: daterange[0].format("YYYY-MM-DD"),
+        end_date: daterange[1].format("YYYY-MM-DD"),
+      });
       changeCurrentContest(result.id);
       window.location.reload();
       onClose?.();
@@ -40,10 +41,16 @@ export const CreateContestPopup = ({ visible, onClose }) => {
     }
   };
 
+  const handleClose = () => {
+    setErrors({});
+    form.resetFields();
+    onClose?.();
+  };
+
   return (
     <Modal
       title={t("create-contest")}
-      onCancel={onClose}
+      onCancel={handleClose}
       open={visible}
       onOk={() => form.submit()}
       okText={t("create-contest")}
@@ -94,36 +101,16 @@ export const CreateContestPopup = ({ visible, onClose }) => {
           <Input.TextArea placeholder={t("contest-description")} rows={2} />
         </Form.Item>
         <Form.Item
-          label={t("start-date")}
-          name="start_date"
+          label={t("date")}
+          name="daterange"
           required
-          rules={[{ required: true, message: t("start-date-required-error") }]}
-          validateStatus={errors.start_date ? "error" : undefined}
-          help={errors.start_date}
+          rules={[{ required: true }]}
+          validateStatus={
+            errors.start_date || errors.end_date ? "error" : undefined
+          }
+          help={errors.start_date || errors.end_date}
         >
-          <DatePicker placeholder={t("start-date")} />
-        </Form.Item>
-        <Form.Item
-          label={t("end-date")}
-          name="end_date"
-          dependencies={["start_date"]}
-          required
-          rules={[
-            { required: true, message: t("end-date-required-error") },
-            // rule to make sure this value is after start_date
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || getFieldValue("start_date").isBefore(value)) {
-                  return Promise.resolve();
-                }
-                return Promise.reject(new Error(t("end-date-invalid-error")));
-              },
-            }),
-          ]}
-          validateStatus={errors.end_date ? "error" : undefined}
-          help={errors.end_date}
-        >
-          <DatePicker placeholder={t("end-date")} />
+          <DatePicker.RangePicker style={{ width: "100%" }} />
         </Form.Item>
       </Form>
     </Modal>

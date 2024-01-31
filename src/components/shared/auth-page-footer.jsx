@@ -22,7 +22,7 @@ export const AuthPageFooter = () => {
 
   return (
     <StyledAuthFooter>
-      <span>{t("copyrightFooterMsg")}</span>
+      <span>{t("copyrightFooterMsg", { year: new Date().getFullYear() })}</span>
       <span className="divider" />
       {i18n.language === "en" ? (
         <Button type="link" onClick={() => changeLanguage("ar")}>

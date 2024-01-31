@@ -16,4 +16,9 @@ export default {
   noResult: "Results were not extracted",
   succussResult: "The results were extracted successfully",
   dayResult: "Select the name to extract the results",
+  "edit-profile": "Edit Profile",
+  "change-profile-photo": "Change Profile Photo",
+  "profile-has-been-edited-successfully":
+    "Profile has been edited successfully",
+  "something-went-wrong": "Something went wrong",
 };

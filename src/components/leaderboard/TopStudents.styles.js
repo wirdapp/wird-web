@@ -1,41 +1,14 @@
 import styled from "@emotion/styled";
-import { colors, spacing } from "styles";
-import { DropdownList, Span } from "../Admins/Admins.styles";
+import { colors } from "styles";
 import {
   Top2Img as DefaultTop2Img,
   Top2Name as DefaultTop2Name,
   Top3RankDiv as DefaultTop3RankDiv,
 } from "../Home/TopRanks/TopRanks.styles";
 import { AnimatedPage } from "../../ui/animated-page";
+import { Link } from "react-router-dom";
 
-export const TopStudentsDropdownList = styled(DropdownList)`
-  width: 35rem;
-  @media (max-width: 500px) {
-    margin: 10px 0;
-    /* width: 100%; */
-    .dropdown-scroll-container {
-      max-height: 350px;
-    }
-  }
-`;
-
-export const TopStudentsSpan = styled(Span)`
-  text-align: center;
-  /* display: inline-flex;
-      align-items: center;
-      justify-content: center; */
-  width: 30px;
-  height: 19px;
-
-  font-style: normal;
-  font-weight: 700;
-  font-size: 16px;
-  line-height: 20px;
-
-  color: #000000;
-`;
-
-export const LeaderBoardContainer = styled.div`
+export const StyledLeaderboardList = styled.div`
   width: auto;
   display: flex;
   margin: auto;
@@ -46,103 +19,128 @@ export const LeaderBoardContainer = styled.div`
   flex-direction: column;
 `;
 
-export const StudentPointsWrapper = styled.div`
+export const StyledLeaderboardItem = styled.div`
   align-items: center;
   background-color: ${colors.warmWheat};
   display: flex;
-  justify-content: space-between;
-  padding: ${spacing.s};
+  padding: 16px 24px;
   flex-direction: row;
-
-  /* padding: 23px 24px; */
-  /* width: auto; */
-  height: 106px;
-  border-radius: 24px;
-  max-width: 961px;
+  gap: 16px;
+  position: relative;
+  max-width: 800px;
   margin: auto;
   width: 100%;
 
   @media (max-width: 700px) {
     position: relative;
     justify-content: space-around;
-  }
-`;
-
-export const SecondaryWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  @media (max-width: 700px) {
-    gap: 6px;
-  }
-`;
-export const WarbSlider = styled.div`
-  display: flex;
-  margin-left: 1rem;
-  align-items: center;
-  width: auto;
-  gap: 12px;
-  white-space: nowrap;
-  overflow-x: scroll;
-
-  &::-webkit-slider-track {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    cursor: pointer;
+    padding: 16px;
   }
 
-  /* overflow: hidden; */
-  /* cursor: grab; */
+  border-radius: 16px;
 
-  @media (max-width: 700px) {
-    display: none;
-    margin: auto;
-    flex-direction: row-reverse;
-    flex-wrap: wrap;
-    align-items: flex-start;
+  .item-rank {
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 29px;
+    color: #fff;
+    background-color: ${colors.red};
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    flex-shrink: 0;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
     justify-content: center;
+  }
 
+  .item-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    flex-grow: 1;
+    gap: 8px;
+
+    .item-details {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  .item-points {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+
+    .item-points-label {
+      font-weight: 400;
+      font-size: 12px;
+      color: ${colors.darkGrey};
+      white-space: nowrap;
+    }
+
+    .item-points-value {
+      font-weight: 700;
+      font-size: 16px;
+      line-height: 29px;
+      color: ${colors.red};
+    }
+  }
+
+  .crown-icon {
     position: absolute;
-    top: 110px;
-    width: 290px;
-    height: auto;
-    /* right: 5%; */
-    max-height: 500px;
-    overflow-x: hidden;
-    /* overflow-y: hidden; */
-    background: #fbf9f7;
-    padding: 1.3rem;
-    border-radius: 24px;
+    top: -10px;
+    inset-inline-end: -10px;
+  }
+
+  &:first-of-type {
+    .crown-icon {
+      color: #ffd700;
+    }
+  }
+
+  &:nth-of-type(2) {
+    .crown-icon {
+      color: #c0c0c0;
+    }
+  }
+
+  &:nth-of-type(3) {
+    .crown-icon {
+      color: #cd7f32;
+    }
   }
 `;
 
-export const AverageWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
+export const StyledResultsLink = styled(Link)`
+  color: ${colors.red};
+  border: 0;
+  padding: 8px 0;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
+  gap: 6px;
 
-  p:first-child {
-    font-size: small;
+  svg {
+    width: 14px;
+    height: 14px;
   }
 
-  p:nth-child(2) {
-    font-size: medium;
-  }
-
-  @media (max-width: 700px) {
-    padding: 10px;
-
-    background: #ffffff;
-    /* box-shadow: 0px 12px 24px rgba(167, 159, 151, 0.24); */
-    border-radius: 12px;
-    border-radius: 12px;
-  }
-
-  @media (max-width: 330px) {
-    padding: 10px;
+  &:hover {
+    text-decoration: underline;
+    color: ${colors.red};
   }
 `;
 
@@ -151,11 +149,7 @@ export const AverageWrapper = styled.div`
 export const LeaderBoardMain = styled(AnimatedPage)`
   /* display: flex; */
   margin: auto;
-  flex-direction: column;
   max-width: 961px;
-  width: 90%;
-  display: flex;
-  gap: 32px;
 `;
 export const LeaderBoardMainTitel = styled.div`
   height: 19px;
@@ -224,8 +218,8 @@ export const AverageParsents = styled.div`
   height: 19px;
 
   font-style: normal;
-  font-weight: 500;
-  font-size: 16px;
+  font-weight: 600;
+  font-size: 20px;
   line-height: 20px;
 
   color: #000000;
@@ -237,13 +231,17 @@ export const DivLine = styled.div`
     display: none;
   }
 `;
-export const AverageWrapperButon = styled.button`
+export const AverageWrapperButon = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  text-align: center;
   background: #f9eaea;
   padding: 15px;
   border-radius: 12px;
+  margin-inline-start: auto;
+  gap: 8px;
 
   p:first-child {
     font-size: small;

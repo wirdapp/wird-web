@@ -16,4 +16,8 @@ export default {
   noResult: "لم يتم استخراج النتائج",
   succussResult: "تم استخراج النتائج بنجاح",
   dayResult: "اختر الآبام لاستخراج النتائج",
+  "edit-profile": "تعديل الملف الشخصي",
+  "change-profile-photo": "تغيير صورة الملف الشخصي",
+  "profile-has-been-edited-successfully": "تم تعديل الملف الشخصي بنجاح",
+  "something-went-wrong": "حدث خطأ ما",
 };

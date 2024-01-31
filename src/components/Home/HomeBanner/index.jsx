@@ -7,7 +7,6 @@ import Banner, {
   CirclesStyle,
   ContentAndImgs,
   ContentBanner,
-  DayContent,
   FirstCircle,
   SecondCircle,
   StudentBanner,
@@ -42,9 +41,6 @@ function HomeBanner(props) {
             <WelcomeName>
               {t("welcome")}, {props.name}!
             </WelcomeName>
-            <DayContent>
-              {t("today-is")} {props.dayNumber} {t("ramadan")}
-            </DayContent>
           </TitleContent>
 
           {currentContest ? (

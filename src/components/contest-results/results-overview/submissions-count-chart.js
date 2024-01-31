@@ -21,9 +21,7 @@ const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
       <StyledChartTooltip>
-        <label>
-          {t("day")} {+label + 1}
-        </label>
+        <label>{dayjs(label).format("DD MMM YYYY")}</label>
         {payload.map((p) => (
           <Fragment key={p.value}>
             {dayjs().isSame(p.payload.date, "day") && (
@@ -87,13 +85,13 @@ export const SubmissionsCountChart = ({ chartData }) => {
             <stop offset="95%" stopColor={colors.yellow} stopOpacity={0} />
           </linearGradient>
         </defs>
-        <XAxis dataKey="index" hide reversed={i18n.dir() === "rtl"} />
+        <XAxis dataKey="date" hide reversed={i18n.dir() === "rtl"} />
         <YAxis hide />
         <Tooltip isAnimationActive={false} content={<CustomTooltip />} />
         <CartesianGrid stroke="#f5f5f5" />
         <Area
           type="monotone"
-          dataKey="submissions_count"
+          dataKey="submission_count"
           stroke={colors.yellow}
           fillOpacity={1}
           fill="url(#colorPv)"

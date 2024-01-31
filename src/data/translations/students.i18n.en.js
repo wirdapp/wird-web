@@ -65,6 +65,8 @@ export default {
    errorStudent:"Please check the name"
   },
   approve:"Approve",
-  reject:"Reject"
-  
+  reject:"Reject",
+
+  "user-details": "User Details",
+  email: "Email",
 };

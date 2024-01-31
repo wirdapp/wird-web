@@ -41,7 +41,7 @@ const ContestModerator = () => {
     setLoading(true);
     try {
       const data = await MembersApi.getAdmins({ search });
-      setAdmins(data.results);
+      setAdmins(data);
     } catch (err) {
       console.log("Failing", err);
     }

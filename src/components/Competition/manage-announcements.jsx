@@ -1,11 +1,12 @@
 import { useDashboardData } from "../../util/routes-data";
-import { useState } from "react";
+import React, { useState } from "react";
 import styled from "@emotion/styled";
 import { colors } from "../../styles";
 import { useTranslation } from "react-i18next";
 import { TrashIcon } from "@heroicons/react/20/solid";
-import { updateContest } from "../../services/contests/api";
-import { Button, Input, Modal } from "antd";
+import { ContestsApi } from "../../services/contests/api";
+import { Button, Empty, Form, Input, message, Modal, Spin } from "antd";
+import { useNavigation, useRevalidator } from "react-router-dom";
 
 const StyledAnnouncementWrapper = styled.div`
   width: 100%;
@@ -29,7 +30,7 @@ const StyledAnnouncementWrapper = styled.div`
   }
 `;
 
-const StyledAnnouncementsList = styled.ul`
+export const StyledAnnouncementsList = styled.ul`
   list-style: none;
   padding: 16px 0;
   margin: 0;
@@ -64,30 +65,66 @@ const StyledAnnouncementsList = styled.ul`
 export const ManageAnnouncements = () => {
   const { currentContest } = useDashboardData();
   const { t } = useTranslation();
-
-  const [announcements, setAnnouncments] = useState(
-    currentContest.announcements ?? [],
-  );
-  const [newAnnouncement, setNewAnnouncement] = useState("");
+  const [errors, setErrors] = useState([]);
+  const [form] = Form.useForm();
+  const [submitting, setSubmitting] = useState(false);
+  const [deleting, setDeleting] = useState({});
   const [announcementFormVisible, setAnnouncementFormVisible] = useState(false);
+  const revalidator = useRevalidator();
+  const navigation = useNavigation();
 
-  const handleAnnouncementChange = (e) => {
-    setNewAnnouncement(e.target.value);
+  const onFormFinish = async (values) => {
+    try {
+      setSubmitting(true);
+      const newAnnouncement = values.announcement.trim();
+      const newAnnouncements = [
+        ...currentContest.announcements,
+        newAnnouncement,
+      ];
+      await ContestsApi.updateContest(currentContest.id, {
+        announcements: newAnnouncements,
+      });
+      revalidator.revalidate();
+      setAnnouncementFormVisible(false);
+      form.resetFields();
+    } catch (err) {
+      console.log(err);
+      const errorsList = [];
+      Object.values(err.response?.data ?? {}).forEach((errMsg) => {
+        errorsList.push(errMsg);
+      });
+      if (errorsList.length > 0) {
+        setErrors(errorsList);
+      } else {
+        setErrors([t("something-went-wrong")]);
+      }
+      message.error(
+        errorsList.map((err) => (
+          <React.Fragment key={err}>
+            {err}
+            <br />
+          </React.Fragment>
+        )),
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
-  const handleAnnouncementSubmit = async (e) => {
-    e.preventDefault();
-    const newAnnouncements = [...announcements, newAnnouncement.trim()];
-    await updateContest({
-      announcements: newAnnouncements,
-    });
-    setAnnouncments(newAnnouncements);
-    setNewAnnouncement("");
-    setAnnouncementFormVisible(false);
-  };
-
-  const handleAnnouncementDelete = (index) => {
-    setAnnouncments(announcements.filter((_, i) => i !== index));
+  const handleAnnouncementDelete = async (index) => {
+    try {
+      setDeleting((prev) => ({ ...prev, [index]: true }));
+      const newAnnouncements = currentContest.announcements.filter(
+        (_, i) => i !== index,
+      );
+      await ContestsApi.updateContest(currentContest.id, {
+        announcements: newAnnouncements,
+      });
+      revalidator.revalidate();
+    } catch (err) {
+      console.log(err);
+      message.error(t("something-went-wrong"));
+    }
   };
 
   return (
@@ -100,38 +137,57 @@ export const ManageAnnouncements = () => {
             {t("new-announcement")}
           </Button>
         </div>
-        {announcements.length === 0 ? (
-          <p>{t("no-announcements-yet")}</p>
+        {currentContest.announcements.length === 0 ? (
+          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
         ) : (
-          <StyledAnnouncementsList>
-            {announcements.map((announcement, index) => (
-              <li key={index}>
-                {announcement}
-                <Button
-                  type="text"
-                  onClick={() => handleAnnouncementDelete(index)}
-                >
-                  <TrashIcon />
-                </Button>
-              </li>
-            ))}
-          </StyledAnnouncementsList>
+          <Spin spinning={navigation.state !== "idle"}>
+            <StyledAnnouncementsList>
+              {currentContest.announcements.map((announcement, index) => (
+                <li key={index}>
+                  {announcement}
+                  <Button
+                    type="text"
+                    danger
+                    size="small"
+                    onClick={() => handleAnnouncementDelete(index)}
+                    loading={deleting[index]}
+                  >
+                    <TrashIcon />
+                  </Button>
+                </li>
+              ))}
+            </StyledAnnouncementsList>
+          </Spin>
         )}
       </div>
       <Modal
         title={t("make-an-announcement")}
         open={announcementFormVisible}
         onCancel={() => setAnnouncementFormVisible(false)}
-        onOk={handleAnnouncementSubmit}
-        okText={t("submit")}
+        onOk={() => form.submit()}
+        okText={t("add")}
         cancelText={t("cancel")}
+        okButtonProps={{
+          loading: submitting,
+        }}
       >
-        <Input.TextArea
-          placeholder={t("announcement-placeholder")}
-          rows={5}
-          onChange={handleAnnouncementChange}
-          value={newAnnouncement}
-        />
+        <Form onFinish={onFormFinish} form={form}>
+          <Form.Item
+            name="announcement"
+            rules={[{ required: true, message: t("requiredField") }]}
+            validateStatus={errors.length > 0 ? "error" : undefined}
+            help={
+              errors.length
+                ? errors.map((err) => <div key={err}>{err}</div>)
+                : undefined
+            }
+          >
+            <Input.TextArea
+              placeholder={t("announcement-placeholder")}
+              rows={5}
+            />
+          </Form.Item>
+        </Form>
       </Modal>
     </StyledAnnouncementWrapper>
   );

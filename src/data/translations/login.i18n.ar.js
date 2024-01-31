@@ -35,5 +35,5 @@ export default {
   resetPassWord: "إعادة تعيين كلمة المرور الآن",
   wirdSupport: "دعم وِرد",
   requiredField: "هذا الحقل مطلوب",
-  copyrightFooterMsg: "\u00A9 جميع الحقوق محفوظة لتطبيق ورد 2024",
+  copyrightFooterMsg: "\u00A9 جميع الحقوق محفوظة لتطبيق ورد - {{year}}",
 };

@@ -11,6 +11,8 @@ export default {
   "make-an-announcement": "أنشر إعلانًا جديدًا",
   "new-announcement": "إعلان جديد",
   announcement: "إعلان",
+  announcements: "إعلانات",
+  "announcement-placeholder": "أدخل محتوى الإعلان هنا",
   "success-to-add-new-announcement-msg": "تم إضافة إعلان جديد بنجاح",
   "fail-to-add-new-announcement-msg": " لم يتم إضافة إعلان جديد",
   "active-announcements": "الإعلانات المنشورة مسبقًا",
@@ -52,4 +54,11 @@ export default {
   "end-date-invalid-error": "تاريخ الانتهاء غير صالح",
   "contest-code-required-error": "كود المسابقة مطلوب",
   "contest-code-invalid-error": "كود المسابقة غير صالح",
+  contestStatus: {
+    not_started: "لم تبدأ",
+    started: "جارية",
+    finished: "انتهت",
+  },
+  contestNotStarted: "لم تبدأ المسابقة بعد",
+  noTopStudentsYet: "لا يوجد أعلى طلاب حتى الآن",
 };

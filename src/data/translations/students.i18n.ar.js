@@ -63,5 +63,7 @@ export default {
     errorStudent:"يرجى التحقق من الاسم"
    },
    approve:"موافقة",
-   reject:"رفض"
+   reject:"رفض",
+  "user-details": "تفاصيل المستخدم",
+  email: "البريد الإلكتروني",
 };

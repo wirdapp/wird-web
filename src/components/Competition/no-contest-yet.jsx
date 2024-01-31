@@ -21,6 +21,7 @@ export const NoContestYet = () => {
         justify-content: center;
         gap: 24px;
         height: 100%;
+        max-height: 500px;
         width: 100%;
         margin-top: 48px;
       `}
