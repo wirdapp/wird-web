@@ -44,13 +44,8 @@ export const GroupDetailPage = () => {
               <>
                 <Typography.Title level={3}>{group.name}</Typography.Title>
                 <Tabs
-                  defaultActiveKey="info"
+                  defaultActiveKey="announcements"
                   items={[
-                    {
-                      key: "info",
-                      label: t("group-info"),
-                      children: <GroupInfo group={group} />,
-                    },
                     {
                       key: "announcements",
                       label: t("announcements"),
@@ -69,6 +64,11 @@ export const GroupDetailPage = () => {
                           )}
                         </Await>
                       ),
+                    },
+                    {
+                      key: "info",
+                      label: t("group-info"),
+                      children: <GroupInfo group={group} />,
                     },
                   ]}
                 />
