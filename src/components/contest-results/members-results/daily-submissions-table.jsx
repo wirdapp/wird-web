@@ -6,15 +6,17 @@ import { useDashboardData } from "../../../util/routes-data";
 import { css } from "@emotion/css";
 import { CriterionRecordAnswer } from "./criterion-record-answer";
 import { CriterionRecordPoints } from "./criterion-record-points";
+import useBreakpoint from "antd/es/grid/hooks/useBreakpoint";
 
 export const DailySubmissionsTable = ({ submissions, onClose, criteria }) => {
   const { message } = App.useApp();
   const { t } = useTranslation();
   const { currentContest } = useDashboardData();
+  const screens = useBreakpoint();
 
   const onUpdateRecord = async ({ record, data }) => {
     try {
-      await ContestResultsApi.updatePointRecord({
+      const updatedRecord = await ContestResultsApi.updatePointRecord({
         contestId: currentContest.id,
         recordId: record.id,
         date: record.record_date,
@@ -22,24 +24,29 @@ export const DailySubmissionsTable = ({ submissions, onClose, criteria }) => {
         data,
       });
       message.success(t("saved"));
+      return updatedRecord;
     } catch (error) {
       message.error(t("failedToSave"));
     }
+    return record;
   };
 
   const columns = useMemo(
     () => [
       {
         render: (_, __, index) => index + 1,
+        width: 50,
       },
       {
         title: t("dailySubmissionsPopup.criteriaTitle"),
         dataIndex: ["contest_criterion_data", "label"],
         key: "title",
+        width: 250,
       },
       {
         title: t("dailySubmissionsPopup.points"),
         key: "point_total",
+        width: 200,
         render: (record, index) => (
           <CriterionRecordPoints
             pointRecord={record}
@@ -77,7 +84,8 @@ export const DailySubmissionsTable = ({ submissions, onClose, criteria }) => {
         dataSource={submissions}
         pagination={false}
         rowKey="id"
-        scroll={{ x: 500 }}
+        scroll={{ x: 800 }}
+        tableLayout={screens.md ? "fixed" : "auto"}
       />
     </div>
   );

@@ -52,4 +52,9 @@ export default {
     member: "Member",
     admin: "Admin",
   },
+  "group-member-updated": "Member updated successfully",
+  "change-role-to-member": "Change Role to Member",
+  "change-role-to-admin": "Change Role to Admin",
+  remove: "Remove",
+  select: "Select",
 };

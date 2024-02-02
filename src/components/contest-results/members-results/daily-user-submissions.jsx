@@ -68,6 +68,7 @@ export const DailyUserSubmissions = ({ onBack, userId }) => {
           label={t("dailySubmissionsPopup.date")}
           name="date"
           rules={[{ required: true, message: t("requiredField") }]}
+          initialValue={currentContest.start_date}
         >
           <DatePicker
             disabledDate={(current) => {

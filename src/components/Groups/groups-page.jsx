@@ -61,23 +61,25 @@ export function Group() {
                     width: 100%;
                   `}
                 >
-                  <Space
-                    size="middle"
-                    align="center"
-                    style={{ marginBottom: 24 }}
-                  >
-                    <Button
-                      onClick={() => setCreateGroupPopupOpen(true)}
-                      icon={<PlusIcon />}
+                  <Spin spinning={revalidator.state !== "idle"}>
+                    <Flex
+                      align="center"
+                      justify="space-between"
+                      gap={16}
+                      style={{ marginBottom: 24 }}
                     >
-                      {t("create-group")}
-                    </Button>
-                    <Spin
-                      size="small"
-                      spinning={revalidator.state !== "idle"}
-                    />
-                  </Space>
-                  <GroupsList groups={groups} selected={groupId} />
+                      <Typography.Title level={4} style={{ marginBottom: 0 }}>
+                        {t("select")}:
+                      </Typography.Title>
+                      <Button
+                        onClick={() => setCreateGroupPopupOpen(true)}
+                        icon={<PlusIcon />}
+                      >
+                        {t("create-group")}
+                      </Button>
+                    </Flex>
+                    <GroupsList groups={groups} selected={groupId} />
+                  </Spin>
                 </div>
                 <div
                   className={css`

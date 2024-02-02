@@ -1,9 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Select } from "antd";
 import { MembersApi } from "../../../services/members/api";
 import { getFullName } from "../../../util/user-utils";
 
-export const MembersSelect = ({ role, valueField = "id", ...props }) => {
+export const MembersSelect = ({
+  role,
+  valueField = "id",
+  excludeUsernames,
+  ...props
+}) => {
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -18,6 +23,7 @@ export const MembersSelect = ({ role, valueField = "id", ...props }) => {
                 ? valueField(member)
                 : member[valueField || "id"],
             label: getFullName(member.person_info),
+            username: member.person_info.username,
           })),
         );
       })
@@ -26,11 +32,17 @@ export const MembersSelect = ({ role, valueField = "id", ...props }) => {
       });
   }, []);
 
+  const filteredMembers = useMemo(
+    () =>
+      members.filter((member) => !excludeUsernames?.includes(member.username)),
+    [members, excludeUsernames],
+  );
+
   return (
     <Select
       {...props}
       loading={loading}
-      options={members}
+      options={filteredMembers}
       showSearch
       optionFilterProp="label"
     />

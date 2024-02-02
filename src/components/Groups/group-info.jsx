@@ -1,7 +1,7 @@
 import React from "react";
 import { App, Button, Flex, Form, Input, Popconfirm } from "antd";
 import { TrashIcon } from "@heroicons/react/20/solid";
-import { useParams, useRevalidator } from "react-router-dom";
+import { useNavigate, useParams, useRevalidator } from "react-router-dom";
 import { GroupsApi } from "../../services/groups/api";
 import { useTranslation } from "react-i18next";
 
@@ -12,6 +12,7 @@ export const GroupInfo = ({ group }) => {
   const [updating, setUpdating] = React.useState(false);
   const [deleting, setDeleting] = React.useState();
   const revalidator = useRevalidator();
+  const navigate = useNavigate();
 
   const onUpdateName = async (values) => {
     setUpdating(true);
@@ -37,6 +38,7 @@ export const GroupInfo = ({ group }) => {
       });
       setUpdating(false);
       message.success(t("group-deleted"));
+      navigate("/dashboard/groups");
       revalidator.revalidate();
     } catch (e) {
       console.error(e);

@@ -1,9 +1,8 @@
 import React from "react";
-import { App, Button, Dropdown, Flex, Form, List, Select, Space } from "antd";
+import { App, Button, Flex, Form, List, Select, Space } from "antd";
 import { css } from "@emotion/css";
 import { colors } from "../../styles";
 import {
-  EllipsisVerticalIcon,
   PlusCircleIcon,
   PlusIcon,
   XMarkIcon,
@@ -14,6 +13,7 @@ import { GroupsApi } from "../../services/groups/api";
 import { useRevalidator } from "react-router-dom";
 import useBreakpoint from "antd/es/grid/hooks/useBreakpoint";
 import { getFullName } from "../../util/user-utils";
+import { useDashboardData } from "../../util/routes-data";
 
 const MemberActions = ({ groupId, member }) => {
   const { t } = useTranslation();
@@ -21,30 +21,12 @@ const MemberActions = ({ groupId, member }) => {
   const revalidator = useRevalidator();
   const [submitting, setSubmitting] = React.useState(false);
 
-  const updateMemberRole = async (role) => {
-    setSubmitting(true);
-    try {
-      await GroupsApi.updateGroupMember({
-        groupId: groupId,
-        memberId: member.username,
-        body: { group_role: role },
-      });
-      message.success(t("group-member-updated"));
-      revalidator.revalidate();
-    } catch (e) {
-      console.error(e);
-      message.error(t("something-went-wrong"));
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
   const removeMember = async () => {
     setSubmitting(true);
     try {
       await GroupsApi.removeGroupMember({
         groupId: groupId,
-        memberId: member.username,
+        memberId: member.id,
       });
       message.success(t("group-member-removed"));
       revalidator.revalidate();
@@ -57,39 +39,16 @@ const MemberActions = ({ groupId, member }) => {
   };
 
   return (
-    <Dropdown
-      menu={{
-        items: [
-          member.group_role === 1
-            ? {
-                key: "set-role-member",
-                label: t("change-role-to-member"),
-                onClick: () => updateMemberRole(2),
-              }
-            : {
-                key: "set-role-admin",
-                label: t("change-role-to-admin"),
-                onClick: () => updateMemberRole(1),
-              },
-
-          {
-            key: "remove",
-            label: t("remove"),
-            icon: <XMarkIcon />,
-            onClick: () => removeMember(),
-          },
-        ],
-      }}
-      disabled={submitting}
-      trigger={["click"]}
+    <Button
+      type="text"
+      size="small"
+      danger
+      icon={<XMarkIcon />}
+      loading={submitting}
+      onClick={removeMember}
     >
-      <Button
-        type="text"
-        size="small"
-        icon={<EllipsisVerticalIcon />}
-        loading={submitting}
-      />
-    </Dropdown>
+      {t("remove")}
+    </Button>
   );
 };
 
@@ -100,9 +59,12 @@ export const GroupMembers = ({ group, members }) => {
   const revalidator = useRevalidator();
   const [form] = Form.useForm();
   const screens = useBreakpoint();
+  const { currentUser } = useDashboardData();
+  const [formErrors, setFormErrors] = React.useState({});
 
   const addMember = async (values) => {
     setAdding(true);
+    setFormErrors({});
     try {
       await GroupsApi.addGroupMember({
         groupId: group.id,
@@ -114,6 +76,7 @@ export const GroupMembers = ({ group, members }) => {
     } catch (e) {
       console.error(e);
       message.error(t("something-went-wrong"));
+      setFormErrors(e.response?.data || {});
     } finally {
       setAdding(false);
     }
@@ -136,11 +99,12 @@ export const GroupMembers = ({ group, members }) => {
             actions={[<MemberActions groupId={group.id} member={member} />]}
           >
             <List.Item.Meta
-              title={getFullName(member.person_info)}
+              title={getFullName(member.person)}
               description={
-                member.group_role === 1
-                  ? t("group-roles.admin")
-                  : t("group-roles.member")
+                <>
+                  {member.group_role === 1 && t("group-roles.admin")}
+                  {member.group_role === 2 && t("group-roles.member")}
+                </>
               }
             />
           </List.Item>
@@ -166,8 +130,16 @@ export const GroupMembers = ({ group, members }) => {
           <Form.Item
             rules={[{ required: true, message: t("requiredField") }]}
             name="contest_person"
+            validateStatus={formErrors.contest_person ? "error" : undefined}
+            help={formErrors.contest_person}
           >
-            <MembersSelect placeholder={t("select-member")} />
+            <MembersSelect
+              placeholder={t("select-member")}
+              excludeUsernames={[
+                currentUser.username,
+                ...members.map((m) => m.person.username),
+              ]}
+            />
           </Form.Item>
           <Form.Item name="group_role" initialValue={2}>
             <Select

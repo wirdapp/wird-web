@@ -61,18 +61,18 @@ export const GroupsApi = {
     return data;
   },
 
-  async removeGroupMember({ username, groupId, contestId }) {
+  async removeGroupMember({ memberId, groupId, contestId }) {
     const cid = contestId ?? getCurrentContestId();
     const { data } = await axios.delete(
-      `/admin_panel/${cid}/groups/${groupId}/members/${username}`,
+      `/admin_panel/${cid}/groups/${groupId}/members/${memberId}/`,
     );
     return data;
   },
 
-  async updateGroupMember({ username, groupId, body, contestId }) {
+  async updateGroupMember({ memberId, groupId, body, contestId }) {
     const cid = contestId ?? getCurrentContestId();
     const { data } = await axios.patch(
-      `/admin_panel/${cid}/groups/${groupId}/members/${username}/`,
+      `/admin_panel/${cid}/groups/${groupId}/members/${memberId}/`,
       body,
     );
     return data;
