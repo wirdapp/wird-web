@@ -37,7 +37,11 @@ export const DashboardLayout = () => {
           </>
         ) : (
           <div className="page-content">
-            <Result status="403" title="403" subTitle={t("notAdmin")} />
+            <Result
+              status="403"
+              title={t("forbidden")}
+              subTitle={t("notAdmin")}
+            />
           </div>
         )}
       </MainContent>
