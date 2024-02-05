@@ -15,7 +15,7 @@ import { ReactComponent as ParticipantsIcon } from "assets/icons/students.svg";
 import { ReactComponent as ResultsIcon } from "assets/icons/results.svg";
 import { ReactComponent as LeaderBoard } from "assets/icons/leaderBoard.svg";
 import { ReactComponent as GroupsIcon } from "assets/icons/group.svg";
-import { isAdmin } from "../../../util/ContestPeople_Role";
+import { isAtLeastAdmin } from "../../../util/ContestPeople_Role";
 import { useTranslation } from "react-i18next";
 import { useDashboardData } from "../../../util/routes-data";
 
@@ -42,7 +42,7 @@ function Sidebar() {
             <CompInfoIcon />
             <MenuItem>{t("contest-information")}</MenuItem>
           </MenuLink>
-          {isAdmin(currentUser?.role) && (
+          {isAtLeastAdmin(currentUser?.role) && (
             <MenuLink
               to="/dashboard/results/overview"
               title={t("results-page")}
