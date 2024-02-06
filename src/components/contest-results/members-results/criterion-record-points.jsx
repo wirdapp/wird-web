@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { FieldTypes } from "../../../services/contest-criteria/consts";
 import { Button, Form, InputNumber, Space } from "antd";
 import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
@@ -20,7 +19,6 @@ export const CriterionRecordPoints = ({
   const criterion = criteria.find(
     (c) => c.id === pointRecord.contest_criterion_data.id,
   );
-  const canEdit = criterion.resourcetype === FieldTypes.Text;
 
   const onFormFinish = async (values) => {
     setSubmitting(true);
@@ -41,7 +39,7 @@ export const CriterionRecordPoints = ({
         initialValue={pointRecord.point_total}
         noStyle
       >
-        <InputNumber max={criterion.points} min={0} disabled={!canEdit} />
+        <InputNumber max={criterion.points} min={0} />
       </Form.Item>
       {newPoints !== pointRecord.point_total && (
         <Space style={{ marginInlineStart: 4 }} size={4}>
