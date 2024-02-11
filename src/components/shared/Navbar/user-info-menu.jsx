@@ -59,7 +59,7 @@ export const UserInfoMenu = () => {
             label: t("help"),
             icon: <QuestionMarkCircleIcon />,
             onClick: () => {
-              navigate("/dashboard/help");
+              window.open(`//wird.app/${i18n.language}/help`, "_blank");
             },
           },
           {
