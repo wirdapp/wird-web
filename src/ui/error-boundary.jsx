@@ -6,7 +6,7 @@ import { ReactComponent as WirdLogo } from "assets/icons/Shared/wirdLogo.svg";
 export function ErrorBoundary() {
   let error = useRouteError();
   console.error(error);
-  if (error.status === 404) {
+  if (error?.status === 404) {
     return <Error404 />;
   }
 

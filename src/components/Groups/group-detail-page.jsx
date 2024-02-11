@@ -10,16 +10,25 @@ import { GroupAnnouncement } from "./group-announcement";
 import { GroupMembers } from "./group-members";
 import { GroupInfo } from "./group-info";
 import { colors } from "../../styles";
+import { isAxiosError } from "axios";
 
 export async function groupDetailPageLoader({ params }) {
-  const group = GroupsApi.getGroup({ id: params.groupId });
-  const groupMembers = GroupsApi.getGroupMembers({ groupId: params.groupId });
+  try {
+    const group = await GroupsApi.getGroup({ id: params.groupId });
 
-  return defer({
-    group,
-    groupMembers,
-    title: "groups",
-  });
+    const groupMembers = GroupsApi.getGroupMembers({ groupId: params.groupId });
+
+    return defer({
+      group,
+      groupMembers,
+      title: "groups",
+    });
+  } catch (e) {
+    if (isAxiosError(e)) {
+      throw new Response(e.response.data, { status: e.response.status });
+    }
+    throw e;
+  }
 }
 
 export const GroupDetailPage = () => {
@@ -38,44 +47,36 @@ export const GroupDetailPage = () => {
           border-radius: 8px;
         `}
       >
-        <React.Suspense>
-          <Await resolve={group}>
-            {(group) => (
-              <>
-                <Typography.Title level={3}>{group.name}</Typography.Title>
-                <Tabs
-                  defaultActiveKey="announcements"
-                  items={[
-                    {
-                      key: "announcements",
-                      label: t("announcements"),
-                      children: <GroupAnnouncement group={group} />,
-                    },
-                    {
-                      key: "members",
-                      label: t("members"),
-                      children: (
-                        <Await resolve={groupMembers}>
-                          {(groupMembers) => (
-                            <GroupMembers
-                              group={group}
-                              members={groupMembers?.results ?? []}
-                            />
-                          )}
-                        </Await>
-                      ),
-                    },
-                    {
-                      key: "info",
-                      label: t("group-info"),
-                      children: <GroupInfo group={group} />,
-                    },
-                  ]}
-                />
-              </>
-            )}
-          </Await>
-        </React.Suspense>
+        <Typography.Title level={3}>{group.name}</Typography.Title>
+        <Tabs
+          defaultActiveKey="announcements"
+          items={[
+            {
+              key: "announcements",
+              label: t("announcements"),
+              children: <GroupAnnouncement group={group} />,
+            },
+            {
+              key: "members",
+              label: t("members"),
+              children: (
+                <Await resolve={groupMembers}>
+                  {(groupMembers) => (
+                    <GroupMembers
+                      group={group}
+                      members={groupMembers?.results ?? []}
+                    />
+                  )}
+                </Await>
+              ),
+            },
+            {
+              key: "info",
+              label: t("group-info"),
+              children: <GroupInfo group={group} />,
+            },
+          ]}
+        />
       </AnimatedPage>
     </AnimatePresence>
   );

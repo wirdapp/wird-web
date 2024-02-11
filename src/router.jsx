@@ -116,6 +116,7 @@ export const router = createBrowserRouter([
                 path: ":groupId",
                 element: <GroupDetailPage />,
                 loader: groupDetailPageLoader,
+                errorElement: <ErrorBoundary />,
               },
             ],
           },
