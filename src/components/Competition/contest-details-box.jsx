@@ -2,14 +2,17 @@ import React from "react";
 import { Squares2X2Icon } from "@heroicons/react/24/outline";
 import { Space, Typography } from "antd";
 import { ContestBadge } from "./contest-badge";
-import { getInviteLink } from "../../services/contests/utils";
 import { useDashboardData } from "../../util/routes-data";
 import { useTranslation } from "react-i18next";
 import { ContestDetailBox } from "./styles";
+import { getCountryFlagElement, getCountryName } from "../../data/countries";
+import dayjs from "dayjs";
 
 export const ContestDetailsBox = () => {
   const { currentContest } = useDashboardData();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+
+  const Flag = getCountryFlagElement(currentContest.country, i18n.language);
 
   return (
     <ContestDetailBox>
@@ -24,29 +27,39 @@ export const ContestDetailsBox = () => {
         {currentContest.description && <h3>{currentContest.description}</h3>}
 
         <div className="contest-detail-item">
+          {t("country")}:{" "}
+          <Typography.Text>
+            {currentContest.country && (
+              <Space>
+                <Flag style={{ display: "block", width: 24 }} />
+                {getCountryName(currentContest.country, i18n.language)}
+              </Space>
+            )}
+          </Typography.Text>
+        </div>
+
+        <div className="contest-detail-item">
           {t("start-date")}:{" "}
           <Typography.Text>
-            {currentContest.start_date.format("dddd, DD MMM YYYY")}
+            {dayjs(currentContest.start_date)
+              .locale(i18n.language)
+              .format("dddd, DD MMM YYYY")}
           </Typography.Text>
         </div>
 
         <div className="contest-detail-item">
           {t("end-date")}:{" "}
           <Typography.Text>
-            {currentContest.end_date.format("dddd, DD MMM YYYY")}
+            {dayjs(currentContest.end_date)
+              .locale(i18n.language)
+              .format("dddd, DD MMM YYYY")}
           </Typography.Text>
         </div>
 
-        <div className="contest-detail-item">
+        <div className="contest-detail-item preformatted">
           {t("join-code")}:{" "}
           <Typography.Text copyable>
             {currentContest.contest_id}
-          </Typography.Text>
-        </div>
-        <div className="contest-detail-item">
-          {t("copy-link")}:{" "}
-          <Typography.Text copyable>
-            {getInviteLink(currentContest.contest_id)}
           </Typography.Text>
         </div>
       </div>

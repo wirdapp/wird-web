@@ -15,6 +15,9 @@ import { isAxiosError } from "axios";
 export async function groupDetailPageLoader({ params }) {
   try {
     const group = await GroupsApi.getGroup({ id: params.groupId });
+    group.announcements = Array.isArray(group.announcements)
+      ? group.announcements
+      : [];
 
     const groupMembers = GroupsApi.getGroupMembers({ groupId: params.groupId });
 

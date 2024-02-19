@@ -62,4 +62,6 @@ export default {
   contestNotStarted: "Contest not started yet",
   noTopStudentsYet: "No top students yet",
   "show-leaderboard-for-students": "Show Leaderboard for Students",
+  country: "Country",
+  "code-error": "Invalid code",
 };

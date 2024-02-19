@@ -3,6 +3,7 @@ import { Button, Form, InputNumber, Space } from "antd";
 import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useDashboardData } from "../../../util/routes-data";
 import { isAtLeastSuperAdmin } from "../../../util/ContestPeople_Role";
+import { FieldTypes } from "../../../services/contest-criteria/consts";
 
 export const CriterionRecordPoints = ({
   onSave,
@@ -15,8 +16,6 @@ export const CriterionRecordPoints = ({
   const [submitting, setSubmitting] = useState(false);
   const { currentUser } = useDashboardData();
 
-  const canEdit = isAtLeastSuperAdmin(currentUser.role);
-
   useEffect(() => {
     setPointRecord(recordFromProps);
   }, [recordFromProps]);
@@ -24,6 +23,10 @@ export const CriterionRecordPoints = ({
   const criterion = criteria.find(
     (c) => c.id === pointRecord.contest_criterion_data.id,
   );
+
+  const canEdit =
+    isAtLeastSuperAdmin(currentUser.role) &&
+    criterion.resourcetype === FieldTypes.Text;
 
   const onFormFinish = async (values) => {
     if (!canEdit) return;
@@ -40,24 +43,27 @@ export const CriterionRecordPoints = ({
 
   return (
     <Form form={form} onFinish={onFormFinish}>
-      <Form.Item
-        name="point_total"
-        initialValue={pointRecord.point_total}
-        noStyle
-      >
-        <InputNumber max={criterion.points} min={0} readOnly={!canEdit} />
-      </Form.Item>
+      {canEdit ? (
+        <Form.Item
+          name="point_total"
+          initialValue={pointRecord.point_total}
+          noStyle
+        >
+          <InputNumber max={criterion.points} min={0} />
+        </Form.Item>
+      ) : (
+        pointRecord.point_total
+      )}
       {canEdit && newPoints !== pointRecord.point_total && (
         <Space style={{ marginInlineStart: 4 }} size={4}>
           <Button
-            type="text"
+            type="primary"
             size="small"
             htmlType="submit"
             icon={<CheckIcon />}
             loading={submitting}
           />
           <Button
-            type="text"
             size="small"
             htmlType="reset"
             icon={<XMarkIcon />}

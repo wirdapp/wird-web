@@ -28,6 +28,11 @@ export async function dashboardLoader({ request }) {
     data.contests = await ContestsApi.getContests();
     data.currentContest = await getCurrentContest(data.contests);
     data.currentUser.role = data.currentContest?.person_contest_role;
+    data.currentContest.announcements = Array.isArray(
+      data.currentContest.announcements,
+    )
+      ? data.currentContest.announcements
+      : [];
   } catch (e) {
     console.log(`Failed to get current contest: ${e}`);
     data.currentContest = null;

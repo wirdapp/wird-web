@@ -28,7 +28,7 @@ export const ContestDetailBox = styled.div`
       align-items: center;
       color: ${colors.darkGrey};
 
-      > span {
+      &.preformatted > span {
         font-family: monospace;
         color: #000;
       }

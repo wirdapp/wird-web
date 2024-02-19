@@ -12,10 +12,7 @@ import { CreateContestPopup } from "../../Competition/create-contest-popup";
 import { JoinContestPopup } from "../../Competition/join-contest-popup";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  changeCurrentContest,
-  getInviteLink,
-} from "../../../services/contests/utils";
+import { changeCurrentContest } from "../../../services/contests/utils";
 import { Button, Menu, Popover, Space, Typography } from "antd";
 import { css } from "@emotion/css";
 import { ContestBadge } from "../../Competition/contest-badge";
@@ -131,13 +128,6 @@ export const ContestInfoMenu = () => {
                       {currentContest?.contest_id}
                     </Typography.Text>
                   </Space>
-                  <Typography.Text
-                    copyable={{
-                      text: getInviteLink(currentContest.contest_id),
-                    }}
-                  >
-                    {t("copy-link")}:
-                  </Typography.Text>
                 </div>
               </StyledCurrentContestWrapper>
             )}

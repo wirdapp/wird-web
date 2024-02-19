@@ -96,4 +96,12 @@ export default {
   "criteria-active": "تفعيل المعيار",
   "criteria-deleted": "تم حذف المعيار بنجاح",
   "criteria-delete-failed": "فشل حذف المعيار",
+  "criteria-updated": "تم تعديل المعيار بنجاح",
+  "criteria-added": "تم إضافة المعيار بنجاح",
+  "criteria-operation-failed": "حدث خطأ أثناء تنفيذ العملية",
+  "cannot-edit-contest-after-start": "لا يمكن تعديل المسابقة بعد بدئها",
+  "delete-section-confirm": "هل تريد حذف هذا القسم؟",
+  "delete-section-confirm-description":
+    "سيتم حذف جميع المعايير المسجلة في هذا القسم",
+  "section-delete-failed": "فشل حذف القسم",
 };

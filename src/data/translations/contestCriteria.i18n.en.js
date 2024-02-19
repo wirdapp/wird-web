@@ -96,4 +96,12 @@ export default {
   "criteria-active": "Active",
   "criteria-deleted": "Criteria deleted",
   "criteria-delete-failed": "Failed to delete criteria",
+  "criteria-updated": "Criteria updated",
+  "criteria-added": "Criteria added",
+  "criteria-operation-failed": "Failed to perform the operation",
+  "cannot-edit-contest-after-start": "Cannot edit the contest after it starts",
+  "delete-section-confirm": "Do you want to delete this section?",
+  "delete-section-confirm-description":
+    "All criteria recorded in this section will be deleted",
+  "section-delete-failed": "Failed to delete the section",
 };

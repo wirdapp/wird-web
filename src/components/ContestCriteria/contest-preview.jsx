@@ -75,7 +75,7 @@ export const ContestPreview = () => {
                   <Form.Item
                     className={css`
                       margin: 4px -6px;
-                      padding: 6px;
+                      padding: 16px 6px;
                       border-radius: 4px;
                       border-bottom: 1px solid #f5f5f5;
 

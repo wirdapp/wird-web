@@ -15,6 +15,8 @@ import { SectionCriteriaList } from "../criteria/section-criteria-list";
 import { colors } from "../../../styles";
 import { useContestSections } from "./use-contest-sections";
 import { motion } from "framer-motion";
+import { ContestStatus } from "../../../services/contests/utils";
+import { useDashboardData } from "../../../util/routes-data";
 
 const expandIconClassName = (isActive, isRtl) => css`
   transform: rotate(${isActive ? (isRtl ? -90 : 90) : 0}deg);
@@ -34,6 +36,7 @@ const ExpandIcon = ({ isActive }) => {
 };
 
 export const SectionListItem = ({ section, index }) => {
+  const { currentContest } = useDashboardData();
   const { message } = App.useApp();
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState(true);
@@ -67,7 +70,7 @@ export const SectionListItem = ({ section, index }) => {
       message.success(t("section-deleted"));
     } catch (e) {
       console.error(e);
-      message.error(t("section-delete-failed"));
+      message.error(e?.response?.data?.detail ?? t("section-delete-failed"));
     }
   };
 
@@ -81,7 +84,11 @@ export const SectionListItem = ({ section, index }) => {
     >
       <Draggable draggableId={section.id} index={index}>
         {(provided, snapshot) => (
-          <div ref={provided.innerRef} {...provided.draggableProps}>
+          <div
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            key={section.id}
+          >
             <Collapse
               activeKey={
                 !snapshot.isDragging && expanded ? section.id : undefined
@@ -120,14 +127,13 @@ export const SectionListItem = ({ section, index }) => {
                           <Button
                             size="small"
                             onClick={onNameUpdate}
-                            type="text"
+                            type="primary"
                             icon={<CheckIcon />}
                             loading={updating}
                           />
                           <Button
                             size="small"
                             onClick={() => setSectionLabel(section.label)}
-                            type="text"
                             icon={<XMarkIcon />}
                             disabled={updating}
                           />
@@ -140,26 +146,29 @@ export const SectionListItem = ({ section, index }) => {
                       <Button
                         size="small"
                         type="text"
+                        key={section.id}
                         {...provided.dragHandleProps}
                         className={css`
                           cursor: grab;
                         `}
                         icon={<Bars2Icon />}
                       />
-                      <Popconfirm
-                        title={t("delete-section-confirm")}
-                        description={t("delete-section-confirm-description")}
-                        onConfirm={onDelete}
-                        okText={t("yes")}
-                        cancelText={t("no")}
-                      >
-                        <Button
-                          size="small"
-                          type="text"
-                          danger
-                          icon={<TrashIcon />}
-                        />
-                      </Popconfirm>
+                      {currentContest.status === ContestStatus.NOT_STARTED && (
+                        <Popconfirm
+                          title={t("delete-section-confirm")}
+                          description={t("delete-section-confirm-description")}
+                          onConfirm={onDelete}
+                          okText={t("yes")}
+                          cancelText={t("no")}
+                        >
+                          <Button
+                            size="small"
+                            type="text"
+                            danger
+                            icon={<TrashIcon />}
+                          />
+                        </Popconfirm>
+                      )}
                     </Space>
                   ),
                   children: <SectionCriteriaList section={section} />,

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { ParticipantsTitelsAtHome } from "../ContestMembers/ContestMembers.styles";
@@ -6,22 +6,30 @@ import {
   EditContestFormWrapper,
   ParticipantsNumbers,
 } from "./EditCompetition.styles";
-import { Alert, App, Button, Checkbox, Form, Input, Space } from "antd";
+import { Alert, App, Button, Checkbox, Form, Input, Select, Space } from "antd";
 import { ContestsApi } from "../../../services/contests/api";
 import { css } from "@emotion/css";
 import { useRevalidator } from "react-router-dom";
 import dayjs from "dayjs";
 import { isAtLeastSuperAdmin } from "../../../util/ContestPeople_Role";
 import { useDashboardData } from "../../../util/routes-data";
+import { allCountries } from "../../../data/countries";
 
 export default function EditCompetitionForm({ contest }) {
   const { message } = App.useApp();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [messages, setMessages] = useState([]);
   const [classColor, setClassColor] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const revalidator = useRevalidator();
   const { currentUser } = useDashboardData();
+
+  const countries = useMemo(() => {
+    return allCountries(i18n.language).map((country) => ({
+      label: country.name,
+      value: country.code,
+    }));
+  }, [i18n.language]);
 
   const handleUpdateContest = async (values) => {
     try {
@@ -79,6 +87,13 @@ export default function EditCompetitionForm({ contest }) {
           </Form.Item>
           <Form.Item label={t("description-label")} name="description">
             <Input placeholder={t("description-label")} />
+          </Form.Item>
+          <Form.Item
+            label={t("country")}
+            name="country"
+            rules={[{ required: true }]}
+          >
+            <Select options={countries} showSearch optionFilterProp="label" />
           </Form.Item>
           <Form.Item
             label={t("start-date")}

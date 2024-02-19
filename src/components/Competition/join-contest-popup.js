@@ -9,19 +9,28 @@ export const JoinContestPopup = ({ visible, onClose }) => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const revalidator = useRevalidator();
+  const [submitting, setSubmitting] = React.useState(false);
+  const [isError, setIsError] = React.useState(false);
 
   const handleSubmit = async (values) => {
+    setSubmitting(true);
+    setIsError(false);
     try {
-      const result = await ContestsApi.joinContest(values.code);
-      if (result.id) {
-        changeCurrentContest(result.id);
+      await ContestsApi.joinContest(values.code);
+      const contests = await ContestsApi.getContests();
+      const newCurrentContest = contests.find(
+        (contest) => contest.contest_id === values.code,
+      );
+      if (newCurrentContest) {
+        changeCurrentContest(newCurrentContest.id);
         window.location.reload();
       }
-      revalidator.revalidate();
+      onClose?.();
     } catch (error) {
       console.log(error);
+      setIsError(true);
     } finally {
-      onClose?.();
+      setSubmitting(false);
     }
   };
 
@@ -33,9 +42,26 @@ export const JoinContestPopup = ({ visible, onClose }) => {
       cancelText={t("cancel")}
       onCancel={onClose}
       onOk={() => form.submit()}
+      okButtonProps={{ loading: submitting }}
     >
-      <Form form={form} onFinish={handleSubmit} style={{ padding: "32px 0" }}>
-        <Form.Item label={t("code-label")} name="code">
+      <Form
+        form={form}
+        onFinish={handleSubmit}
+        style={{ padding: "32px 0" }}
+        disabled={submitting}
+      >
+        <Form.Item
+          label={t("code-label")}
+          name="code"
+          rules={[
+            {
+              required: true,
+              message: t("requiredField"),
+            },
+          ]}
+          validateStatus={isError ? "error" : undefined}
+          help={isError ? t("code-error") : undefined}
+        >
           <Input placeholder={t("code-label")} />
         </Form.Item>
       </Form>

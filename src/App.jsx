@@ -4,6 +4,11 @@ import { RouterProvider } from "react-router-dom";
 import "./App.css";
 import i18n from "./i18n";
 import { router } from "./router";
+import dayjs from "dayjs";
+import "dayjs/locale/ar";
+import "dayjs/locale/en";
+
+dayjs.locale(i18n.language);
 
 function App() {
   return (

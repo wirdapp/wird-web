@@ -62,4 +62,6 @@ export default {
   contestNotStarted: "لم تبدأ المسابقة بعد",
   noTopStudentsYet: "لا يوجد أعلى طلاب حتى الآن",
   "show-leaderboard-for-students": "عرض لوحة الأوائل للطلاب",
+  country: "الدولة",
+  "code-error": "كود غير صالح",
 };

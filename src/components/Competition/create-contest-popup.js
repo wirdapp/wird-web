@@ -1,24 +1,25 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { PlusCircleIcon } from "@heroicons/react/20/solid";
 import { isAxiosError } from "axios";
-import { App, Form, Input, Modal } from "antd";
+import { App, Form, Input, Modal, Select } from "antd";
 import { ContestsApi } from "../../services/contests/api";
 import { changeCurrentContest } from "../../services/contests/utils";
 import { useDashboardData } from "../../util/routes-data";
 import dayjs from "dayjs";
+import { allCountries } from "../../data/countries";
 
 export const CreateContestPopup = ({ visible, onClose }) => {
   const { message } = App.useApp();
   const { currentUser } = useDashboardData();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [errors, setErrors] = React.useState({});
   const [submitting, setSubmitting] = React.useState(false);
   const [form] = Form.useForm();
 
   const handleSubmit = async (values) => {
     if (!currentUser.email_verified) {
-      message.error(t("emailnotverified"));
+      message.error(t("emailNotVerified"));
       return;
     }
     setSubmitting(true);
@@ -48,6 +49,13 @@ export const CreateContestPopup = ({ visible, onClose }) => {
     form.resetFields();
     onClose?.();
   };
+
+  const countries = useMemo(() => {
+    return allCountries(i18n.language).map((country) => ({
+      label: country.name,
+      value: country.code,
+    }));
+  }, [i18n.language]);
 
   return (
     <Modal
@@ -101,6 +109,16 @@ export const CreateContestPopup = ({ visible, onClose }) => {
           help={errors.description}
         >
           <Input.TextArea placeholder={t("contest-description")} rows={2} />
+        </Form.Item>
+        <Form.Item
+          label={t("country")}
+          name="country"
+          required
+          rules={[{ required: true, message: t("requiredField") }]}
+          validateStatus={errors.country ? "error" : undefined}
+          help={errors.country}
+        >
+          <Select options={countries} showSearch optionFilterProp="label" />
         </Form.Item>
         <Form.Item
           label={t("start-date")}

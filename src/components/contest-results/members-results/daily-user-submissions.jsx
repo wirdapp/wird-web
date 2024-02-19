@@ -6,9 +6,8 @@ import dayjs from "dayjs";
 import { ContestResultsApi } from "../../../services/contest-results/api";
 import { ContestCriteriaApi } from "../../../services/contest-criteria/api";
 import { DailySubmissionsTable } from "./daily-submissions-table";
-import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 
-export const DailyUserSubmissions = ({ onBack, userId }) => {
+export const DailyUserSubmissions = ({ onUpdated, userId }) => {
   const { t, i18n } = useTranslation();
   const { currentContest } = useDashboardData();
   const [loading, setLoading] = useState(false);
@@ -49,20 +48,23 @@ export const DailyUserSubmissions = ({ onBack, userId }) => {
     await loadSubmissions(values.date);
   };
 
+  const afterRecordUpdate = (record) => {
+    const index = submissions.findIndex((r) => r.id === record.id);
+    if (index !== -1) {
+      const newSubmissions = [...submissions];
+      newSubmissions[index] = record;
+      setSubmissions(newSubmissions);
+    }
+    onUpdated?.(record);
+  };
+
   return (
     <div>
-      <Button
-        type="link"
-        onClick={onBack}
-        icon={i18n.dir() === "rtl" ? <ArrowRightIcon /> : <ArrowLeftIcon />}
-      >
-        {t("back")}
-      </Button>
       <Form
         form={form}
         layout="inline"
         onFinish={onFormFinish}
-        style={{ margin: "24px 0" }}
+        style={{ marginBottom: 24 }}
       >
         <Form.Item
           label={t("dailySubmissionsPopup.date")}
@@ -87,7 +89,11 @@ export const DailyUserSubmissions = ({ onBack, userId }) => {
           {t("dailySubmissionsPopup.load")}
         </Button>
       </Form>
-      <DailySubmissionsTable submissions={submissions} criteria={criteria} />
+      <DailySubmissionsTable
+        submissions={submissions}
+        criteria={criteria}
+        onUpdated={afterRecordUpdate}
+      />
     </div>
   );
 };

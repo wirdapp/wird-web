@@ -20,7 +20,7 @@ const CustomTooltip = ({ active, payload, label }) => {
     return (
       <Card className="custom-tooltip">
         <label>
-          {t("day")} {+label + 1}
+          {t("day")} {+label}
         </label>
         <Flex gap={8} align="center">
           <span

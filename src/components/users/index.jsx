@@ -1,5 +1,5 @@
-import { Button, Empty, Flex, Skeleton, Typography } from "antd";
-import React, { useEffect, useState } from "react";
+import { Button, Empty, Flex, Input, Skeleton, Typography } from "antd";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { MembersApi } from "../../services/members/api";
 import ParticipantCard from "./ParticipantCard";
@@ -11,6 +11,7 @@ import { RolesSelect } from "./roles-select";
 import { AddUserPopup } from "./add-user-popup";
 import { isAtLeastSuperAdmin } from "../../util/ContestPeople_Role";
 import { useDashboardData } from "../../util/routes-data";
+import { debounce } from "../../util/utils";
 
 export default function Students() {
   const { t } = useTranslation();
@@ -19,13 +20,15 @@ export default function Students() {
   const [role, setRole] = useState(-1);
   const [showAddUserPopup, setShowAddUserPopup] = useState(false);
   const { currentUser } = useDashboardData();
+  const [search, setSearch] = useState("");
 
-  const callMembersData = async (role) => {
+  const callMembersData = async (role, search = "") => {
     setLoading(true);
 
     try {
       const data = await MembersApi.getUsers({
         role: role > -1 ? role : undefined,
+        search,
       });
       setStudents(data);
     } catch (e) {
@@ -34,6 +37,11 @@ export default function Students() {
       setLoading(false);
     }
   };
+
+  const debouncedCallMembersData = useMemo(
+    () => debounce(callMembersData, 500),
+    [],
+  );
 
   useEffect(() => {
     setStudents([]);
@@ -76,7 +84,7 @@ export default function Students() {
               </Button>
             )}
           </Flex>
-          <Flex gap={8} align="center">
+          <Flex gap={16} align="center">
             <Typography.Text type="secondary">{t("show")}:</Typography.Text>
             <RolesSelect
               showAll
@@ -85,6 +93,16 @@ export default function Students() {
               style={{ width: "100%", maxWidth: 300 }}
             />
           </Flex>
+          <Input.Search
+            onSearch={callMembersData}
+            value={search}
+            onChange={(e) => {
+              const value = e.target.value;
+              setSearch(value);
+              debouncedCallMembersData(role, value);
+            }}
+            placeholder={t("search")}
+          />
           <AnimatePresence mode="wait">
             {students.length === 0 ? (
               <>

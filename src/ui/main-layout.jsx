@@ -1,6 +1,8 @@
 import { useTranslation } from "react-i18next";
 import React, { useEffect } from "react";
 import dayjs from "dayjs";
+import "dayjs/locale/ar";
+import "dayjs/locale/en";
 import { App as AntdApp, ConfigProvider } from "antd";
 import { lightTheme } from "../styles/antd-theme";
 import arLocale from "antd/locale/ar_EG";
@@ -12,11 +14,7 @@ export const MainLayout = () => {
   const { i18n } = useTranslation();
 
   useEffect(() => {
-    if (i18n.language === "ar") {
-      dayjs.locale("ar");
-    } else {
-      dayjs.locale("en");
-    }
+    dayjs.locale(i18n.language);
   }, [i18n.language]);
 
   return (

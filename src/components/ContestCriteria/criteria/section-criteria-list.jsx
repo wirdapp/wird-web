@@ -18,8 +18,11 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { Bars2Icon } from "@heroicons/react/24/solid";
 import { useContestCriteria } from "./use-contest-criteria";
 import { reorder } from "../../../util/contest-utils";
+import { useDashboardData } from "../../../util/routes-data";
+import { ContestStatus } from "../../../services/contests/utils";
 
 export const SectionCriteriaList = ({ section }) => {
+  const { currentContest } = useDashboardData();
   const { message } = App.useApp();
   const { t } = useTranslation();
   const { criteriaItems, actions } = useContestCriteria({
@@ -34,7 +37,19 @@ export const SectionCriteriaList = ({ section }) => {
       message.success(t("criteria-deleted"));
     } catch (e) {
       console.error(e);
-      message.error(e.response?.data?.detail ?? t("criteria-delete-failed"));
+      let errorMessage = t("criteria-delete-failed");
+      if (e.response?.data?.detail) {
+        if (
+          e.response?.data?.detail.includes(
+            "cannot edit contest after its start date",
+          )
+        ) {
+          errorMessage = t("cannot-edit-contest-after-start");
+        } else {
+          errorMessage = e.response?.data?.detail;
+        }
+      }
+      message.error(errorMessage);
     }
   };
 
@@ -79,6 +94,7 @@ export const SectionCriteriaList = ({ section }) => {
                     FieldTypesIcons[FieldTypes.Text];
                   return (
                     <Draggable
+                      key={item.id}
                       draggableId={item.id}
                       index={index}
                       droppableId="criteria-droparea"
@@ -95,6 +111,7 @@ export const SectionCriteriaList = ({ section }) => {
                             <Button
                               size="small"
                               type="text"
+                              key={item.id}
                               {...provided.dragHandleProps}
                               className={css`
                                 cursor: grab;
@@ -110,20 +127,23 @@ export const SectionCriteriaList = ({ section }) => {
                                 setAddCriteriaVisible(true);
                               }}
                             />,
-                            <Popconfirm
-                              title={t("delete-confirm")}
-                              onConfirm={() => handleDelete(item.id)}
-                              okText={t("delete")}
-                              cancelText={t("cancel")}
-                            >
-                              <Button
-                                size="small"
-                                type="text"
-                                danger
-                                icon={<TrashIcon />}
-                              />
-                            </Popconfirm>,
-                          ]}
+                            currentContest.status ===
+                              ContestStatus.NOT_STARTED && (
+                              <Popconfirm
+                                title={t("delete-confirm")}
+                                onConfirm={() => handleDelete(item.id)}
+                                okText={t("delete")}
+                                cancelText={t("cancel")}
+                              >
+                                <Button
+                                  size="small"
+                                  type="text"
+                                  danger
+                                  icon={<TrashIcon />}
+                                />
+                              </Popconfirm>
+                            ),
+                          ].filter(Boolean)}
                         >
                           <List.Item.Meta
                             title={

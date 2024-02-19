@@ -54,7 +54,7 @@ function ContestMembers() {
               {t("moderatorsKey")}
             </ParticipantsTitelsAtHome>
 
-            <SeeAll to="/dashboard/admins">
+            <SeeAll to="/dashboard/participants">
               <SeeAllP>{t("seeAll")}</SeeAllP>
               <SeeAllIcon src={SeeMore} Alt="" />
             </SeeAll>
@@ -75,7 +75,7 @@ function ContestMembers() {
               {t("participantsKey")}
             </ParticipantsTitelsAtHome>
 
-            <SeeAll to="/dashboard/students">
+            <SeeAll to="/dashboard/participants">
               <SeeAllP>{t("seeAll")}</SeeAllP>
               <SeeAllIcon src={SeeMore} Alt="" />
             </SeeAll>

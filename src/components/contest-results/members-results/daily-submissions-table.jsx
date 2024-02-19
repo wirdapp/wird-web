@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import { App, Table } from "antd";
 import { useTranslation } from "react-i18next";
 import { ContestResultsApi } from "../../../services/contest-results/api";
@@ -8,28 +8,32 @@ import { CriterionRecordAnswer } from "./criterion-record-answer";
 import { CriterionRecordPoints } from "./criterion-record-points";
 import useBreakpoint from "antd/es/grid/hooks/useBreakpoint";
 
-export const DailySubmissionsTable = ({ submissions, onClose, criteria }) => {
+export const DailySubmissionsTable = ({ submissions, onUpdated, criteria }) => {
   const { message } = App.useApp();
   const { t } = useTranslation();
   const { currentContest } = useDashboardData();
   const screens = useBreakpoint();
 
-  const onUpdateRecord = async ({ record, data }) => {
-    try {
-      const updatedRecord = await ContestResultsApi.updatePointRecord({
-        contestId: currentContest.id,
-        recordId: record.id,
-        date: record.record_date,
-        userId: record.person,
-        data,
-      });
-      message.success(t("saved"));
-      return updatedRecord;
-    } catch (error) {
-      message.error(t("failedToSave"));
-    }
-    return record;
-  };
+  const onUpdateRecord = useCallback(
+    async ({ record, data }) => {
+      try {
+        const updatedRecord = await ContestResultsApi.updatePointRecord({
+          contestId: currentContest.id,
+          recordId: record.id,
+          date: record.record_date,
+          userId: record.person,
+          data,
+        });
+        message.success(t("saved-successfully"));
+        onUpdated?.(updatedRecord);
+        return updatedRecord;
+      } catch (error) {
+        message.error(t("failedToSave"));
+      }
+      return record;
+    },
+    [currentContest, message, onUpdated, t],
+  );
 
   const columns = useMemo(
     () => [
@@ -67,7 +71,7 @@ export const DailySubmissionsTable = ({ submissions, onClose, criteria }) => {
         ),
       },
     ],
-    [criteria, t],
+    [criteria, t, onUpdateRecord],
   );
 
   return (
