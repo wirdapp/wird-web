@@ -97,7 +97,9 @@ export default function Leaderboard() {
                     </StyledResultsLink>
                   </div>
                   <div className="item-points">
-                    <span className="item-points-label">{t("average")}</span>
+                    <span className="item-points-label">
+                      {t("totalPoints")}
+                    </span>
                     <span className="item-points-value">
                       {student.total_points}
                     </span>

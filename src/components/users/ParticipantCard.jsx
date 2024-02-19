@@ -81,9 +81,7 @@ const ParticipantCard = ({ student, onChange }) => {
                 size="small"
                 icon={<ResultsIcon />}
                 onClick={() =>
-                  navigate(
-                    `/dashboard/results/members?userId=${student?.person_info.username}`,
-                  )
+                  navigate(`/dashboard/results/members?userId=${student?.id}`)
                 }
               >
                 {t("show-results")}
