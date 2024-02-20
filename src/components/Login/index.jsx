@@ -127,7 +127,7 @@ function Login() {
               href={`//www.wird.app/${i18n.language}/user/forgot-password`}
               type="link"
             >
-              {t("forgetPass")}
+              {t("forgetPassOrUsername")}
             </Button>
           </Flex>
         </Form>
