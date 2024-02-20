@@ -1,22 +1,16 @@
 import React, { useState } from "react";
 import SignupFormContainer, { DivCenter } from "../Signup/Signup.styles";
-import {
-  HeadLogIn,
-  SignupNow,
-  SignupNowAccount,
-  StyledErrorsList,
-  TitleLogin,
-} from "../Login/login.styles";
+import { HeadLogIn, StyledErrorsList, TitleLogin } from "../Login/login.styles";
 import * as AuthApi from "../../services/auth/api";
+import { updateUserInfo } from "../../services/auth/api";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { login } from "../../services/auth/session";
-import { Button, Form, Input, Upload } from "antd";
+import { Button, Flex, Form, Input, Space, Typography, Upload } from "antd";
 import { isAxiosError } from "axios";
 import { ArrowUpTrayIcon } from "@heroicons/react/24/outline";
 import { AuthPageFooter } from "../shared/auth-page-footer";
 import { ReactComponent as WirdLogo } from "assets/icons/Shared/wirdLogo.svg";
-import {updateUserInfo} from "../../services/auth/api";
 
 const usernameRegex = new RegExp("^[\u0621-\u064Aa-zA-Z0-9+-.@_]*$");
 
@@ -38,7 +32,7 @@ function Signup() {
         first_name: values.first_name,
         last_name: values.last_name,
         phone_number: values.phone_number,
-        profile_photo: values.profile_photo
+        profile_photo: values.profile_photo,
       });
       navigate("/dashboard");
     } catch (err) {
@@ -58,10 +52,6 @@ function Signup() {
         <HeadLogIn>
           <WirdLogo />
           <TitleLogin>{t("signUp")}</TitleLogin>
-          <SignupNowAccount>
-            {t("alreadyHaveAccount")}
-            <SignupNow href="/Login">{t("loginNow")}</SignupNow>
-          </SignupNowAccount>
         </HeadLogIn>
 
         <Form
@@ -210,16 +200,26 @@ function Signup() {
               })}
             </StyledErrorsList>
           )}
-          <Button
-            size="large"
-            type="primary"
-            htmlType="submit"
-            value="login"
-            loading={loading}
-            block
-          >
-            {t("signUp")}
-          </Button>
+          <Flex vertical align="center" gap={16}>
+            <Button
+              size="large"
+              type="primary"
+              htmlType="submit"
+              value="login"
+              loading={loading}
+              block
+            >
+              {t("signUp")}
+            </Button>
+            <Space>
+              <Typography.Text type="secondary">
+                {t("alreadyHaveAccount")}
+              </Typography.Text>
+              <Button type="link" href="/login">
+                {t("loginNow")}
+              </Button>
+            </Space>
+          </Flex>
         </Form>
       </DivCenter>
       <AuthPageFooter />

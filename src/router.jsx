@@ -13,8 +13,6 @@ import ReviewOtherPoints from "./components/ReviewOtherPoints";
 import ExportPoints from "./components/ExportPoints";
 import { ContestResults } from "./components/contest-results";
 import Signup from "./components/Signup";
-import ResetPassword from "./components/ResetPassword";
-import ForgotPassword from "./components/ForgotPassword";
 import React from "react";
 import "dayjs/locale/ar";
 import "dayjs/locale/en";
@@ -50,14 +48,6 @@ export const router = createBrowserRouter([
       {
         path: "signup",
         element: <Signup />,
-      },
-      {
-        path: "reset-password",
-        element: <ResetPassword />,
-      },
-      {
-        path: "forgot-password",
-        element: <ForgotPassword />,
       },
       {
         id: "dashboard",

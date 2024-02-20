@@ -111,9 +111,6 @@ export const TitleLogin = styled.div`
   color: #000000;
 `;
 export const SignupNowAccount = styled.p`
-  width: 17.9375rem;
-  height: 1.1875rem;
-
   font-style: normal;
   font-weight: 400;
   font-size: 1rem;
@@ -126,8 +123,6 @@ export const SignupNow = styled.a`
   border: none;
   background: none;
   outline: none;
-  width: 17.9375rem;
-  height: 1.1875rem;
   font-style: normal;
   font-weight: 500;
   font-size: 1rem;

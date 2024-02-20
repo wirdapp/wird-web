@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import LoginFormContainer, {
   DivCenter,
   HeadLogIn,
-  SignupNow,
-  SignupNowAccount,
   StyledErrorsList,
   TitleLogin,
 } from "./login.styles";
@@ -11,7 +9,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { login } from "../../services/auth/session";
 import { useHandleError } from "hooks/handleError";
-import { Button, Flex, Form, Input } from "antd";
+import { Button, Flex, Form, Input, Space, Typography } from "antd";
 import { AuthPageFooter } from "../shared/auth-page-footer";
 import { ReactComponent as WirdLogo } from "assets/icons/Shared/wirdLogo.svg";
 
@@ -30,7 +28,6 @@ function Login() {
       navigate(searchParams.get("redirectTo") ?? "/dashboard");
     } catch (err) {
       handleError(err);
-    } finally {
       setLoading(false);
     }
   };
@@ -41,31 +38,7 @@ function Login() {
         <HeadLogIn>
           <WirdLogo />
           <TitleLogin>{`${t("login")}`}</TitleLogin>
-          <SignupNowAccount>
-            {t("notAccount")}{" "}
-            <SignupNow href="/signup">{t("signUpKey")}</SignupNow>
-          </SignupNowAccount>
         </HeadLogIn>
-
-        {/*TODO: Uncomment when it's ready*/}
-        {/*<MediaOneLine>*/}
-        {/*  <MediaLogIn>*/}
-        {/*    {" "}*/}
-        {/*    <img src={AppleLogo} alt="" />*/}
-        {/*  </MediaLogIn>*/}
-        {/*  <MediaLogIn>*/}
-        {/*    {" "}*/}
-        {/*    <img src={GoogleLogo} alt="" />*/}
-        {/*  </MediaLogIn>*/}
-        {/*  <MediaLogIn>*/}
-        {/*    <img src={FBLogo} alt="" />*/}
-        {/*  </MediaLogIn>*/}
-        {/*</MediaOneLine>*/}
-
-        {/*/!* <HeadLogIn> *!/*/}
-        {/*/!* <img src={WirdLogo} alt='' /> *!/*/}
-        {/*<OrWayToLogIn>Or</OrWayToLogIn>*/}
-        {/*/!* </HeadLogIn> *!/*/}
 
         <Form onFinish={handleSubmit} layout="vertical">
           <Form.Item
@@ -112,18 +85,27 @@ function Login() {
               })}
             </StyledErrorsList>
           )}
-          <Flex vertical gap={16}>
+          <Flex vertical align="center" gap={16}>
             <Button
               style={{ marginTop: "24px" }}
               type="primary"
               htmlType="submit"
-              disabled={loading}
+              loading={loading}
               size="large"
               block
             >
               {t("login")}
             </Button>
+            <Space>
+              <Typography.Text type="secondary">
+                {t("notAccount")}
+              </Typography.Text>
+              <Button type="link" size="small" href="/signup">
+                {t("signUpKey")}
+              </Button>
+            </Space>
             <Button
+              size="small"
               href={`//www.wird.app/${i18n.language}/user/forgot-password`}
               type="link"
             >
