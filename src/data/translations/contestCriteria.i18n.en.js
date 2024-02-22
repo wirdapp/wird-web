@@ -108,4 +108,5 @@ export default {
     "Criteria type cannot be changed after creation",
   "partial-points": "Partial points",
   "is-correct": "Is correct",
+  option: "Option",
 };

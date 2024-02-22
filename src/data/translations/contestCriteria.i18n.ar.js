@@ -107,4 +107,5 @@ export default {
   "criteria-type-change-warning": "لا يمكن تغيير نوع المعيار بعد إنشائه",
   "partial-points": "النقاط جزئية",
   "is-correct": "إجابة صحيحة",
+  option: "خيار",
 };

@@ -9,8 +9,6 @@ import Leaderboard from "./components/leaderboard";
 import Students from "./components/users";
 import Groups from "./components/Groups";
 import ContestCriteria from "./components/ContestCriteria";
-import ReviewOtherPoints from "./components/ReviewOtherPoints";
-import ExportPoints from "./components/ExportPoints";
 import { ContestResults } from "./components/contest-results";
 import Signup from "./components/Signup";
 import React from "react";
@@ -127,27 +125,11 @@ export const router = createBrowserRouter([
             errorElement: <ErrorBoundary />,
           },
           {
-            path: "review-other-points",
-            loader: () => ({
-              title: "text-inputs",
-            }),
-            element: <ReviewOtherPoints />,
-            errorElement: <ErrorBoundary />,
-          },
-          {
             path: "results/:tab",
             loader: () => ({
               title: "results-page",
             }),
             element: <ContestResults />,
-            errorElement: <ErrorBoundary />,
-          },
-          {
-            path: "export-points",
-            loader: () => ({
-              title: "export-points",
-            }),
-            element: <ExportPoints />,
             errorElement: <ErrorBoundary />,
           },
         ],
