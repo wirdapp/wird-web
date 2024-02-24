@@ -38,12 +38,24 @@ export const ContestDetailBox = styled.div`
 
 export const StyledAnnouncementWrapper = styled.div`
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 
   > div {
     padding: 24px;
     background-color: ${colors.warmWheat};
     border-radius: 24px;
-    height: 100%;
+  }
+
+  > div.danger-zone {
+    border: 1px solid ${colors.lightRed};
+    background-color: transparent;
+    color: ${colors.darkGrey};
+
+    h3 {
+      color: ${colors.red};
+    }
   }
 
   h2 {

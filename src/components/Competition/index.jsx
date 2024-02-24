@@ -9,6 +9,7 @@ import { ContestDetailsBox } from "./contest-details-box";
 import { Alert, Flex } from "antd";
 import { useTranslation } from "react-i18next";
 import { StyledAnnouncementWrapper } from "./styles";
+import { ContestDeleteSection } from "./ContestMembers/contest-delete-section";
 
 const StyledContestEditWrapper = styled.div`
   display: flex;
@@ -30,6 +31,7 @@ export default function Competition() {
 
         <ContestMembers contest={currentContest} />
         <StyledContestEditWrapper>
+          <EditCompetitionForm contest={currentContest} />
           <StyledAnnouncementWrapper>
             <Alert.ErrorBoundary
               message={t("something-went-wrong")}
@@ -37,8 +39,8 @@ export default function Competition() {
             >
               <ManageAnnouncements />
             </Alert.ErrorBoundary>
+            <ContestDeleteSection />
           </StyledAnnouncementWrapper>
-          <EditCompetitionForm contest={currentContest} />
         </StyledContestEditWrapper>
       </Flex>
     </AnimatedPage>

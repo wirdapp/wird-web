@@ -92,6 +92,12 @@ export default function Students() {
               onChange={setRole}
               style={{ width: "100%", maxWidth: 300 }}
             />
+            <span>
+              {(!loading &&
+                students.length &&
+                `${t("showing")} ${students.length}`) ||
+                ""}
+            </span>
           </Flex>
           <Input.Search
             onSearch={callMembersData}

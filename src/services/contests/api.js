@@ -37,4 +37,11 @@ export const ContestsApi = {
       status: getContestStatus(data),
     };
   },
+
+  async drop(id, confirmed) {
+    const { data } = await axios.delete(`/admin_panel/${id}/edit_contest/`, {
+      params: { sure: confirmed },
+    });
+    return data;
+  },
 };

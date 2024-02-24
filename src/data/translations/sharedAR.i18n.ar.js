@@ -9,4 +9,16 @@ export default {
   forbidden: "ليس لديك صلاحية الوصول",
   "are-you-sure": "هل أنت متأكد؟",
   "saved-successfully": "تم الحفظ بنجاح",
+  showing: "يتم عرض",
+  "danger-zone": "منطقة الخطر",
+  "deleting-contest-description":
+    "سيؤدي حذف المسابقة إلى حذف جميع البيانات المتعلقة بها بشكل دائم",
+  users: "المستخدمون",
+  groups: "المجموعات",
+  points: "النقاط",
+  results: "النتائج",
+  "action-cannot-be-undone": "هذا الإجراء لا يمكن التراجع عنه",
+  "delete-contest": "حذف المسابقة",
+  "write-contest-code-to-confirm": "اكتب كود المسابقة لتأكيد الحذف",
+  "write-contest-code": "اكتب {{code}} لتأكيد الحذف",
 };
