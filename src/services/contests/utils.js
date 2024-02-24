@@ -17,6 +17,10 @@ export function changeCurrentContest(contestId) {
   Cookies.set("currentContest", contestId, { path: "/" });
 }
 
+export function removeCurrentContest() {
+  Cookies.remove("currentContest");
+}
+
 export async function getCurrentContest(contests = []) {
   let currentContestId = getCurrentContestId();
   if (!contests.find((contest) => contest.id === currentContestId)) {

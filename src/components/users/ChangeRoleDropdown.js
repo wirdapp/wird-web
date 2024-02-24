@@ -22,7 +22,7 @@ const ChangeRoleDropdown = ({ student, onChange }) => {
   const studentRole = student?.contest_role;
 
   const dropDownItems = [
-    isOwner(currentUser) &&
+    isOwner(currentUser.role) &&
       !isSuperAdmin(studentRole) && {
         label: t("role.1"),
         key: Role.SUPER_ADMIN,

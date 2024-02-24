@@ -1,17 +1,35 @@
 import React from "react";
-import { Alert, Button, Flex, Form, Input, Modal, Space } from "antd";
+import { Alert, App, Button, Flex, Form, Input, Modal, Space } from "antd";
 import { useTranslation } from "react-i18next";
 import { useDashboardData } from "../../../util/routes-data";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/solid";
 import { colors } from "../../../styles";
 import { TrashIcon } from "@heroicons/react/24/outline";
+import { ContestsApi } from "../../../services/contests/api";
+import { removeCurrentContest } from "../../../services/contests/utils";
 
 export const ContestDeleteSection = () => {
+  const { message } = App.useApp();
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = React.useState(false);
   const { currentContest } = useDashboardData();
   const [confirmText, setConfirmText] = React.useState("");
   const [deleting, setDeleting] = React.useState(false);
+
+  const onDelete = async () => {
+    setDeleting(true);
+    try {
+      await ContestsApi.drop(currentContest.id, true);
+      message.success(t("contest-removed"));
+      removeCurrentContest();
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+      message.error(t("something-went-wrong"));
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   return (
     <div className="danger-zone">
@@ -30,7 +48,7 @@ export const ContestDeleteSection = () => {
           </Space>
         }
         open={isOpen}
-        onOk={() => console.log("delete")}
+        onOk={onDelete}
         onCancel={() => setIsOpen(false)}
         okButtonProps={{
           danger: true,

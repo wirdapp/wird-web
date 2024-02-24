@@ -20,4 +20,5 @@ export default {
   "delete-contest": "Delete Contest",
   "write-contest-code-to-confirm": "Write the contest code to confirm deletion",
   "write-contest-code": "Write {{code}} to confirm deletion",
+  "contest-removed": "Contest has been removed",
 };

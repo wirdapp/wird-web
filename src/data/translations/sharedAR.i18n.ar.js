@@ -21,4 +21,5 @@ export default {
   "delete-contest": "حذف المسابقة",
   "write-contest-code-to-confirm": "اكتب كود المسابقة لتأكيد الحذف",
   "write-contest-code": "اكتب {{code}} لتأكيد الحذف",
+  "contest-removed": "تم حذف المسابقة",
 };
