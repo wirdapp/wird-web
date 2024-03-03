@@ -47,6 +47,18 @@ export const CriteriaFormPopup = ({
   const handleFormSubmit = async (values) => {
     setSubmitting(true);
     try {
+      if (
+        values.resourcetype === FieldTypes.Radio ||
+        values.resourcetype === FieldTypes.MultipleChoices
+      ) {
+        if (
+          !values.options ||
+          !values.options.some((option) => option.is_correct)
+        ) {
+          message.error(t("correct-option-required"));
+          return;
+        }
+      }
       if (criterionId) {
         await actions.update(criterionId, {
           ...values,

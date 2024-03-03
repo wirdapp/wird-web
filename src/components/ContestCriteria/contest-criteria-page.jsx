@@ -27,11 +27,17 @@ export function ContestCriteria() {
                 margin-bottom: 16px;
               `}
             >
-              <Alert
-                message={t("contest-started-warning")}
-                type="info"
-                showIcon
-              />
+              <div
+                className={css`
+                  padding: 4px;
+                `}
+              >
+                <Alert
+                  message={t("contest-started-warning")}
+                  type="info"
+                  showIcon
+                />
+              </div>
               <SectionsList />
             </Col>
             <Col span={24} lg={10}>

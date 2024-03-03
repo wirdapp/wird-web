@@ -109,4 +109,5 @@ export default {
   "is-correct": "إجابة صحيحة",
   option: "خيار",
   "contest-started-warning": "لا يمكن حذف الأقسام والمعايير بعد بدء المسابقة",
+  "correct-option-required": "يجب اختيار إجابة صحيحة",
 };

@@ -111,4 +111,5 @@ export default {
   option: "Option",
   "contest-started-warning":
     "Cannot delete sections and criteria after the contest starts",
+  "correct-option-required": "At least one correct option is required",
 };
