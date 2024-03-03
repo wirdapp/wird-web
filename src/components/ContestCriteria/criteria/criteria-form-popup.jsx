@@ -124,11 +124,13 @@ export const CriteriaFormPopup = ({
                 label: t("criteria-type"),
                 key: "type",
                 children: <CriteriaTypeFields form={form} isEdit={isEdit} />,
+                forceRender: true,
               },
               {
                 label: t("criteria-advanced"),
                 key: "advanced",
                 children: <CriteriaAdvancedFields form={form} />,
+                forceRender: true,
               },
             ]}
           />
