@@ -53,7 +53,7 @@ const ChangeRoleDropdown = ({ student, onChange }) => {
     try {
       const res = await MembersApi.updateUserContestRole({
         role,
-        username: student.person_info.username,
+        userId: student.id,
       });
       message.success(t("notification.success"));
       onChange?.(res);

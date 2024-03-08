@@ -53,25 +53,25 @@ export const MembersApi = {
     return res.data;
   },
 
-  async updateUserContestRole({ username, contestId, role }) {
+  async updateUserContestRole({ userId, contestId, role }) {
     const cid = contestId ?? getCurrentContestId();
-    const res = await axios.patch(`/admin_panel/${cid}/members/${username}/`, {
+    const res = await axios.patch(`/admin_panel/${cid}/members/${userId}/`, {
       contest_role: role,
     });
     return res.data;
   },
 
-  async addAdminToContest({ username, contestId }) {
+  async addAdminToContest({ userId, contestId }) {
     return MembersApi.addUserToContest({
-      username,
+      userId,
       contestId,
       role: Role.ADMIN,
     });
   },
 
-  async removeUserFromContest({ username, contestId }) {
+  async removeUserFromContest({ userId, contestId }) {
     const cid = contestId ?? getCurrentContestId();
-    const res = await axios.delete(`/admin_panel/${cid}/members/${username}/`);
+    const res = await axios.delete(`/admin_panel/${cid}/members/${userId}/`);
     return res.data;
   },
 };

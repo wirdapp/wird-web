@@ -33,10 +33,10 @@ const UserListItem = ({ student, onChange }) => {
     student.contest_role > currentUser.role &&
     isAtLeastSuperAdmin(currentUser.role);
 
-  const removeUserFromContest = async (username) => {
+  const removeUserFromContest = async (userId) => {
     setDeleting(true);
     try {
-      await MembersApi.removeUserFromContest({ username });
+      await MembersApi.removeUserFromContest({ userId });
       message.success(t("user-removed"));
       onChange?.();
     } catch (error) {
@@ -96,9 +96,7 @@ const UserListItem = ({ student, onChange }) => {
               !isOwner(student.contest_role) && (
                 <Popconfirm
                   title={t("are-you-sure")}
-                  onConfirm={() =>
-                    removeUserFromContest(student?.person_info.username)
-                  }
+                  onConfirm={() => removeUserFromContest(student?.id)}
                 >
                   <Button
                     size="small"
