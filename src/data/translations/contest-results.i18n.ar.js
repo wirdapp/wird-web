@@ -32,6 +32,7 @@ export default {
     noSubmissions: "لا يوجد مشاركات لهذا اليوم",
     selectDate: "اختر التاريخ",
     points: "النقاط",
+    lastUpdated: "آخر تحديث",
   },
   "no-results": "لا يوجد نتائج",
   failedToSave: "فشل في الحفظ",

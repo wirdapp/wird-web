@@ -30,7 +30,6 @@ function TopRanks({
 }) {
   const { t } = useTranslation();
 
-  console.log(topMembers);
   return (
     <TopRank>
       <TopRanksAndParticipants>
@@ -64,7 +63,7 @@ function TopRanks({
               {t("top-3-rank")}
             </ParticipantsTitelsAtHome>
 
-            <SeeAll href="/dashboard/leaderboard" target="_blank">
+            <SeeAll to="/dashboard/leaderboard">
               <SeeAllP>{t("see-all")}</SeeAllP>
               <SeeAllIcon src={SeeMore} Alt="" />
             </SeeAll>

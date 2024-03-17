@@ -7,6 +7,7 @@ import { css } from "@emotion/css";
 import { CriterionRecordAnswer } from "./criterion-record-answer";
 import { CriterionRecordPoints } from "./criterion-record-points";
 import useBreakpoint from "antd/es/grid/hooks/useBreakpoint";
+import dayjs from "dayjs";
 
 export const DailySubmissionsTable = ({ submissions, onUpdated, criteria }) => {
   const { message } = App.useApp();
@@ -69,6 +70,12 @@ export const DailySubmissionsTable = ({ submissions, onUpdated, criteria }) => {
             onSave={onUpdateRecord}
           />
         ),
+      },
+      {
+        title: t("dailySubmissionsPopup.lastUpdated"),
+        dataIndex: "timestamp",
+        key: "timestamp",
+        render: (timestamp) => dayjs(timestamp).format("YYYY-MM-DD hh:mm A"),
       },
     ],
     [criteria, t, onUpdateRecord],

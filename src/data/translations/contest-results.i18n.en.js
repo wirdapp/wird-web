@@ -32,6 +32,7 @@ export default {
     noSubmissions: "No submissions for this day",
     selectDate: "Select date",
     points: "Points",
+    lastUpdated: "Last updated",
   },
   "no-results": "No results",
   failedToSave: "Failed to save",
