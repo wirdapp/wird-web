@@ -3,8 +3,7 @@ import { EyeSlashIcon, PencilSquareIcon, PlusIcon } from "@heroicons/react/24/ou
 import { Bars2Icon } from "@heroicons/react/24/solid";
 import type React from "react";
 import { useState } from "react";
-// @ts-expect-error - react-beautiful-dnd types not installed
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { DragDropContext, Draggable, type DraggableProvided, Droppable, type DroppableProvided, type DroppableStateSnapshot, type DropResult } from "@hello-pangea/dnd";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -48,7 +47,7 @@ export const SectionCriteriaList: React.FC<SectionCriteriaListProps> = ({ sectio
 		}
 	};
 
-	const onDragEnd = async (result: any): Promise<void> => {
+	const onDragEnd = async (result: DropResult): Promise<void> => {
 		// dropped outside the list
 		if (!result.destination) {
 			return;
@@ -67,7 +66,7 @@ export const SectionCriteriaList: React.FC<SectionCriteriaListProps> = ({ sectio
 		<DragDropContext onDragEnd={onDragEnd}>
 			<div className="flex flex-col gap-4">
 				<Droppable droppableId="criteria-droparea">
-					{(provided: any, snapshot: any) => (
+					{(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
 						<div
 							ref={provided.innerRef}
 							{...provided.droppableProps}
@@ -78,7 +77,7 @@ export const SectionCriteriaList: React.FC<SectionCriteriaListProps> = ({ sectio
 									FieldTypesIcons[(item as any).resourcetype] ?? FieldTypesIcons[FieldTypes.Text];
 								return (
 									<Draggable key={item.id} draggableId={item.id} index={index}>
-										{(provided: any, _snapshot: any) => (
+										{(provided: DraggableProvided) => (
 											<div
 												ref={provided.innerRef}
 												{...provided.draggableProps}
@@ -149,7 +148,6 @@ export const SectionCriteriaList: React.FC<SectionCriteriaListProps> = ({ sectio
 														variant="destructive"
 													/>
 												</div>
-												{provided.placeholder}
 											</div>
 										)}
 									</Draggable>
