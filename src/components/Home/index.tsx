@@ -6,8 +6,8 @@ import type { ContestPerson, LeaderboardEntry } from "../../types";
 import { useDashboardData } from "../../util/routes-data";
 import { getFullName } from "../../util/user-utils";
 import { ContestDetailsBox } from "../Competition/contest-details-box";
+import { AnimatedPage } from "../../ui/animated-page";
 import HomeBanner from "./HomeBanner";
-import { HomeContainer } from "./home.styles";
 import TopRanks from "./TopRanks";
 
 function Home(): React.ReactElement {
@@ -55,7 +55,7 @@ function Home(): React.ReactElement {
 	}, [currentContest]);
 
 	return (
-		<HomeContainer>
+		<AnimatedPage className="flex flex-col justify-center items-start gap-4 min-[900px]:gap-8">
 			<HomeBanner name={getFullName(currentUser)} />
 			{currentContest && <ContestDetailsBox />}
 			<TopRanks
@@ -64,7 +64,7 @@ function Home(): React.ReactElement {
 				studentsLoading={studentsLoading}
 				topMembersLoading={topMembersLoading}
 			/>
-		</HomeContainer>
+		</AnimatedPage>
 	);
 }
 

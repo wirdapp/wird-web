@@ -1,11 +1,9 @@
-import { Spin } from "antd";
-import React from "react";
-import Container from "./loder.styles";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function Loader() {
 	return (
-		<Container>
-			<Spin size="large" />
-		</Container>
+		<main className="flex w-full bg-white h-[calc(100vh-300px)] items-center justify-center gap-4 flex-col">
+			<Spinner size="lg" />
+		</main>
 	);
 }

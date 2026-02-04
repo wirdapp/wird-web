@@ -1,5 +1,3 @@
-import { css } from "@emotion/css";
-import { Col, Result, Row, Typography } from "antd";
 import type React from "react";
 import { useTranslation } from "react-i18next";
 import { AnimatedPage } from "../../ui/animated-page";
@@ -8,6 +6,7 @@ import { useDashboardData } from "../../util/routes-data";
 import { ContestCriteriaProvider } from "./contest-criteria-context";
 import { ContestPreview } from "./contest-preview";
 import { SectionsList } from "./sections/sections-list";
+import { Result } from "@/components/ui/result";
 
 export function ContestCriteria(): React.ReactElement {
 	const { t } = useTranslation();
@@ -19,41 +18,20 @@ export function ContestCriteria(): React.ReactElement {
 		<AnimatedPage>
 			{canAccess ? (
 				<ContestCriteriaProvider>
-					<Row gutter={24}>
-						<Col
-							span={24}
-							lg={14}
-							className={css`
-                margin-bottom: 16px;
-              `}
-						>
+					<div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+						<div className="lg:col-span-7">
 							<SectionsList />
-						</Col>
-						<Col span={24} lg={10}>
-							<div
-								className={css`
-                  @media (min-width: 992px) {
-                    position: sticky;
-                    top: 16px;
-                  }
-                `}
-							>
-								<Typography.Title level={3}>{t("preview")}</Typography.Title>
-								<div
-									className={css`
-                    padding: 16px;
-                    background-color: #f0f2f5;
-                    min-height: 200px;
-                  `}
-								>
-									<ContestPreview />
-								</div>
+						</div>
+						<div className="lg:col-span-5 lg:sticky lg:top-4 lg:self-start">
+							<h3 className="text-xl font-semibold mb-4">{t("preview")}</h3>
+							<div className="p-4 bg-muted min-h-[200px]">
+								<ContestPreview />
 							</div>
-						</Col>
-					</Row>
+						</div>
+					</div>
 				</ContestCriteriaProvider>
 			) : (
-				<Result status="403" title={t("forbidden")} subTitle={t("notSuperAdmin")} />
+				<Result status="error" title={t("forbidden")} subTitle={t("notSuperAdmin")} />
 			)}
 		</AnimatedPage>
 	);

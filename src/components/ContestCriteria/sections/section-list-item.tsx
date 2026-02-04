@@ -1,44 +1,31 @@
-import { css } from "@emotion/css";
 import { TrashIcon } from "@heroicons/react/20/solid";
 import {
 	CheckIcon,
-	ChevronLeftIcon,
-	ChevronRightIcon,
+	ChevronDownIcon,
 	XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { Bars2Icon } from "@heroicons/react/24/solid";
-import { App, Button, Collapse, Input, Popconfirm, Space } from "antd";
 import { motion } from "framer-motion";
 import type React from "react";
 import { useEffect, useState } from "react";
 // @ts-expect-error - react-beautiful-dnd types not installed
 import { Draggable } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 import { colors } from "../../../styles";
 import type { Section } from "../../../types";
 import { SectionCriteriaList } from "../criteria/section-criteria-list";
 import { useContestSections } from "./use-contest-sections";
-
-const expandIconClassName = (isActive: boolean, isRtl: boolean): string => css`
-  transform: rotate(${isActive ? (isRtl ? -90 : 90) : 0}deg);
-  width: 16px;
-  transition: transform 0.3s ease-in-out;
-`;
-
-interface ExpandIconProps {
-	isActive?: boolean;
-}
-
-const ExpandIcon: React.FC<ExpandIconProps> = ({ isActive }) => {
-	const { i18n } = useTranslation();
-	const isRtl = i18n.dir() === "rtl";
-
-	return isRtl ? (
-		<ChevronLeftIcon className={expandIconClassName(isActive ?? false, isRtl)} />
-	) : (
-		<ChevronRightIcon className={expandIconClassName(isActive ?? false, isRtl)} />
-	);
-};
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { cn } from "@/lib/utils";
 
 interface SectionListItemProps {
 	section: Section;
@@ -46,9 +33,8 @@ interface SectionListItemProps {
 }
 
 export const SectionListItem: React.FC<SectionListItemProps> = ({ section, index }) => {
-	const { message } = App.useApp();
 	const { t } = useTranslation();
-	const [expanded, setExpanded] = useState(true);
+	const [expanded, setExpanded] = useState<string | undefined>(section.id);
 	const [sectionLabel, setSectionLabel] = useState(section.label);
 	const [updating, setUpdating] = useState(false);
 	const { actions } = useContestSections();
@@ -70,10 +56,10 @@ export const SectionListItem: React.FC<SectionListItemProps> = ({ section, index
 				label: label ?? section.label,
 				position: position ?? section.order_in_contest,
 			});
-			message.success(t("section-updated"));
+			toast.success(t("section-updated"));
 		} catch (e) {
 			console.error(e);
-			message.error(t("section-update-failed"));
+			toast.error(t("section-update-failed"));
 		} finally {
 			setUpdating(false);
 		}
@@ -82,10 +68,10 @@ export const SectionListItem: React.FC<SectionListItemProps> = ({ section, index
 	const onDelete = async (): Promise<void> => {
 		try {
 			await actions.remove(section.id);
-			message.success(t("section-deleted"));
+			toast.success(t("section-deleted"));
 		} catch (e: any) {
 			console.error(e);
-			message.error(e?.response?.data?.detail ?? t("section-delete-failed"));
+			toast.error(e?.response?.data?.detail ?? t("section-delete-failed"));
 		}
 	};
 
@@ -100,83 +86,99 @@ export const SectionListItem: React.FC<SectionListItemProps> = ({ section, index
 			<Draggable draggableId={section.id} index={index}>
 				{(provided: any, snapshot: any) => (
 					<div ref={provided.innerRef} {...provided.draggableProps} key={section.id}>
-						<Collapse
-							activeKey={!snapshot.isDragging && expanded ? section.id : undefined}
-							onChange={() => setExpanded(!expanded)}
-							expandIcon={({ isActive }) => <ExpandIcon isActive={isActive} />}
-							collapsible="icon"
-							className={css`
-                background: ${colors.lightYellow};
-                border: 1px solid ${colors.yellow};
-
-                .ant-collapse-header {
-                  align-items: center !important;
-                }
-              `}
-							items={[
-								{
-									key: section.id,
-									label: (
-										<Space
-											size="small"
-											className={css`
-                        margin-inline-end: 16px;
-                      `}
-										>
+						<div
+							className="rounded-lg border"
+							style={{
+								backgroundColor: colors.lightYellow,
+								borderColor: colors.yellow,
+							}}
+						>
+							<Accordion
+								type="single"
+								collapsible
+								value={!snapshot.isDragging ? expanded : undefined}
+								onValueChange={setExpanded}
+							>
+								<AccordionItem value={section.id} className="border-0">
+									<div className="flex items-center gap-2 p-3">
+										<AccordionTrigger className="p-0 hover:no-underline [&>svg]:hidden">
+											<ChevronDownIcon
+												className={cn(
+													"h-4 w-4 transition-transform duration-200",
+													expanded === section.id && "rotate-180"
+												)}
+											/>
+										</AccordionTrigger>
+										<div className="flex items-center gap-2 flex-1 min-w-0">
 											<Input
 												placeholder={t("section-name")}
 												value={sectionLabel}
 												onChange={(e) => setSectionLabel(e.target.value)}
-												className={css`
-                          max-width: 200px;
-                        `}
+												className="max-w-[200px] h-8 bg-white"
+												onClick={(e) => e.stopPropagation()}
 											/>
 											{sectionLabel !== section.label && (
 												<>
 													<Button
-														size="small"
-														onClick={onNameUpdate}
-														type="primary"
-														icon={<CheckIcon />}
-														loading={updating}
-													/>
-													<Button
-														size="small"
-														onClick={() => setSectionLabel(section.label)}
-														icon={<XMarkIcon />}
+														size="icon"
+														className="h-8 w-8"
+														onClick={(e) => {
+															e.stopPropagation();
+															onNameUpdate();
+														}}
 														disabled={updating}
-													/>
+													>
+														<CheckIcon className="h-4 w-4" />
+													</Button>
+													<Button
+														size="icon"
+														variant="outline"
+														className="h-8 w-8"
+														onClick={(e) => {
+															e.stopPropagation();
+															setSectionLabel(section.label);
+														}}
+														disabled={updating}
+													>
+														<XMarkIcon className="h-4 w-4" />
+													</Button>
 												</>
 											)}
-										</Space>
-									),
-									extra: (
-										<Space>
+										</div>
+										<div className="flex items-center gap-1">
 											<Button
-												size="small"
-												type="text"
-												key={section.id}
+												variant="ghost"
+												size="icon"
+												className="h-8 w-8 cursor-grab"
 												{...provided.dragHandleProps}
-												className={css`
-                          cursor: grab;
-                        `}
-												icon={<Bars2Icon />}
-											/>
-											<Popconfirm
+											>
+												<Bars2Icon className="h-4 w-4" />
+											</Button>
+											<ConfirmDialog
+												trigger={
+													<Button
+														variant="ghost"
+														size="icon"
+														className="h-8 w-8 text-destructive hover:text-destructive"
+													>
+														<TrashIcon className="h-4 w-4" />
+													</Button>
+												}
 												title={t("delete-section-confirm")}
 												description={t("delete-section-confirm-description")}
-												onConfirm={onDelete}
-												okText={t("yes")}
+												confirmText={t("yes")}
 												cancelText={t("no")}
-											>
-												<Button size="small" type="text" danger icon={<TrashIcon />} />
-											</Popconfirm>
-										</Space>
-									),
-									children: <SectionCriteriaList section={section} />,
-								},
-							]}
-						/>
+												onConfirm={onDelete}
+												variant="destructive"
+											/>
+										</div>
+									</div>
+									<AccordionContent className="px-3 pb-3">
+										<SectionCriteriaList section={section} />
+									</AccordionContent>
+								</AccordionItem>
+							</Accordion>
+						</div>
 						{provided.placeholder}
 					</div>
 				)}

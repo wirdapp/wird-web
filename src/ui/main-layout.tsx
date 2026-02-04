@@ -1,14 +1,13 @@
 import dayjs from "dayjs";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import "dayjs/locale/ar";
 import "dayjs/locale/en";
-import { App as AntdApp, ConfigProvider } from "antd";
-import arLocale from "antd/locale/ar_EG";
-import enLocale from "antd/locale/en_US";
+import { DirectionProvider } from "@base-ui/react/direction-provider";
 import { Helmet } from "react-helmet";
 import { Outlet } from "react-router-dom";
-import { lightTheme } from "../styles/antd-theme";
+import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 export const MainLayout = () => {
 	const { i18n } = useTranslation();
@@ -17,19 +16,18 @@ export const MainLayout = () => {
 		dayjs.locale(i18n.language);
 	}, [i18n.language]);
 
+	const direction = i18n.dir();
+
 	return (
-		<ConfigProvider
-			theme={lightTheme}
-			locale={i18n.language === "ar" ? arLocale : enLocale}
-			direction={i18n.dir()}
-		>
-			<AntdApp>
+		<DirectionProvider direction={direction}>
+			<TooltipProvider>
 				<Helmet>
-					<html lang={i18n.language || "en"} dir={i18n.dir()} />
+					<html lang={i18n.language || "en"} dir={direction} />
 					<meta charSet="utf-8" />
 				</Helmet>
 				<Outlet />
-			</AntdApp>
-		</ConfigProvider>
+				<Toaster position={direction === "rtl" ? "bottom-left" : "bottom-right"} />
+			</TooltipProvider>
+		</DirectionProvider>
 	);
 };

@@ -58,6 +58,8 @@ const groupsI18nEn = {
 	select: "Select",
 	"add-admins": "Add Admins",
 	"add-members": "Add Members",
+	"no-announcements": "No announcements",
+	"no-members": "No members",
 };
 
 export default groupsI18nEn;

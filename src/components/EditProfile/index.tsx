@@ -1,9 +1,11 @@
-import { App, Flex, Grid, Space, Typography } from "antd";
 import type { AxiosError } from "axios";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
+import { useIsMobile } from "../../hooks/use-mobile";
 import { useUpdateUserInfo } from "../../services/auth/queries";
 import { useDashboardData } from "../../util/routes-data";
 import { getFullName } from "../../util/user-utils";
+import { cn } from "@/lib/utils";
 import { ChangePasswordForm } from "./change-password-form";
 import { ProfilePictureUploader } from "./profile-picture-uploader";
 import { UserDetailsForm } from "./user-details-form";
@@ -15,10 +17,9 @@ export interface UpdateUserInfoValues {
 }
 
 function EditProfile() {
-	const { message } = App.useApp();
 	const { currentUser } = useDashboardData();
 	const { t } = useTranslation();
-	const screens = Grid.useBreakpoint();
+	const isMobile = useIsMobile();
 	const updateUserInfo = useUpdateUserInfo();
 
 	const handleSubmit = async (values: UpdateUserInfoValues): Promise<void> => {
@@ -34,7 +35,7 @@ function EditProfile() {
 				formData.append("profile_photo", values.profile_photo);
 			}
 			await updateUserInfo.mutateAsync(formData);
-			message.success(t("profile-has-been-edited-successfully"));
+			toast.success(t("profile-has-been-edited-successfully"));
 		} catch (err) {
 			const axiosError = err as AxiosError<Record<string, string[]>>;
 			const errMessages: string[] = [];
@@ -44,25 +45,30 @@ function EditProfile() {
 					errMessages.push(`${obj[e]} : ${e}`);
 				});
 			}
-			message.error(errMessages.length > 0 ? errMessages : t("something-went-wrong"));
+			toast.error(errMessages.length > 0 ? errMessages.join(", ") : t("something-went-wrong"));
 		}
 	};
 
 	return (
 		<div>
-			<Space align="center" size="large">
+			<div className="flex items-center gap-6">
 				<ProfilePictureUploader onSubmit={handleSubmit} />
-				<Space direction="vertical" size="small">
-					<Typography.Title level={3} style={{ marginBottom: 0 }}>
+				<div className="flex flex-col gap-1">
+					<h3 className="text-xl font-semibold m-0">
 						{getFullName(currentUser)}
-					</Typography.Title>
-					<Typography.Text>{currentUser?.email}</Typography.Text>
-				</Space>
-			</Space>
-			<Flex vertical={!screens.lg} style={{ marginTop: 24, width: "100%" }} gap={24}>
+					</h3>
+					<span className="text-muted-foreground">{currentUser?.email}</span>
+				</div>
+			</div>
+			<div
+				className={cn(
+					"flex gap-6 mt-6 w-full",
+					isMobile && "flex-col"
+				)}
+			>
 				<UserDetailsForm onSubmit={handleSubmit} />
 				<ChangePasswordForm />
-			</Flex>
+			</div>
 		</div>
 	);
 }

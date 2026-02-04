@@ -1,11 +1,11 @@
-import { css } from "@emotion/css";
-import { Empty, Tabs } from "antd";
 import type React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { ContestStatus } from "../../services/contests/utils";
 import { AnimatedPage } from "../../ui/animated-page";
 import { useDashboardData } from "../../util/routes-data";
+import { Empty } from "@/components/ui/empty";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MembersResults } from "./members-results/members-results";
 import { ResultsOverview } from "./results-overview/results-overview";
 
@@ -20,43 +20,26 @@ export const ContestResults: React.FC = () => {
 	};
 
 	return (
-		<AnimatedPage
-			className={css`
-        height: 100%;
-      `}
-		>
+		<AnimatedPage className="h-full">
 			{currentContest?.status === ContestStatus.NOT_STARTED ? (
-				<Empty
-					description={t("contestNotStarted")}
-					className={css`
-            margin-top: 50px;
-          `}
-				/>
+				<Empty description={t("contestNotStarted")} className="mt-12" />
 			) : (
 				<Tabs
-					className={css`
-            height: 100%;
-
-            .ant-tabs-tabpane,
-            .ant-tabs-content {
-              height: 100%;
-            }
-          `}
-					activeKey={tabParam}
-					onChange={onTabChange}
-					items={[
-						{
-							key: "overview",
-							label: t("results-overview"),
-							children: <ResultsOverview />,
-						},
-						{
-							key: "members",
-							label: t("results-members"),
-							children: <MembersResults />,
-						},
-					]}
-				/>
+					value={tabParam}
+					onValueChange={onTabChange}
+					className="h-full flex flex-col"
+				>
+					<TabsList>
+						<TabsTrigger value="overview">{t("results-overview")}</TabsTrigger>
+						<TabsTrigger value="members">{t("results-members")}</TabsTrigger>
+					</TabsList>
+					<TabsContent value="overview" className="flex-1">
+						<ResultsOverview />
+					</TabsContent>
+					<TabsContent value="members" className="flex-1">
+						<MembersResults />
+					</TabsContent>
+				</Tabs>
 			)}
 		</AnimatedPage>
 	);

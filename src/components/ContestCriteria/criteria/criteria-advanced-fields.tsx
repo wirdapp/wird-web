@@ -1,25 +1,40 @@
-import type { FormInstance } from "antd";
-import { Checkbox, Form, Select, Space } from "antd";
 import type React from "react";
 import { useMemo } from "react";
+import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { getContestDays } from "../../../util/contest-utils";
 import { useDashboardData } from "../../../util/routes-data";
-
-interface CriteriaAdvancedFieldsProps {
-	form: FormInstance;
-}
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+	Combobox,
+	ComboboxChip,
+	ComboboxChips,
+	ComboboxChipsInput,
+	ComboboxContent,
+	ComboboxEmpty,
+	ComboboxItem,
+	ComboboxList,
+	ComboboxValue,
+} from "@/components/ui/combobox";
+import {
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+} from "@/components/ui/form";
 
 interface DateOption {
 	value: string;
 	label: string;
 }
 
-export const CriteriaAdvancedFields: React.FC<CriteriaAdvancedFieldsProps> = ({ form }) => {
+export const CriteriaAdvancedFields: React.FC = () => {
 	const { t } = useTranslation();
 	const { currentContest } = useDashboardData();
-	const activateOnDates: string[] | undefined = Form.useWatch("activate_on_dates", form);
-	const deactivateOnDates: string[] | undefined = Form.useWatch("deactivate_on_dates", form);
+	const form = useFormContext();
+	const activateOnDates: string[] | undefined = form.watch("activate_on_dates");
+	const deactivateOnDates: string[] | undefined =
+		form.watch("deactivate_on_dates");
 
 	const { activateOnDatesOptions, deactivateOnDatesOptions } = useMemo<{
 		activateOnDatesOptions: DateOption[];
@@ -45,21 +60,147 @@ export const CriteriaAdvancedFields: React.FC<CriteriaAdvancedFieldsProps> = ({ 
 	}, [currentContest, activateOnDates, deactivateOnDates]);
 
 	return (
-		<>
-			<Space size="large">
-				<Form.Item name="visible" valuePropName="checked" initialValue={true}>
-					<Checkbox>{t("criteria-visible")}</Checkbox>
-				</Form.Item>
-				<Form.Item name="active" valuePropName="checked" initialValue={true}>
-					<Checkbox>{t("criteria-active")}</Checkbox>
-				</Form.Item>
-			</Space>
-			<Form.Item name="activate_on_dates" label={t("criteria-show-on-dates")}>
-				<Select options={activateOnDatesOptions} mode="multiple" />
-			</Form.Item>
-			<Form.Item name="deactivate_on_dates" label={t("criteria-hide-on-dates")}>
-				<Select options={deactivateOnDatesOptions} mode="multiple" />
-			</Form.Item>
-		</>
+		<div className="space-y-4">
+			<div className="flex gap-6">
+				<FormField
+					control={form.control}
+					name="visible"
+					render={({ field }) => (
+						<FormItem className="flex items-center gap-2 space-y-0">
+							<FormControl>
+								<Checkbox
+									checked={field.value}
+									onCheckedChange={field.onChange}
+								/>
+							</FormControl>
+							<FormLabel className="font-normal">
+								{t("criteria-visible")}
+							</FormLabel>
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name="active"
+					render={({ field }) => (
+						<FormItem className="flex items-center gap-2 space-y-0">
+							<FormControl>
+								<Checkbox
+									checked={field.value}
+									onCheckedChange={field.onChange}
+								/>
+							</FormControl>
+							<FormLabel className="font-normal">
+								{t("criteria-active")}
+							</FormLabel>
+						</FormItem>
+					)}
+				/>
+			</div>
+			<FormField
+				control={form.control}
+				name="activate_on_dates"
+				render={({ field }) => (
+					<FormItem>
+						<FormLabel>{t("criteria-show-on-dates")}</FormLabel>
+						<FormControl>
+							<Combobox
+								items={activateOnDatesOptions}
+								itemToStringValue={(item) => item.label}
+								multiple
+								value={
+									field.value
+										? activateOnDatesOptions.filter((opt) =>
+												field.value.includes(opt.value),
+											)
+										: []
+								}
+								onValueChange={(items) => {
+									field.onChange(items.map((item) => item.value));
+								}}
+							>
+								<ComboboxChips className="min-h-10 text-base">
+									<ComboboxValue>
+										{(field.value || []).map((dateValue: string) => {
+											const option = activateOnDatesOptions.find(
+												(opt) => opt.value === dateValue,
+											);
+											return option ? (
+												<ComboboxChip key={option.value} className="text-sm py-1">
+													{option.label}
+												</ComboboxChip>
+											) : null;
+										})}
+									</ComboboxValue>
+									<ComboboxChipsInput placeholder={t("select-dates")} className="text-base" />
+								</ComboboxChips>
+								<ComboboxContent>
+									<ComboboxEmpty>{t("no-dates-found")}</ComboboxEmpty>
+									<ComboboxList>
+										{(item) => (
+											<ComboboxItem key={item.value} value={item} className="py-2 text-base">
+												{item.label}
+											</ComboboxItem>
+										)}
+									</ComboboxList>
+								</ComboboxContent>
+							</Combobox>
+						</FormControl>
+					</FormItem>
+				)}
+			/>
+			<FormField
+				control={form.control}
+				name="deactivate_on_dates"
+				render={({ field }) => (
+					<FormItem>
+						<FormLabel>{t("criteria-hide-on-dates")}</FormLabel>
+						<FormControl>
+							<Combobox
+								items={deactivateOnDatesOptions}
+								itemToStringValue={(item) => item.label}
+								multiple
+								value={
+									field.value
+										? deactivateOnDatesOptions.filter((opt) =>
+												field.value.includes(opt.value),
+											)
+										: []
+								}
+								onValueChange={(items) => {
+									field.onChange(items.map((item) => item.value));
+								}}
+							>
+								<ComboboxChips className="min-h-10 text-base">
+									<ComboboxValue>
+										{(field.value || []).map((dateValue: string) => {
+											const option = deactivateOnDatesOptions.find(
+												(opt) => opt.value === dateValue,
+											);
+											return option ? (
+												<ComboboxChip key={option.value} className="text-sm py-1">
+													{option.label}
+												</ComboboxChip>
+											) : null;
+										})}
+									</ComboboxValue>
+									<ComboboxChipsInput placeholder={t("select-dates")} className="text-base" />
+								</ComboboxChips>
+								<ComboboxContent>
+									<ComboboxEmpty>{t("no-dates-found")}</ComboboxEmpty>
+									<ComboboxList>
+										{(item) => (
+											<ComboboxItem key={item.value} value={item} className="py-2 text-base">
+												{item.label}
+											</ComboboxItem>
+										)}
+									</ComboboxList>
+								</ComboboxContent>
+							</Combobox>
+						</FormControl>
+					</FormItem>
+				)}
+			/>
+		</div>
 	);
 };

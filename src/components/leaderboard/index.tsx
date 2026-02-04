@@ -3,7 +3,6 @@ import { useLeaderboard } from "../../services/contest-results/queries";
 import { useDashboardData } from "../../util/routes-data";
 import Loader from "../Loader";
 import { LeaderboardList } from "./leaderboard-list";
-import { LeaderBoardMain } from "./TopStudents.styles";
 
 export const colors: string[] = ["#503E9D", "#FB862C", "#FF5367", "#FDD561", "#FFBAC2"];
 
@@ -21,8 +20,8 @@ export default function Leaderboard(): React.ReactElement {
 	}
 
 	return (
-		<LeaderBoardMain>
+		<div className="mx-auto max-w-[961px]">
 			<LeaderboardList topStudents={topStudents} />
-		</LeaderBoardMain>
+		</div>
 	);
 }

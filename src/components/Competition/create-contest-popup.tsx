@@ -1,10 +1,37 @@
-import { css } from "@emotion/css";
 import { PlusCircleIcon } from "@heroicons/react/20/solid";
-import { App, Form, Input, Modal, Result, Select } from "antd";
 import { isAxiosError } from "axios";
-import dayjs, { type Dayjs } from "dayjs";
 import React, { useMemo } from "react";
+import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import {
+	Dialog,
+	DialogContent,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from "@/components/ui/dialog";
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import { Result } from "@/components/ui/result";
 import { allCountries } from "../../data/countries";
 import { ContestsService } from "../../services/contests/contests.service";
 import { changeCurrentContest } from "../../services/contests/utils";
@@ -13,15 +40,6 @@ import { useDashboardData } from "../../util/routes-data";
 interface CreateContestPopupProps {
 	visible: boolean;
 	onClose?: () => void;
-}
-
-interface CreateContestFormValues {
-	contest_id: string;
-	name: string;
-	description?: string;
-	country: string;
-	start_date: Dayjs;
-	end_date: Dayjs;
 }
 
 interface FormErrors {
@@ -33,26 +51,52 @@ interface FormErrors {
 }
 
 export const CreateContestPopup: React.FC<CreateContestPopupProps> = ({ visible, onClose }) => {
-	const { message } = App.useApp();
 	const { currentUser } = useDashboardData();
 	const { t, i18n } = useTranslation();
 	const [errors, setErrors] = React.useState<FormErrors>({});
 	const [submitting, setSubmitting] = React.useState<boolean>(false);
-	const [form] = Form.useForm<CreateContestFormValues>();
 
-	const handleSubmit = async (values: CreateContestFormValues): Promise<void> => {
+	const formSchema = z.object({
+		contest_id: z
+			.string()
+			.min(1, t("contest-code-required-error"))
+			.min(6, t("contest-code-invalid-error")),
+		name: z.string().min(1, t("contest-name-required-error")),
+		description: z.string().optional(),
+		country: z.string().min(1, t("requiredField")),
+		start_date: z.string().min(1, t("requiredField")),
+		end_date: z.string().min(1, t("requiredField")),
+	});
+
+	type FormValues = z.infer<typeof formSchema>;
+
+	const form = useForm<FormValues>({
+		resolver: zodResolver(formSchema),
+		defaultValues: {
+			contest_id: "",
+			name: "",
+			description: "",
+			country: "",
+			start_date: "",
+			end_date: "",
+		},
+	});
+
+	const handleSubmit = async (values: FormValues): Promise<void> => {
 		if (!currentUser?.email_verified) {
-			message.error(t("emailNotVerified"));
+			toast.error(t("emailNotVerified"));
 			return;
 		}
 		setSubmitting(true);
 
 		try {
-			const { start_date, end_date, ...rest } = values;
 			const result = await ContestsService.createContest({
-				...rest,
-				start_date: start_date.format("YYYY-MM-DD"),
-				end_date: end_date.format("YYYY-MM-DD"),
+				contest_id: values.contest_id,
+				name: values.name,
+				description: values.description,
+				country: values.country,
+				start_date: values.start_date,
+				end_date: values.end_date,
 			});
 			changeCurrentContest(result.id);
 			window.location.reload();
@@ -69,7 +113,7 @@ export const CreateContestPopup: React.FC<CreateContestPopupProps> = ({ visible,
 
 	const handleClose = (): void => {
 		setErrors({});
-		form.resetFields();
+		form.reset();
 		onClose?.();
 	};
 
@@ -85,122 +129,164 @@ export const CreateContestPopup: React.FC<CreateContestPopupProps> = ({ visible,
 	const isEmailVerified = currentUser?.email_verified ?? false;
 
 	return (
-		<Modal
-			title={t("create-contest")}
-			onCancel={handleClose}
-			open={visible}
-			onOk={() => form.submit()}
-			okText={t("create-contest")}
-			okButtonProps={{
-				icon: <PlusCircleIcon style={{ width: 16 }} />,
-				loading: submitting,
-				disabled: !isEmailVerified,
-			}}
-			cancelText={t("cancel")}
-		>
-			<div style={{ position: "relative" }}>
-				{!isEmailVerified && (
-					<div
-						className={css`
-              position: absolute;
-              inset: 0;
-              background-color: rgba(255, 255, 255, 0.5);
-              backdrop-filter: blur(2px);
-              z-index: 100;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              padding: 14px;
-              margin: 0 -4px;
-            `}
-					>
-						<Result
-							title={t("emailNotVerified")}
-							status="warning"
-							extra={
-								<span
-									dangerouslySetInnerHTML={{
-										__html: t("emailNotVerifiedDescription", {
-											email: currentUser?.email,
-										}),
-									}}
-								/>
-							}
-						/>
-					</div>
-				)}
-				<Form
-					style={{ padding: "32px 0" }}
-					form={form}
-					onFinish={handleSubmit}
-					layout="vertical"
-					disabled={!isEmailVerified || submitting}
-				>
-					<Form.Item
-						name="contest_id"
-						label={t("contest-code")}
-						required
-						rules={[
-							{ required: true, message: t("contest-code-required-error") },
-							{ min: 6, message: t("contest-code-invalid-error") },
-						]}
-						validateStatus={errors.contest_id ? "error" : undefined}
-						help={errors.contest_id}
-					>
-						<Input placeholder={t("contest-code")} />
-					</Form.Item>
-					<Form.Item
-						label={t("contest-name")}
-						name="name"
-						required
-						rules={[{ required: true, message: t("contest-name-required-error") }]}
-						validateStatus={errors.name ? "error" : undefined}
-						help={errors.name}
-					>
-						<Input placeholder={t("name-label")} />
-					</Form.Item>
-					<Form.Item
-						label={t("contest-description")}
-						name="description"
-						validateStatus={errors.description ? "error" : undefined}
-						help={errors.description}
-					>
-						<Input.TextArea placeholder={t("contest-description")} rows={2} />
-					</Form.Item>
-					<Form.Item
-						label={t("country")}
-						name="country"
-						required
-						rules={[{ required: true, message: t("requiredField") }]}
-						validateStatus={errors.country ? "error" : undefined}
-						help={errors.country}
-					>
-						<Select options={countries} showSearch optionFilterProp="label" />
-					</Form.Item>
-					<Form.Item
-						label={t("start-date")}
-						name="start_date"
-						rules={[{ required: true }]}
-						getValueFromEvent={(e: React.ChangeEvent<HTMLInputElement>) => dayjs(e.target.value)}
-						getValueProps={(value: Dayjs) => ({
-							value: value?.format("YYYY-MM-DD"),
-						})}
-					>
-						<Input type="date" />
-					</Form.Item>
-					<Form.Item
-						label={t("end-date")}
-						name="end_date"
-						rules={[{ required: true }]}
-						getValueFromEvent={(e: React.ChangeEvent<HTMLInputElement>) => dayjs(e.target.value)}
-						getValueProps={(value: Dayjs) => ({
-							value: value?.format("YYYY-MM-DD"),
-						})}
-					>
-						<Input type="date" />
-					</Form.Item>
-				</Form>
-			</div>
-		</Modal>
+		<Dialog open={visible} onOpenChange={(open) => !open && handleClose()}>
+			<DialogContent className="max-w-lg">
+				<DialogHeader>
+					<DialogTitle>{t("create-contest")}</DialogTitle>
+				</DialogHeader>
+				<div className="relative">
+					{!isEmailVerified && (
+						<div className="absolute inset-0 z-10 flex items-center justify-center bg-white/50 p-4 backdrop-blur-sm">
+							<Result
+								status="warning"
+								title={t("emailNotVerified")}
+								extra={
+									<span
+										dangerouslySetInnerHTML={{
+											__html: t("emailNotVerifiedDescription", {
+												email: currentUser?.email,
+											}),
+										}}
+									/>
+								}
+							/>
+						</div>
+					)}
+					<Form {...form}>
+						<form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4 py-4">
+							<FormField
+								control={form.control}
+								name="contest_id"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>{t("contest-code")}</FormLabel>
+										<FormControl>
+											<Input
+												placeholder={t("contest-code")}
+												disabled={!isEmailVerified || submitting}
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage>{errors.contest_id}</FormMessage>
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name="name"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>{t("contest-name")}</FormLabel>
+										<FormControl>
+											<Input
+												placeholder={t("name-label")}
+												disabled={!isEmailVerified || submitting}
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage>{errors.name}</FormMessage>
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name="description"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>{t("contest-description")}</FormLabel>
+										<FormControl>
+											<Textarea
+												placeholder={t("contest-description")}
+												rows={2}
+												disabled={!isEmailVerified || submitting}
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage>{errors.description}</FormMessage>
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name="country"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>{t("country")}</FormLabel>
+										<Select
+											onValueChange={field.onChange}
+											value={field.value}
+											disabled={!isEmailVerified || submitting}
+											items={countries}
+										>
+											<FormControl>
+												<SelectTrigger>
+													<SelectValue placeholder={t("country")} />
+												</SelectTrigger>
+											</FormControl>
+											<SelectContent>
+												{countries.map((country) => (
+													<SelectItem key={country.value} value={country.value}>
+														{country.label}
+													</SelectItem>
+												))}
+											</SelectContent>
+										</Select>
+										<FormMessage>{errors.country}</FormMessage>
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name="start_date"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>{t("start-date")}</FormLabel>
+										<FormControl>
+											<Input
+												type="date"
+												disabled={!isEmailVerified || submitting}
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name="end_date"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>{t("end-date")}</FormLabel>
+										<FormControl>
+											<Input
+												type="date"
+												disabled={!isEmailVerified || submitting}
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<DialogFooter>
+								<Button
+									type="button"
+									variant="outline"
+									onClick={handleClose}
+									disabled={submitting}
+								>
+									{t("cancel")}
+								</Button>
+								<Button type="submit" disabled={!isEmailVerified || submitting}>
+									<PlusCircleIcon className="h-4 w-4" />
+									{submitting ? "..." : t("create-contest")}
+								</Button>
+							</DialogFooter>
+						</form>
+					</Form>
+				</div>
+			</DialogContent>
+		</Dialog>
 	);
 };

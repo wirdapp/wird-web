@@ -1,26 +1,33 @@
-import { css } from "@emotion/css";
 import { TrashIcon } from "@heroicons/react/20/solid";
 import { EyeSlashIcon, PencilSquareIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { Bars2Icon } from "@heroicons/react/24/solid";
-import { App, Button, Divider, Flex, List, Popconfirm, Tooltip } from "antd";
 import type React from "react";
 import { useState } from "react";
 // @ts-expect-error - react-beautiful-dnd types not installed
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 import { FieldTypes, FieldTypesIcons } from "../../../services/contest-criteria/consts";
-import { colors } from "../../../styles";
 import type { Criterion, Section, UUID } from "../../../types";
 import { reorder } from "../../../util/contest-utils";
 import { CriteriaFormPopup } from "./criteria-form-popup";
 import { useContestCriteria } from "./use-contest-criteria";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { cn } from "@/lib/utils";
 
 interface SectionCriteriaListProps {
 	section: Section;
 }
 
 export const SectionCriteriaList: React.FC<SectionCriteriaListProps> = ({ section }) => {
-	const { message } = App.useApp();
 	const { t } = useTranslation();
 	const { criteriaItems, actions } = useContestCriteria({
 		sectionId: section.id,
@@ -31,7 +38,7 @@ export const SectionCriteriaList: React.FC<SectionCriteriaListProps> = ({ sectio
 	const handleDelete = async (id: UUID): Promise<void> => {
 		try {
 			await actions.remove(id);
-			message.success(t("criteria-deleted"));
+			toast.success(t("criteria-deleted"));
 		} catch (e: any) {
 			console.error(e);
 			let errorMessage = t("criteria-delete-failed");
@@ -42,7 +49,7 @@ export const SectionCriteriaList: React.FC<SectionCriteriaListProps> = ({ sectio
 					errorMessage = e.response?.data?.detail;
 				}
 			}
-			message.error(errorMessage);
+			toast.error(errorMessage);
 		}
 	};
 
@@ -63,135 +70,122 @@ export const SectionCriteriaList: React.FC<SectionCriteriaListProps> = ({ sectio
 
 	return (
 		<DragDropContext onDragEnd={onDragEnd}>
-			<Flex vertical gap={16}>
+			<div className="flex flex-col gap-4">
 				<Droppable droppableId="criteria-droparea">
 					{(provided: any, snapshot: any) => (
 						<div
 							ref={provided.innerRef}
 							{...provided.droppableProps}
-							className={css`
-                background-color: #fff;
-                ${snapshot.isDraggingOver && `background-color: ${colors.lightGrey};`}
-              `}
+							className={cn(
+								"bg-white transition-colors",
+								snapshot.isDraggingOver && "bg-muted"
+							)}
 						>
-							<List
-								dataSource={criteriaItems}
-								renderItem={(item: Criterion, index: number) => {
-									const Icon =
-										FieldTypesIcons[(item as any).resourcetype] ?? FieldTypesIcons[FieldTypes.Text];
-									return (
-										<Draggable key={item.id} draggableId={item.id} index={index}>
-											{(provided: any, _snapshot: any) => (
-												<List.Item
-													ref={provided.innerRef}
-													{...provided.draggableProps}
-													key={item.id}
-													className={css`
-                            ${(item as any).archived ? `opacity: 0.5;` : ""}
-                          `}
-													actions={[
-														<Button
-															size="small"
-															type="text"
-															key={item.id}
-															{...provided.dragHandleProps}
-															className={css`
-                                cursor: grab;
-                              `}
-															icon={<Bars2Icon />}
-														/>,
-														<Button
-															size="small"
-															type="text"
-															icon={<PencilSquareIcon />}
-															onClick={() => {
-																setActiveCriterion(item.id);
-																setAddCriteriaVisible(true);
-															}}
-															key="edit"
-														/>,
-
-														<Popconfirm
-															title={t("delete-confirm")}
-															onConfirm={() => handleDelete(item.id)}
-															okText={t("delete")}
-															cancelText={t("cancel")}
-															key="delete"
-														>
-															<Button size="small" type="text" danger icon={<TrashIcon />} />
-														</Popconfirm>,
-													].filter(Boolean)}
-												>
-													<List.Item.Meta
-														title={
-															<Flex
-																align="center"
-																gap="small"
-																className={css`
-                                  svg {
-                                    width: 16px;
-                                  }
-                                `}
-															>
+							{criteriaItems.map((item: Criterion, index: number) => {
+								const Icon =
+									FieldTypesIcons[(item as any).resourcetype] ?? FieldTypesIcons[FieldTypes.Text];
+								return (
+									<Draggable key={item.id} draggableId={item.id} index={index}>
+										{(provided: any, _snapshot: any) => (
+											<div
+												ref={provided.innerRef}
+												{...provided.draggableProps}
+												className={cn(
+													"flex items-center justify-between p-3 border-b last:border-b-0",
+													(item as any).archived && "opacity-50"
+												)}
+											>
+												<div className="flex items-center gap-3 flex-1 min-w-0">
+													<Icon className="h-6 w-6 shrink-0" />
+													<div className="flex-1 min-w-0">
+														<div className="flex items-center gap-2">
+															<span className="font-medium truncate">
 																{item.label}
-																{!(item as any).visible && (
-																	<Tooltip title={t("criteria-not-visible")}>
-																		<EyeSlashIcon />
+															</span>
+															{!(item as any).visible && (
+																<TooltipProvider>
+																	<Tooltip>
+																		<TooltipTrigger>
+																			<EyeSlashIcon className="h-4 w-4 text-muted-foreground" />
+																		</TooltipTrigger>
+																		<TooltipContent>
+																			{t("criteria-not-visible")}
+																		</TooltipContent>
 																	</Tooltip>
-																)}
-															</Flex>
-														}
-														description={
-															<Flex align="center">
-																<div
-																	className={css`
-                                    white-space: nowrap;
-                                  `}
-																>
-																	{t("points", { count: (item as any).points })}
-																</div>
-																<Divider type="vertical" />
-																<div
-																	className={css`
-                                    overflow: hidden;
-                                    text-overflow: ellipsis;
-                                    white-space: nowrap;
-                                    flex-grow: 0;
-                                  `}
-																>
-																	{item.description}
-																</div>
-															</Flex>
-														}
-														avatar={
-															<Icon
-																className={css`
-                                  width: 24px;
-                                  height: 24px;
-                                `}
+																</TooltipProvider>
+															)}
+														</div>
+														<div className="flex items-center text-sm text-muted-foreground">
+															<span className="whitespace-nowrap">
+																{t("points", { count: (item as any).points })}
+															</span>
+															<Separator
+																orientation="vertical"
+																className="mx-2 h-4"
 															/>
+															<span className="truncate">
+																{item.description}
+															</span>
+														</div>
+													</div>
+												</div>
+												<div className="flex items-center gap-1">
+													<Button
+														variant="ghost"
+														size="icon"
+														className="h-8 w-8 cursor-grab"
+														{...provided.dragHandleProps}
+													>
+														<Bars2Icon className="h-4 w-4" />
+													</Button>
+													<Button
+														variant="ghost"
+														size="icon"
+														className="h-8 w-8"
+														onClick={() => {
+															setActiveCriterion(item.id);
+															setAddCriteriaVisible(true);
+														}}
+													>
+														<PencilSquareIcon className="h-4 w-4" />
+													</Button>
+													<ConfirmDialog
+														trigger={
+															<Button
+																variant="ghost"
+																size="icon"
+																className="h-8 w-8 text-destructive hover:text-destructive"
+															>
+																<TrashIcon className="h-4 w-4" />
+															</Button>
 														}
+														title={t("delete-confirm")}
+														confirmText={t("delete")}
+														cancelText={t("cancel")}
+														onConfirm={() => handleDelete(item.id)}
+														variant="destructive"
 													/>
-													{provided.placeholder}
-												</List.Item>
-											)}
-										</Draggable>
-									);
-								}}
-							/>
+												</div>
+												{provided.placeholder}
+											</div>
+										)}
+									</Draggable>
+								);
+							})}
 							{provided.placeholder}
 						</div>
 					)}
 				</Droppable>
 				<Button
-					size="small"
-					icon={<PlusIcon />}
-					type="dashed"
+					variant="outline"
+					size="sm"
+					className="border-dashed"
 					onClick={() => {
 						setActiveCriterion(null);
 						setAddCriteriaVisible(true);
 					}}
 				>
+					<PlusIcon className="h-4 w-4" />
 					{t("add-criteria")}
 				</Button>
 				<CriteriaFormPopup
@@ -204,7 +198,7 @@ export const SectionCriteriaList: React.FC<SectionCriteriaListProps> = ({ sectio
 						setActiveCriterion(null);
 					}}
 				/>
-			</Flex>
+			</div>
 		</DragDropContext>
 	);
 };

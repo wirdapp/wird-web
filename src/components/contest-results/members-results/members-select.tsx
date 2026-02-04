@@ -1,9 +1,17 @@
-import { Select, type SelectProps } from "antd";
 import type React from "react";
 import { useEffect, useMemo, useState } from "react";
 import { MembersService } from "../../../services/members/members.service";
 import type { ContestPerson, Role } from "../../../types";
 import { getFullName } from "../../../util/user-utils";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import { cn } from "@/lib/utils";
+import { Spinner } from "@/components/ui/spinner";
 
 interface MemberOption {
 	value: string;
@@ -13,18 +21,26 @@ interface MemberOption {
 
 type ValueFieldFunction = (member: ContestPerson) => string;
 
-interface MembersSelectProps
-	extends Omit<SelectProps, "loading" | "options" | "showSearch" | "optionFilterProp"> {
+interface MembersSelectProps {
 	role?: Role;
 	valueField?: string | ValueFieldFunction;
 	excludeUsernames?: string[];
+	value?: string;
+	onValueChange?: (value: string) => void;
+	placeholder?: string;
+	className?: string;
+	disabled?: boolean;
 }
 
 export const MembersSelect: React.FC<MembersSelectProps> = ({
 	role,
 	valueField = "id",
 	excludeUsernames,
-	...props
+	value,
+	onValueChange,
+	placeholder,
+	className,
+	disabled,
 }) => {
 	const [members, setMembers] = useState<MemberOption[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
@@ -53,12 +69,24 @@ export const MembersSelect: React.FC<MembersSelectProps> = ({
 	);
 
 	return (
-		<Select
-			{...props}
-			loading={loading}
-			options={filteredMembers}
-			showSearch
-			optionFilterProp="label"
-		/>
+		<Select value={value} onValueChange={onValueChange} disabled={disabled || loading} items={filteredMembers.map((m) => ({ value: m.value, label: m.label }))}>
+			<SelectTrigger className={cn("w-full", className)}>
+				{loading ? (
+					<div className="flex items-center gap-2">
+						<Spinner size="sm" />
+						<span className="text-muted-foreground">Loading...</span>
+					</div>
+				) : (
+					<SelectValue placeholder={placeholder} />
+				)}
+			</SelectTrigger>
+			<SelectContent>
+				{filteredMembers.map((member) => (
+					<SelectItem key={member.value} value={member.value}>
+						{member.label}
+					</SelectItem>
+				))}
+			</SelectContent>
+		</Select>
 	);
 };

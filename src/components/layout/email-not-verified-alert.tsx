@@ -1,12 +1,13 @@
-import { EnvelopeIcon } from "@heroicons/react/24/outline";
-import { Alert, App, Button, Space } from "antd";
+import { Mail, AlertTriangle } from "lucide-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 import { AuthService } from "../../services/auth/auth.service";
 import { useDashboardData } from "../../util/routes-data";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 
 export const EmailNotVerifiedAlert: React.FC = () => {
-	const { message } = App.useApp();
 	const { t } = useTranslation();
 	const { currentUser } = useDashboardData();
 	const [submitting, setSubmitting] = React.useState<boolean>(false);
@@ -15,25 +16,25 @@ export const EmailNotVerifiedAlert: React.FC = () => {
 		setSubmitting(true);
 		try {
 			await AuthService.resendVerificationEmail(currentUser?.email ?? "");
-			message.success(t("verificationEmailSent"));
+			toast.success(t("verificationEmailSent"));
 		} catch (e) {
 			console.error(e);
 			if ((e as Error).message === "email-already-sent") {
-				message.error(t("emailAlreadySent"));
+				toast.error(t("emailAlreadySent"));
 				return;
 			}
-			message.error(t("somethingWentWrong"));
+			toast.error(t("somethingWentWrong"));
 		} finally {
 			setSubmitting(false);
 		}
 	};
 
 	return (
-		<Alert
-			type="warning"
-			message={t("emailNotVerified")}
-			description={
-				<Space direction="vertical">
+		<Alert className="bg-yellow-50 border-yellow-200">
+			<AlertTriangle className="h-4 w-4 text-yellow-600" />
+			<AlertTitle className="text-yellow-800">{t("emailNotVerified")}</AlertTitle>
+			<AlertDescription className="text-yellow-700">
+				<div className="flex flex-col gap-2">
 					<div
 						dangerouslySetInnerHTML={{
 							__html: t("emailNotVerifiedDescription", {
@@ -41,20 +42,20 @@ export const EmailNotVerifiedAlert: React.FC = () => {
 							}),
 						}}
 					/>
-					<div>
+					<div className="flex items-center gap-1">
 						{t("didntReceiveEmail")}{" "}
 						<Button
-							type="link"
-							icon={<EnvelopeIcon />}
-							loading={submitting}
+							variant="link"
+							className="p-0 h-auto text-yellow-800 hover:text-yellow-900"
+							disabled={submitting}
 							onClick={handleResendVerificationEmail}
 						>
-							{t("resendVerificationEmail")}
+							<Mail className="h-4 w-4 mr-1" />
+							{submitting ? t("loading") : t("resendVerificationEmail")}
 						</Button>
 					</div>
-				</Space>
-			}
-			banner
-		/>
+				</div>
+			</AlertDescription>
+		</Alert>
 	);
 };

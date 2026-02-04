@@ -1,8 +1,14 @@
-import { Checkbox, Input, InputNumber, Radio, Switch } from "antd";
 import type React from "react";
 import { useTranslation } from "react-i18next";
 import { FieldTypes } from "../../services/contest-criteria/consts";
 import type { Criterion } from "../../types";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 
 interface CriterionFieldProps {
 	criterion: Criterion & {
@@ -18,49 +24,56 @@ interface CriterionFieldProps {
 	};
 }
 
-export const CriterionField: React.FC<CriterionFieldProps> = ({ criterion, ...props }) => {
+export const CriterionField: React.FC<CriterionFieldProps> = ({ criterion }) => {
 	const { t } = useTranslation();
 
 	return (
 		<>
 			{criterion.resourcetype === FieldTypes.Text &&
 				(criterion.allow_multiline ? (
-					<Input.TextArea placeholder={criterion.label} {...props} />
+					<Textarea placeholder={criterion.label} />
 				) : (
-					<Input placeholder={criterion.label} {...props} />
+					<Input placeholder={criterion.label} />
 				))}
 			{criterion.resourcetype === FieldTypes.Number && (
-				<InputNumber
+				<Input
+					type="number"
 					defaultValue={criterion.lower_bound || 0}
 					min={criterion.lower_bound}
 					max={criterion.upper_bound}
-					{...props}
 				/>
 			)}
 			{criterion.resourcetype === FieldTypes.Checkbox && (
-				<Switch
-					checkedChildren={criterion.checked_label ?? t("yes")}
-					unCheckedChildren={criterion.unchecked_label ?? t("no")}
-					{...props}
-				/>
+				<div className="flex items-center gap-2">
+					<Switch />
+					<span className="text-sm text-muted-foreground">
+						{criterion.checked_label ?? t("yes")} / {criterion.unchecked_label ?? t("no")}
+					</span>
+				</div>
 			)}
 			{criterion.resourcetype === FieldTypes.MultipleChoices && (
-				<Checkbox.Group
-					options={criterion.options?.map((o) => ({
-						label: o.label,
-						value: o.id,
-					}))}
-					{...props}
-				/>
+				<div className="flex flex-col gap-2">
+					{criterion.options?.map((o) => (
+						<div key={o.id} className="flex items-center gap-2">
+							<Checkbox id={o.id} />
+							<Label htmlFor={o.id} className="font-normal">
+								{o.label}
+							</Label>
+						</div>
+					))}
+				</div>
 			)}
 			{criterion.resourcetype === FieldTypes.Radio && (
-				<Radio.Group
-					options={criterion.options?.map((o) => ({
-						label: o.label,
-						value: o.id,
-					}))}
-					{...props}
-				/>
+				<RadioGroup>
+					{criterion.options?.map((o) => (
+						<div key={o.id} className="flex items-center gap-2">
+							<RadioGroupItem value={o.id} id={o.id} />
+							<Label htmlFor={o.id} className="font-normal">
+								{o.label}
+							</Label>
+						</div>
+					))}
+				</RadioGroup>
 			)}
 		</>
 	);

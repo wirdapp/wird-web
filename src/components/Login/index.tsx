@@ -1,19 +1,26 @@
-import type { FormProps } from "antd";
-import { Button, Flex, Form, Input, Space, Typography } from "antd";
 import { ReactComponent as WirdLogo } from "assets/icons/Shared/wirdLogo.svg";
 import { useHandleError } from "hooks/handleError";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { login } from "../../services/auth/session";
 import type { LoginFormValues } from "../../types";
 import { AuthPageFooter } from "../shared/auth-page-footer";
-import LoginFormContainer, {
-	DivCenter,
-	HeadLogIn,
-	StyledErrorsList,
-	TitleLogin,
-} from "./login.styles";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "@/components/ui/form";
 
 function Login() {
 	const { t } = useTranslation();
@@ -21,9 +28,22 @@ function Login() {
 	const [loading, setLoading] = useState(false);
 	const location = useLocation();
 
-	const { messages, classColor, handleError } = useHandleError();
+	const { messages, handleError } = useHandleError();
 
-	const handleSubmit: FormProps<LoginFormValues>["onFinish"] = async (values) => {
+	const formSchema = z.object({
+		username: z.string().min(1, t("requiredField")),
+		password: z.string().min(1, t("requiredField")),
+	});
+
+	const form = useForm<LoginFormValues>({
+		resolver: zodResolver(formSchema),
+		defaultValues: {
+			username: "",
+			password: "",
+		},
+	});
+
+	const handleSubmit = async (values: LoginFormValues) => {
 		setLoading(true);
 		try {
 			await login(values.username, values.password);
@@ -36,87 +56,90 @@ function Login() {
 	};
 
 	return (
-		<LoginFormContainer>
-			<DivCenter>
-				<HeadLogIn>
+		<div className="flex flex-col items-center justify-center gap-6 m-0 p-8 bg-wheat-light min-h-screen">
+			<div className="mx-auto w-full max-w-[500px] flex flex-col justify-center p-9 gap-5 bg-white rounded-3xl">
+				<div className="mt-4 flex font-medium flex-col justify-center items-center p-1 gap-4 rounded-3xl">
 					<WirdLogo />
-					<TitleLogin>{`${t("login")}`}</TitleLogin>
-				</HeadLogIn>
+					<div className="w-auto h-9 font-bold text-3xl leading-9 text-center text-black">
+						{t("login")}
+					</div>
+				</div>
 
-				<Form<LoginFormValues> onFinish={handleSubmit} layout="vertical">
-					<Form.Item
-						name="username"
-						rules={[
-							{
-								required: true,
-								message: t("requiredField"),
-							},
-						]}
-						label={t("username")}
-					>
-						<Input size="large" placeholder={t("username")} />
-					</Form.Item>
+				<Form {...form}>
+					<form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+						<FormField
+							control={form.control}
+							name="username"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>{t("username")}</FormLabel>
+									<FormControl>
+										<Input
+											placeholder={t("username")}
+											className="h-12"
+											{...field}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
 
-					<Form.Item
-						name="password"
-						rules={[
-							{
-								required: true,
-								message: t("requiredField"),
-							},
-						]}
-						label={t("passwordKey")}
-					>
-						<Input.Password size="large" placeholder={t("passwordKey")} />
-					</Form.Item>
+						<FormField
+							control={form.control}
+							name="password"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>{t("passwordKey")}</FormLabel>
+									<FormControl>
+										<PasswordInput
+											placeholder={t("passwordKey")}
+											className="h-12"
+											{...field}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
 
-					{/* TODO: style the error message */}
-					{/* {showErrorMessage && (
-            <DivPass className="red">{t("checkPassword")}</DivPass>
-          )} */}
-					{/* <PageLink href="https://www.facebook.com/Wird.Competition/" target="_blank">
-            هل تواجه مشكلة تقنية أو نسيت كلمة المرور؟ تواصل مع الدعم الفني
-          </PageLink> */}
-					{messages.length > 0 && (
-						<StyledErrorsList>
-							{messages?.map?.((message, index) => {
-								return (
-									<div className={classColor} key={String(message)}>
-										{message}
-									</div>
-								);
-							})}
-						</StyledErrorsList>
-					)}
-					<Flex vertical align="center" gap={16}>
-						<Button
-							style={{ marginTop: "24px" }}
-							type="primary"
-							htmlType="submit"
-							loading={loading}
-							size="large"
-							block
-						>
-							{t("login")}
-						</Button>
-						<Space>
-							<Typography.Text type="secondary">{t("notAccount")}</Typography.Text>
-							<Button type="link" size="small" href="/signup">
-								{t("signUpKey")}
+						{messages.length > 0 && (
+							<Alert variant="destructive">
+								<AlertDescription>
+									{messages.map((message) => (
+										<div key={String(message)}>{message}</div>
+									))}
+								</AlertDescription>
+							</Alert>
+						)}
+
+						<div className="flex flex-col items-center gap-4">
+							<Button
+								type="submit"
+								className="w-full h-12 mt-6"
+								disabled={loading}
+							>
+								{loading ? t("loading") : t("login")}
 							</Button>
-						</Space>
-						<Button
-							size="small"
-							href={`${import.meta.env.VITE_MAIN_URL}/user/forgot-password`}
-							type="link"
-						>
-							{t("forgetPassOrUsername")}
-						</Button>
-					</Flex>
+
+							<div className="flex items-center gap-2">
+								<span className="text-muted-foreground">{t("notAccount")}</span>
+								<Button variant="link" asChild className="p-0 h-auto">
+									<Link to="/signup">{t("signUpKey")}</Link>
+								</Button>
+							</div>
+
+							<Button variant="link" asChild className="p-0 h-auto">
+								<a href={`${import.meta.env.VITE_MAIN_URL}/user/forgot-password`}>
+									{t("forgetPassOrUsername")}
+								</a>
+							</Button>
+						</div>
+					</form>
 				</Form>
-			</DivCenter>
+			</div>
 			<AuthPageFooter />
-		</LoginFormContainer>
+		</div>
 	);
 }
 

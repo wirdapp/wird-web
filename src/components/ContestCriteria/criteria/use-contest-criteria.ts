@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { ContestCriteriaService } from "../../../services/contest-criteria/contest-criteria.service";
 import {
 	useAddCriteria,
@@ -34,23 +34,23 @@ export function useContestCriteria({
 	const deleteCriteriaMutation = useDeleteCriteria();
 	const updateCriteriaOrderMutation = useUpdateCriteriaOrder();
 
-	const getById = async (id: string): Promise<Criterion> => {
+	const getById = useCallback(async (id: string): Promise<Criterion> => {
 		return await ContestCriteriaService.getById({ id });
-	};
+	}, []);
 
-	const add = async (criterion: CriterionCreateData): Promise<void> => {
+	const add = useCallback(async (criterion: CriterionCreateData): Promise<void> => {
 		await addCriteriaMutation.mutateAsync(criterion);
-	};
+	}, [addCriteriaMutation]);
 
-	const update = async (id: string, criterion: CriterionUpdateData): Promise<void> => {
+	const update = useCallback(async (id: string, criterion: CriterionUpdateData): Promise<void> => {
 		await updateCriteriaMutation.mutateAsync({ id, criterion });
-	};
+	}, [updateCriteriaMutation]);
 
-	const remove = async (id: string): Promise<void> => {
+	const remove = useCallback(async (id: string): Promise<void> => {
 		await deleteCriteriaMutation.mutateAsync(id);
-	};
+	}, [deleteCriteriaMutation]);
 
-	const updateOrder = async (newCriteriaItems: Criterion[]): Promise<Criterion[]> => {
+	const updateOrder = useCallback(async (newCriteriaItems: Criterion[]): Promise<Criterion[]> => {
 		const newCriteriaItemsWithPositions = criteria.items.map((criterion) => {
 			const newIndex = newCriteriaItems.findIndex((c) => c.id === criterion.id);
 			return {
@@ -59,7 +59,7 @@ export function useContestCriteria({
 			};
 		});
 		return await updateCriteriaOrderMutation.mutateAsync(newCriteriaItemsWithPositions);
-	};
+	}, [criteria.items, updateCriteriaOrderMutation]);
 
 	const criteriaItems = useMemo(() => {
 		if (!criteria.items) return [];
@@ -70,15 +70,17 @@ export function useContestCriteria({
 		return items.sort((a, b) => a.order_in_section - b.order_in_section);
 	}, [criteria.items, sectionId]);
 
+	const actions = useMemo(() => ({
+		getById,
+		add,
+		update,
+		remove,
+		updateOrder,
+	}), [getById, add, update, remove, updateOrder]);
+
 	return {
 		criteriaItems,
 		loading: criteria.loading,
-		actions: {
-			getById,
-			add,
-			update,
-			remove,
-			updateOrder,
-		},
+		actions,
 	};
 }

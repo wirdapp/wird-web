@@ -1,11 +1,9 @@
-import { css } from "@emotion/css";
-import { Empty } from "antd";
 import type React from "react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ContestResultsService } from "../../../services/contest-results/contest-results.service";
 import type { DailySubmissionSummary } from "../../../types";
-import { StyledOverviewWrapper } from "./results-overview.styles";
+import { Empty } from "@/components/ui/empty";
 import { ResultsOverviewSkeleton } from "./results-overview-skeleton";
 import { SubmissionsCountChart } from "./submissions-count-chart";
 import { SubmissionsList } from "./submissions-list";
@@ -29,21 +27,18 @@ export const ResultsOverview: React.FC = () => {
 	return loading ? (
 		<ResultsOverviewSkeleton />
 	) : (
-		<StyledOverviewWrapper>
+		<div className="rounded-lg">
 			{results.length === 0 ? (
-				<Empty
-					description={t("no-results")}
-					className={css`
-            padding: 80px 0;
-          `}
-				/>
+				<Empty description={t("no-results")} className="py-20" />
 			) : (
 				<>
-					<h3>{t("contest-submissions")}</h3>
+					<h3 className="text-xl font-light text-foreground mb-4">
+						{t("contest-submissions")}
+					</h3>
 					<SubmissionsCountChart chartData={results} />
 					<SubmissionsList results={results} />
 				</>
 			)}
-		</StyledOverviewWrapper>
+		</div>
 	);
 };

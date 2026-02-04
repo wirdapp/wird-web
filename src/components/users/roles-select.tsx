@@ -1,14 +1,21 @@
-import { Select } from "antd";
 import type React from "react";
-import { type CSSProperties, useMemo } from "react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Role } from "../../util/roles";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 
 interface RolesSelectProps {
 	value?: Role | number;
 	onChange?: (value: Role | number) => void;
 	showAll?: boolean;
-	style?: CSSProperties;
+	className?: string;
 	minRole?: number;
 }
 
@@ -21,7 +28,7 @@ export const RolesSelect: React.FC<RolesSelectProps> = ({
 	value,
 	onChange,
 	showAll,
-	style,
+	className,
 	minRole = -1,
 }) => {
 	const { t } = useTranslation();
@@ -39,5 +46,22 @@ export const RolesSelect: React.FC<RolesSelectProps> = ({
 		return ops;
 	}, [minRole, showAll, t]);
 
-	return <Select value={value} onChange={onChange} style={style} options={options} />;
+	return (
+		<Select
+			value={value?.toString()}
+			onValueChange={(val) => onChange?.(Number(val))}
+			items={options.map((o) => ({ value: o.value.toString(), label: o.label }))}
+		>
+			<SelectTrigger className={cn("w-full", className)}>
+				<SelectValue />
+			</SelectTrigger>
+			<SelectContent>
+				{options.map((option) => (
+					<SelectItem key={option.value} value={option.value.toString()}>
+						{option.label}
+					</SelectItem>
+				))}
+			</SelectContent>
+		</Select>
+	);
 };

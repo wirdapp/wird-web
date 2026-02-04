@@ -1,8 +1,8 @@
-import { css } from "@emotion/css";
 import { PlusIcon } from "@heroicons/react/24/outline";
-import { Button, Input } from "antd";
 import type React from "react";
 import { useTranslation } from "react-i18next";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface MultipleChoiceControlProps {
 	value?: string[];
@@ -20,16 +20,8 @@ export const MultipleChoiceControl: React.FC<MultipleChoiceControlProps> = ({
 	};
 
 	return (
-		<>
-			<ol
-				className={css`
-          padding-inline-start: 40px;
-
-          > li {
-            margin-bottom: 8px;
-          }
-        `}
-			>
+		<div className="space-y-2">
+			<ol className="list-decimal ps-10 space-y-2">
 				{value?.map((item, index) => (
 					<li key={index}>
 						<Input
@@ -44,15 +36,14 @@ export const MultipleChoiceControl: React.FC<MultipleChoiceControlProps> = ({
 				))}
 			</ol>
 			<Button
-				type="dashed"
-				icon={<PlusIcon />}
+				type="button"
+				variant="outline"
+				className="ms-10 border-dashed"
 				onClick={addOption}
-				className={css`
-          margin-inline-start: 40px;
-        `}
 			>
+				<PlusIcon className="h-4 w-4" />
 				{t("add-option")}
 			</Button>
-		</>
+		</div>
 	);
 };

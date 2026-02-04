@@ -1,38 +1,26 @@
-import styled from "@emotion/styled";
-import { Button } from "antd";
-import React from "react";
 import { useTranslation } from "react-i18next";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { changeLanguage } from "../../util/roles";
-
-const StyledAuthFooter = styled.div`
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  justify-content: center;
-
-  .divider {
-    width: 1px;
-    height: 16px;
-    background-color: #aeaeae;
-  }
-`;
 
 export const AuthPageFooter = () => {
 	const { t, i18n } = useTranslation();
 
 	return (
-		<StyledAuthFooter>
-			<span>{t("copyrightFooterMsg", { year: new Date().getFullYear() })}</span>
-			<span className="divider" />
+		<div className="flex gap-4 items-center justify-center">
+			<span className="text-muted-foreground text-sm">
+				{t("copyrightFooterMsg", { year: new Date().getFullYear() })}
+			</span>
+			<Separator orientation="vertical" className="h-4" />
 			{i18n.language === "en" ? (
-				<Button type="link" onClick={() => changeLanguage("ar")}>
+				<Button variant="link" onClick={() => changeLanguage("ar")} className="p-0 h-auto">
 					العربية
 				</Button>
 			) : (
-				<Button type="link" onClick={() => changeLanguage("en")}>
+				<Button variant="link" onClick={() => changeLanguage("en")} className="p-0 h-auto">
 					English
 				</Button>
 			)}
-		</StyledAuthFooter>
+		</div>
 	);
 };

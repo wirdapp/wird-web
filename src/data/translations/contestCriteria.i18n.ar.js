@@ -109,6 +109,7 @@ const contestCriteriaI18nAr = {
 	option: "خيار",
 	"contest-started-warning": "لا يمكن حذف الأقسام والمعايير بعد بدء المسابقة",
 	"correct-option-required": "يجب اختيار إجابة صحيحة",
+	"select-dates": "اختر التواريخ",
 };
 
 export default contestCriteriaI18nAr;

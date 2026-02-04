@@ -1,14 +1,12 @@
-import React from "react";
 import {
-	Background,
-	Body,
-	CloseBtn,
-	Container,
-	Footer,
-	FooterBtn,
-	Title,
-	TitleCloseBtn,
-} from "./Modal.styles";
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 interface ModalProps {
 	setOpenModal: (open: boolean) => void;
@@ -25,27 +23,25 @@ export default function Modal(props: ModalProps) {
 	};
 
 	return (
-		<Background>
-			<Container>
-				<TitleCloseBtn>
-					<CloseBtn onClick={handleCloseBtnChange}>x</CloseBtn>
-				</TitleCloseBtn>
+		<Dialog open={true} onOpenChange={handleCloseBtnChange}>
+			<DialogContent className="max-w-[500px]">
+				<DialogHeader>
+					<DialogTitle className="text-center">{props.title}</DialogTitle>
+				</DialogHeader>
 
-				<Title>
-					<h2>{props.title}</h2>
-				</Title>
+				<DialogDescription className="text-center text-lg py-4">
+					{props.content}
+				</DialogDescription>
 
-				<Body>
-					<p>{props.content}</p>
-				</Body>
-
-				<Footer>
-					<FooterBtn onClick={handleCloseBtnChange}>{props.cancelBtn}</FooterBtn>
-					<FooterBtn onClick={() => props.deleteFunction()} id="deleteBtn">
+				<DialogFooter className="flex justify-center gap-2 sm:justify-center">
+					<Button variant="outline" onClick={handleCloseBtnChange}>
+						{props.cancelBtn}
+					</Button>
+					<Button variant="destructive" onClick={() => props.deleteFunction()}>
 						{props.deleteBtn}
-					</FooterBtn>
-				</Footer>
-			</Container>
-		</Background>
+					</Button>
+				</DialogFooter>
+			</DialogContent>
+		</Dialog>
 	);
 }

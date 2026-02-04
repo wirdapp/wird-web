@@ -1,13 +1,16 @@
-import { Avatar, Tooltip } from "antd";
-import React from "react";
 import type { ContestPerson } from "../../../types";
 import { getFullName, getInitials } from "../../../util/user-utils";
-import { MemberImgsAndNumNumbers } from "../../Home/TopRanks/TopRanks.styles";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
 
-const styles = [
-	{ background: "#FDD561", color: "black" },
-	{ background: "#FF5367", color: "white" },
-	{ background: "#503E9D", color: "#FDD561" },
+const avatarStyles = [
+	"bg-[#FDD561] text-black",
+	"bg-[#FF5367] text-white",
+	"bg-[#503E9D] text-[#FDD561]",
 ];
 
 interface NumberAndAbbreviationOfNamesProps {
@@ -15,18 +18,35 @@ interface NumberAndAbbreviationOfNamesProps {
 }
 
 function NumberAndAbbreviationOfNames(props: NumberAndAbbreviationOfNamesProps) {
+	const displayUsers = props.users.slice(0, 3);
+	const remainingCount = props.users.length - 3;
+
 	return (
-		<MemberImgsAndNumNumbers>
-			<Avatar.Group maxCount={3}>
-				{props.users.map((user, i) => {
-					return (
-						<Tooltip title={getFullName(user.person_info)} key={i}>
-							<Avatar style={styles[i]}>{getInitials(user.person_info)}</Avatar>
-						</Tooltip>
-					);
-				})}
-			</Avatar.Group>
-		</MemberImgsAndNumNumbers>
+		<div className="flex flex-row items-center gap-0 ms-auto">
+			<div className="flex -space-x-2 rtl:space-x-reverse">
+				{displayUsers.map((user, i) => (
+					<Tooltip key={i}>
+						<TooltipTrigger asChild>
+							<Avatar className="h-9 w-9 border-2 border-background">
+								<AvatarFallback className={avatarStyles[i]}>
+									{getInitials(user.person_info)}
+								</AvatarFallback>
+							</Avatar>
+						</TooltipTrigger>
+						<TooltipContent>
+							{getFullName(user.person_info)}
+						</TooltipContent>
+					</Tooltip>
+				))}
+				{remainingCount > 0 && (
+					<Avatar className="h-9 w-9 border-2 border-background">
+						<AvatarFallback className="bg-muted text-muted-foreground text-xs">
+							+{remainingCount}
+						</AvatarFallback>
+					</Avatar>
+				)}
+			</div>
+		</div>
 	);
 }
 

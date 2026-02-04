@@ -1,100 +1,45 @@
 import type React from "react";
-import { useState } from "react";
-import Carousel from "react-bootstrap/Carousel";
 import { useTranslation } from "react-i18next";
 import CarouselPry from "../../../assets/Carousel/CarouselPry.svg";
 import WirdLogo from "../../../assets/Logo/WirdLogosvg.svg";
 import {
-	BorderBottom,
-	Introduction,
-	IntroductionDiv,
-	IntroductionSection,
-	IntroductionSectionDiv,
-	WirdLogoInHome,
-	WirdMinIntroduction,
-} from "../../shared/styles";
-import { CarouselStyle } from "./CarouselStatistics.styles.js";
+	Carousel,
+	CarouselContent,
+	CarouselItem,
+} from "@/components/ui/carousel";
 
 export default function CarouselStatistics(): React.ReactElement {
-	const [index, setIndex] = useState<number>(0);
 	const { t } = useTranslation();
-	const handleSelect = (selectedIndex: number, e: unknown): void => {
-		// setIndex(selectedIndex);
-	};
 
 	return (
-		<CarouselStyle>
-			<Carousel activeIndex={index} onSelect={handleSelect}>
-				<Carousel.Item>
-					<img className="d-block w-100" src={CarouselPry} alt="First slide" />
-					{/* <Carousel.Caption> */}
-					<IntroductionSection>
-						<Carousel.Caption>
-							<IntroductionDiv>
-								<WirdLogoInHome>
-									<img src={WirdLogo} alt="" width="200" />
-								</WirdLogoInHome>
-
-								<IntroductionSectionDiv>
-									<WirdMinIntroduction>{t("ourName")}</WirdMinIntroduction>
-									<Introduction>{t("welcomeMsg")}</Introduction>
-								</IntroductionSectionDiv>
-							</IntroductionDiv>
-							<BorderBottom></BorderBottom>
-							<h3>{t("ourName")}</h3>
-							<p>{t("welcomeMsg")} </p>
-						</Carousel.Caption>
-					</IntroductionSection>
-
-					{/* </Carousel.Caption> */}
-				</Carousel.Item>
-
-				<Carousel.Item>
-					<img className="d-block w-100" src={CarouselPry} alt="First slide" />
-					{/* <Carousel.Caption> */}
-					<IntroductionSection>
-						<Carousel.Caption>
-							<IntroductionDiv>
-								<WirdLogoInHome>
-									<img src={WirdLogo} alt="" width="200" />
-								</WirdLogoInHome>
-
-								<IntroductionSectionDiv>
-									<WirdMinIntroduction>{t("ourName")}</WirdMinIntroduction>
-									<Introduction>{t("welcomeMsg")}</Introduction>
-								</IntroductionSectionDiv>
-							</IntroductionDiv>
-							<BorderBottom></BorderBottom>
-						</Carousel.Caption>
-					</IntroductionSection>
-					<h3>{t("ourName")}</h3>
-					<p>{t("welcomeMsg")}</p>
-					{/* </Carousel.Caption> */}
-				</Carousel.Item>
-
-				<Carousel.Item>
-					<img className="d-block w-100" src={CarouselPry} alt="First slide" />
-					{/* <Carousel.Caption> */}
-					<IntroductionSection>
-						<Carousel.Caption>
-							<IntroductionDiv>
-								<WirdLogoInHome>
-									<img src={WirdLogo} alt="" width="200" />
-								</WirdLogoInHome>
-
-								<IntroductionSectionDiv>
-									<WirdMinIntroduction>{t("ourName")}</WirdMinIntroduction>
-									<Introduction>{t("welcomeMsg")}</Introduction>
-								</IntroductionSectionDiv>
-							</IntroductionDiv>
-							<BorderBottom></BorderBottom>
-						</Carousel.Caption>
-					</IntroductionSection>
-					<h3>{t("ourName")}</h3>
-					<p>{t("welcomeMsg")}</p>
-					{/* </Carousel.Caption> */}
-				</Carousel.Item>
-			</Carousel>
-		</CarouselStyle>
+		<Carousel className="w-full">
+			<CarouselContent>
+				{[1, 2, 3].map((_, index) => (
+					<CarouselItem key={index}>
+						<div className="relative">
+							<img className="block w-full" src={CarouselPry} alt={`Slide ${index + 1}`} />
+							<div className="mx-auto mt-20 justify-center items-start flex pb-16 flex-col">
+								<div className="justify-center -mt-[55rem] flex-col flex -mr-[50rem]">
+									<div className="flex justify-center items-start">
+										<img src={WirdLogo} alt="" width="200" />
+									</div>
+									<div className="w-[35rem] justify-center items-start mx-auto">
+										<div className="mt-6 pr-8 text-right font-bold text-3xl text-blue-600">
+											{t("ourName")}
+										</div>
+										<div className="mt-8 text-right text-xl text-brand-orange">
+											{t("welcomeMsg")}
+										</div>
+									</div>
+								</div>
+								<div className="w-[40rem] h-1 bg-red-500 mx-auto mt-16 rounded-full -mr-28" />
+								<h3 className="text-center w-full mt-4">{t("ourName")}</h3>
+								<p className="text-center w-full">{t("welcomeMsg")}</p>
+							</div>
+						</div>
+					</CarouselItem>
+				))}
+			</CarouselContent>
+		</Carousel>
 	);
 }
