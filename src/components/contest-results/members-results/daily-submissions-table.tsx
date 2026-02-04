@@ -1,11 +1,16 @@
-import { css } from "@emotion/css";
-import { App, Table } from "antd";
-import useBreakpoint from "antd/es/grid/hooks/useBreakpoint";
-import type { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
 import type React from "react";
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table";
 import { useUpdatePointRecord } from "../../../services/contest-results/queries";
 import type { Criterion, PointRecordUpdateData } from "../../../types";
 import { CriterionRecordAnswer } from "./criterion-record-answer";
@@ -45,9 +50,7 @@ export const DailySubmissionsTable: React.FC<DailySubmissionsTableProps> = ({
 	onUpdated,
 	criteria,
 }) => {
-	const { message } = App.useApp();
 	const { t } = useTranslation();
-	const screens = useBreakpoint();
 	const updatePointRecord = useUpdatePointRecord();
 
 	const onUpdateRecord = useCallback(
@@ -59,71 +62,53 @@ export const DailySubmissionsTable: React.FC<DailySubmissionsTableProps> = ({
 					userId: record.person,
 					data,
 				});
-				message.success(t("saved-successfully"));
+				toast.success(t("saved-successfully"));
 				onUpdated?.(updatedRecord as unknown as PointRecordData);
 				return updatedRecord as unknown as PointRecordData;
-			} catch (error) {
-				message.error(t("failedToSave"));
+			} catch (_error) {
+				toast.error(t("failedToSave"));
 			}
 			return record;
 		},
-		[updatePointRecord, message, onUpdated, t],
-	);
-
-	const columns: ColumnsType<PointRecordData> = useMemo(
-		() => [
-			{
-				render: (_: unknown, __: PointRecordData, index: number) => index + 1,
-				width: 50,
-			},
-			{
-				title: t("dailySubmissionsPopup.criteriaTitle"),
-				dataIndex: ["contest_criterion_data", "label"],
-				key: "title",
-				width: 250,
-			},
-			{
-				title: t("dailySubmissionsPopup.points"),
-				key: "point_total",
-				width: 200,
-				render: (record: PointRecordData) => (
-					<CriterionRecordPoints pointRecord={record} criteria={criteria} onSave={onUpdateRecord} />
-				),
-			},
-			{
-				title: t("dailySubmissionsPopup.answer"),
-				key: "answer",
-				render: (record: PointRecordData) => (
-					<CriterionRecordAnswer pointRecord={record} criteria={criteria} onSave={onUpdateRecord} />
-				),
-			},
-			{
-				title: t("dailySubmissionsPopup.lastUpdated"),
-				dataIndex: "timestamp",
-				key: "timestamp",
-				render: (timestamp: string) => dayjs(timestamp).format("YYYY-MM-DD hh:mm A"),
-			},
-		],
-		[criteria, t, onUpdateRecord],
+		[updatePointRecord, onUpdated, t],
 	);
 
 	return (
-		<div
-			className={css`
-        margin: 0 -14px;
-        @media (min-width: 768px) {
-          margin: 0;
-        }
-      `}
-		>
-			<Table
-				columns={columns}
-				dataSource={submissions}
-				pagination={false}
-				rowKey="id"
-				scroll={{ x: 800 }}
-				tableLayout={screens.md ? "fixed" : "auto"}
-			/>
+		<div className="-mx-3.5 md:mx-0">
+			<Table>
+				<TableHeader>
+					<TableRow>
+						<TableHead className="w-[50px]">#</TableHead>
+						<TableHead className="w-[250px]">{t("dailySubmissionsPopup.criteriaTitle")}</TableHead>
+						<TableHead className="w-[200px]">{t("dailySubmissionsPopup.points")}</TableHead>
+						<TableHead>{t("dailySubmissionsPopup.answer")}</TableHead>
+						<TableHead>{t("dailySubmissionsPopup.lastUpdated")}</TableHead>
+					</TableRow>
+				</TableHeader>
+				<TableBody>
+					{submissions.map((submission, index) => (
+						<TableRow key={submission.id}>
+							<TableCell>{index + 1}</TableCell>
+							<TableCell>{submission.contest_criterion_data.label}</TableCell>
+							<TableCell>
+								<CriterionRecordPoints
+									pointRecord={submission}
+									criteria={criteria}
+									onSave={onUpdateRecord}
+								/>
+							</TableCell>
+							<TableCell>
+								<CriterionRecordAnswer
+									pointRecord={submission}
+									criteria={criteria}
+									onSave={onUpdateRecord}
+								/>
+							</TableCell>
+							<TableCell>{dayjs(submission.timestamp).format("YYYY-MM-DD hh:mm A")}</TableCell>
+						</TableRow>
+					))}
+				</TableBody>
+			</Table>
 		</div>
 	);
 };

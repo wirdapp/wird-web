@@ -6,17 +6,11 @@ import { ReactComponent as LeaderBoard } from "assets/icons/leaderBoard.svg";
 import { ReactComponent as ResultsIcon } from "assets/icons/results.svg";
 import { ReactComponent as WirdLogo } from "assets/icons/Shared/wirdLogo.svg";
 import { ReactComponent as ParticipantsIcon } from "assets/icons/students.svg";
-import React from "react";
 import { useTranslation } from "react-i18next";
+import { NavLink } from "react-router-dom";
+import { cn } from "@/lib/utils";
 import { isAtLeastSuperAdmin } from "../../../util/roles";
 import { useDashboardData } from "../../../util/routes-data";
-import {
-	MenuContainer,
-	MenuItem,
-	MenuLink,
-	SideBarContainer,
-	WirdLogoContainer,
-} from "./sidebar.styles";
 
 function Sidebar() {
 	const { currentUser } = useDashboardData();
@@ -24,48 +18,78 @@ function Sidebar() {
 
 	const isSuperAdmin = isAtLeastSuperAdmin(currentUser?.role);
 
+	const menuLinkClasses = cn(
+		"flex no-underline justify-end rounded-xl items-center text-grey-dark whitespace-nowrap h-12 px-3 py-2 flex-row font-bold text-start gap-4 text-base",
+		"hover:bg-brand-red-light hover:text-black",
+		"focus:bg-brand-red-light focus:text-black",
+		"[&.active]:bg-brand-red-light [&.active]:text-black",
+		"max-lg:text-sm max-lg:w-full max-lg:justify-center",
+	);
+
 	return (
-		<SideBarContainer>
-			<div>
-				<WirdLogoContainer>
-					<WirdLogo />
-				</WirdLogoContainer>
+		<aside className="duration-200 bg-wheat-warm text-center my-2 flex-[0_1_300px] [&_svg]:min-w-5 max-lg:flex-[0_1_90px] max-lg:w-[90px] max-lg:text-center max-lg:[&_span]:hidden max-md:hidden">
+			<div className="p-2">
+				<div className="p-4 max-lg:p-0 max-lg:pb-4">
+					<WirdLogo className="mx-auto w-full max-w-[50px] h-auto" />
+				</div>
 
-				<MenuContainer>
-					<MenuLink end to="/dashboard/" title={t("home-page")}>
+				<div className="w-full gap-2 flex flex-col">
+					<NavLink end to="/dashboard/" title={t("home-page")} className={menuLinkClasses}>
 						<HomeIcon />
-						<MenuItem>{t("home-page")}</MenuItem>
-					</MenuLink>
-					<MenuLink to="/dashboard/competition" title={t("contest-information")}>
+						<span className="cursor-pointer p-0 border-none w-full">{t("home-page")}</span>
+					</NavLink>
+					<NavLink
+						to="/dashboard/competition"
+						title={t("contest-information")}
+						className={menuLinkClasses}
+					>
 						<CompInfoIcon />
-						<MenuItem>{t("contest-information")}</MenuItem>
-					</MenuLink>
-					<MenuLink to="/dashboard/groups" title={t("groups-page")}>
+						<span className="cursor-pointer p-0 border-none w-full">
+							{t("contest-information")}
+						</span>
+					</NavLink>
+					<NavLink to="/dashboard/groups" title={t("groups-page")} className={menuLinkClasses}>
 						<GroupsIcon />
-						<MenuItem>{t("groups-page")}</MenuItem>
-					</MenuLink>
+						<span className="cursor-pointer p-0 border-none w-full">{t("groups-page")}</span>
+					</NavLink>
 
-					<MenuLink to="/dashboard/results/overview" title={t("results-page")}>
+					<NavLink
+						to="/dashboard/results/overview"
+						title={t("results-page")}
+						className={menuLinkClasses}
+					>
 						<ResultsIcon />
-						<MenuItem>{t("results-page")}</MenuItem>
-					</MenuLink>
-					<MenuLink to="/dashboard/leaderboard" title={t("leaders-board")}>
+						<span className="cursor-pointer p-0 border-none w-full">{t("results-page")}</span>
+					</NavLink>
+					<NavLink
+						to="/dashboard/leaderboard"
+						title={t("leaders-board")}
+						className={menuLinkClasses}
+					>
 						<LeaderBoard />
-						<MenuItem>{t("leaders-board")}</MenuItem>
-					</MenuLink>
-					<MenuLink to="/dashboard/participants" title={t("participants")}>
+						<span className="cursor-pointer p-0 border-none w-full">{t("leaders-board")}</span>
+					</NavLink>
+					<NavLink
+						to="/dashboard/participants"
+						title={t("participants")}
+						className={menuLinkClasses}
+					>
 						<ParticipantsIcon />
-						<MenuItem>{t("participants")}</MenuItem>
-					</MenuLink>
+						<span className="cursor-pointer p-0 border-none w-full">{t("participants")}</span>
+					</NavLink>
 					{isSuperAdmin && (
-						<MenuLink to="/dashboard/contest-criteria" title={t("criterias")}>
+						<NavLink
+							to="/dashboard/contest-criteria"
+							title={t("criterias")}
+							className={menuLinkClasses}
+						>
 							<CriteriaIcon />
-							<MenuItem>{t("criterias")}</MenuItem>
-						</MenuLink>
+							<span className="cursor-pointer p-0 border-none w-full">{t("criterias")}</span>
+						</NavLink>
 					)}
-				</MenuContainer>
+				</div>
 			</div>
-		</SideBarContainer>
+		</aside>
 	);
 }
 

@@ -1,6 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { Spin } from "antd";
 import { createContext, type ReactNode, useCallback, useContext, useMemo } from "react";
+import { Spinner } from "@/components/ui/spinner";
+import { cn } from "@/lib/utils";
 import {
 	contestCriteriaKeys,
 	useCriteria,
@@ -97,9 +98,16 @@ export const ContestCriteriaProvider = ({ children }: ContestCriteriaProviderPro
 
 	return (
 		<ContestCriteriaContext.Provider value={contextValue}>
-			<Spin spinning={contextValue.loading}>
-				{typeof children === "function" ? children(contextValue) : children}
-			</Spin>
+			<div className="relative">
+				{contextValue.loading && (
+					<div className="absolute inset-0 z-10 flex items-center justify-center bg-background/50">
+						<Spinner size="lg" />
+					</div>
+				)}
+				<div className={cn(contextValue.loading && "opacity-50 pointer-events-none")}>
+					{typeof children === "function" ? children(contextValue) : children}
+				</div>
+			</div>
 		</ContestCriteriaContext.Provider>
 	);
 };

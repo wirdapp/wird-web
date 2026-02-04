@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bunx --bun biome check --write .tool_input.file_path"
+          }
+        ]
+      }
+    ]
+  }
+}

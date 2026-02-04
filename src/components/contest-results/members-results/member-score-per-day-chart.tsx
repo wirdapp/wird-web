@@ -1,10 +1,8 @@
-import { css } from "@emotion/css";
-import { Card, Flex } from "antd";
 import dayjs from "dayjs";
 import type React from "react";
 import { useTranslation } from "react-i18next";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis } from "recharts";
-import { colors } from "../../../styles";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface DayData {
 	index: number;
@@ -29,33 +27,29 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label })
 
 	if (active && payload && payload.length) {
 		return (
-			<Card className="custom-tooltip">
-				<span>
-					{t("day")} {Number(label)}
-				</span>
-				<Flex gap={8} align="center">
-					<span
-						className={css`
-              width: 10px;
-              height: 10px;
-              border-radius: 50%;
-              display: inline-block;
-              background-color: ${payload[0].color};
-            `}
-						style={{ backgroundColor: payload[0].color }}
-					></span>
+			<Card className="border shadow-md">
+				<CardContent className="p-3">
 					<span>
-						{t("score")}: {payload[0].value}
+						{t("day")} {Number(label)}
 					</span>
-				</Flex>
-				<div>
-					<small>
-						{t("date")}:{" "}
-						{payload[0].payload.date
-							? dayjs(payload[0].payload.date).format("DD/MM/YYYY")
-							: ""}{" "}
-					</small>
-				</div>
+					<div className="flex gap-2 items-center mt-1">
+						<span
+							className="w-2.5 h-2.5 rounded-full inline-block"
+							style={{ backgroundColor: payload[0].color }}
+						/>
+						<span>
+							{t("score")}: {payload[0].value}
+						</span>
+					</div>
+					<div className="mt-1">
+						<small className="text-muted-foreground">
+							{t("date")}:{" "}
+							{payload[0].payload.date
+								? dayjs(payload[0].payload.date).format("DD/MM/YYYY")
+								: ""}{" "}
+						</small>
+					</div>
+				</CardContent>
 			</Card>
 		);
 	}
@@ -96,7 +90,7 @@ export const MemberScorePerDayChart: React.FC<MemberScorePerDayChartProps> = ({ 
 				<CartesianGrid stroke="#f5f5f5" />
 				<XAxis dataKey="index" stroke="#afafaf" tick={<CustomXTick />} reversed={isRtl} />
 				<Tooltip content={<CustomTooltip />} />
-				<Bar dataKey="points" fill={colors.orange} />
+				<Bar dataKey="points" fill="#FB6D3B" />
 			</BarChart>
 		</ResponsiveContainer>
 	);

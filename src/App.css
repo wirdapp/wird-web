@@ -70,10 +70,6 @@
 	background: rgb(253, 164, 1);
 }
 
-button {
-	border: none;
-}
-
 .content-tabs {
 	flex-grow: 1;
 }

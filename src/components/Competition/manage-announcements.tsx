@@ -1,17 +1,34 @@
-import { css } from "@emotion/css";
-import { App, Button, Empty, Form, Input, Modal, Spin, Typography } from "antd";
+import { zodResolver } from "@hookform/resolvers/zod";
 import dayjs from "dayjs";
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
+import * as z from "zod";
+import { Button } from "@/components/ui/button";
+import {
+	Dialog,
+	DialogContent,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from "@/components/ui/dialog";
+import { Empty } from "@/components/ui/empty";
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
+import { Textarea } from "@/components/ui/textarea";
 import { useCreateNotification, useNotifications } from "../../services/notifications/queries";
 import { isAtLeastSuperAdmin } from "../../util/roles";
 import { useDashboardData } from "../../util/routes-data";
-import { StyledAnnouncementsList } from "./styles";
-
-interface AnnouncementFormValues {
-	title: string;
-	body: string;
-}
 
 interface ApiErrorResponse {
 	response?: {
@@ -20,16 +37,28 @@ interface ApiErrorResponse {
 }
 
 export const ManageAnnouncements: React.FC = () => {
-	const { message } = App.useApp();
 	const { currentContest, currentUser } = useDashboardData();
 	const { t } = useTranslation();
-	const [errors, setErrors] = useState<string[]>([]);
-	const [form] = Form.useForm<AnnouncementFormValues>();
 	const [announcementFormVisible, setAnnouncementFormVisible] = useState<boolean>(false);
 	const createNotification = useCreateNotification();
 	const { data: notifications = [], isFetching } = useNotifications(currentContest?.id);
 
-	const onFormFinish = async (values: AnnouncementFormValues): Promise<void> => {
+	const formSchema = z.object({
+		title: z.string().min(1, t("requiredField")),
+		body: z.string().min(1, t("requiredField")),
+	});
+
+	type FormValues = z.infer<typeof formSchema>;
+
+	const form = useForm<FormValues>({
+		resolver: zodResolver(formSchema),
+		defaultValues: {
+			title: "",
+			body: "",
+		},
+	});
+
+	const onFormFinish = async (values: FormValues): Promise<void> => {
 		if (!currentContest) return;
 
 		try {
@@ -39,7 +68,7 @@ export const ManageAnnouncements: React.FC = () => {
 				body: values.body.trim(),
 			});
 			setAnnouncementFormVisible(false);
-			form.resetFields();
+			form.reset();
 		} catch (err) {
 			console.log(err);
 			const error = err as ApiErrorResponse;
@@ -48,18 +77,12 @@ export const ManageAnnouncements: React.FC = () => {
 				errorsList.push(errMsg);
 			});
 			if (errorsList.length > 0) {
-				setErrors(errorsList);
+				errorsList.forEach((errItem) => {
+					toast.error(errItem);
+				});
 			} else {
-				setErrors([t("something-went-wrong")]);
+				toast.error(t("something-went-wrong"));
 			}
-			message.error(
-				errorsList.map((errItem) => (
-					<React.Fragment key={errItem}>
-						{errItem}
-						<br />
-					</React.Fragment>
-				)),
-			);
 		}
 	};
 
@@ -68,78 +91,110 @@ export const ManageAnnouncements: React.FC = () => {
 
 	return (
 		<>
-			<div>
-				<div className="announcement-header">
-					<h2>{t("active-announcements")}</h2>
+			<div className="rounded-3xl bg-wheat-warm p-6">
+				<div className="flex items-center justify-between">
+					<h2 className="text-base font-bold">{t("active-announcements")}</h2>
 
 					{canManageAnnouncements && (
-						<Button onClick={() => setAnnouncementFormVisible(true)}>
+						<Button variant="outline" onClick={() => setAnnouncementFormVisible(true)}>
 							{t("new-announcement")}
 						</Button>
 					)}
 				</div>
 				{notifications.length === 0 ? (
-					<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+					<Empty />
 				) : (
-					<Spin spinning={isFetching}>
-						<StyledAnnouncementsList>
-							{notifications.map((notification) => (
-								<li key={notification.id}>
-									<div
-										className={css`
-                      display: flex;
-                      flex-direction: column;
-                      gap: 4px;
-                    `}
-									>
-										<Typography.Text type="secondary" style={{ fontSize: 10 }}>
+					<div className="relative">
+						{isFetching && (
+							<div className="absolute inset-0 flex items-center justify-center bg-white/50">
+								<Spinner />
+							</div>
+						)}
+						<ul className="m-0 flex list-none flex-col gap-0.5 p-0 py-4">
+							{notifications.map((notification, index) => (
+								<li
+									key={notification.id}
+									className={`flex w-full items-center justify-between whitespace-pre-wrap bg-white p-3 ${
+										index === 0 ? "rounded-t-lg" : ""
+									} ${index === notifications.length - 1 ? "rounded-b-lg" : ""}`}
+								>
+									<div className="flex flex-col gap-1">
+										<span className="text-[10px] text-muted-foreground">
 											{notification.created_at
 												? dayjs(notification.created_at).format("DD MMM YYYY HH:mm")
 												: t("not-sent-yet")}
-										</Typography.Text>
-										<Typography.Text strong>{notification.title}</Typography.Text>
-										<Typography.Text>{notification.body}</Typography.Text>
+										</span>
+										<span className="font-semibold">{notification.title}</span>
+										<span>{notification.body}</span>
 									</div>
 								</li>
 							))}
-						</StyledAnnouncementsList>
-					</Spin>
+						</ul>
+					</div>
 				)}
 			</div>
-			<Modal
-				title={t("make-an-announcement")}
+			<Dialog
 				open={announcementFormVisible}
-				onCancel={() => setAnnouncementFormVisible(false)}
-				onOk={() => form.submit()}
-				okText={t("add")}
-				cancelText={t("cancel")}
-				okButtonProps={{
-					loading: createNotification.isPending,
-				}}
+				onOpenChange={(open) => !open && setAnnouncementFormVisible(false)}
 			>
-				<Form onFinish={onFormFinish} form={form} layout="vertical">
-					<Form.Item
-						name="title"
-						label={t("notification-title")}
-						rules={[{ required: true, message: t("requiredField") }]}
-					>
-						<Input placeholder={t("notification-title-placeholder")} />
-					</Form.Item>
-					<Form.Item
-						name="body"
-						label={t("notification-body")}
-						rules={[{ required: true, message: t("requiredField") }]}
-						validateStatus={errors.length > 0 ? "error" : undefined}
-						help={
-							errors.length
-								? errors.map((errItem) => <div key={errItem}>{errItem}</div>)
-								: undefined
-						}
-					>
-						<Input.TextArea placeholder={t("notification-body-placeholder")} rows={5} />
-					</Form.Item>
-				</Form>
-			</Modal>
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>{t("make-an-announcement")}</DialogTitle>
+					</DialogHeader>
+					<Form {...form}>
+						<form onSubmit={form.handleSubmit(onFormFinish)} className="space-y-4">
+							<FormField
+								control={form.control}
+								name="title"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>{t("notification-title")}</FormLabel>
+										<FormControl>
+											<Input
+												placeholder={t("notification-title-placeholder")}
+												disabled={createNotification.isPending}
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name="body"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>{t("notification-body")}</FormLabel>
+										<FormControl>
+											<Textarea
+												placeholder={t("notification-body-placeholder")}
+												rows={5}
+												disabled={createNotification.isPending}
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<DialogFooter>
+								<Button
+									type="button"
+									variant="outline"
+									onClick={() => setAnnouncementFormVisible(false)}
+									disabled={createNotification.isPending}
+								>
+									{t("cancel")}
+								</Button>
+								<Button type="submit" disabled={createNotification.isPending}>
+									{createNotification.isPending ? "..." : t("add")}
+								</Button>
+							</DialogFooter>
+						</form>
+					</Form>
+				</DialogContent>
+			</Dialog>
 		</>
 	);
 };

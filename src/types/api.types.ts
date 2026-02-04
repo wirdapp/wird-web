@@ -189,6 +189,7 @@ export interface ContestRaw {
 	country: string;
 	start_date: string;
 	end_date: string;
+	days_to_record_in_past?: number;
 	show_standings: boolean;
 	readonly_mode: boolean;
 	person_contest_role?: Role;
@@ -204,6 +205,7 @@ export interface Contest extends Omit<ContestRaw, "start_date" | "end_date"> {
 
 /** Contest creation payload */
 export interface ContestCreateData {
+	contest_id?: string;
 	name: string;
 	description?: string;
 	country?: string;
@@ -220,6 +222,7 @@ export interface ContestUpdateData {
 	country?: string;
 	start_date?: string;
 	end_date?: string;
+	days_to_record_in_past?: number;
 	show_standings?: boolean;
 	readonly_mode?: boolean;
 }

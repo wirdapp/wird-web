@@ -52,7 +52,7 @@ export async function getUser(): Promise<User | null> {
 			const { AuthService } = await import("./auth.service");
 			user = await AuthService.currentUserInfo();
 			updateSessionUserDetails(user);
-		} catch (e) {
+		} catch (_e) {
 			destroySession();
 			return null;
 		}

@@ -1,7 +1,9 @@
 import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { Button, Flex, Form, Space } from "antd";
 import type React from "react";
 import { useEffect, useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import type { Criterion } from "../../../types";
 import { CriterionField } from "../../ContestCriteria/criterion-field";
 
@@ -61,21 +63,35 @@ export const CriterionRecordAnswer: React.FC<CriterionRecordAnswerProps> = ({
 	criteria,
 }) => {
 	const [pointRecord, setPointRecord] = useState<PointRecordData>(recordFromProps);
-	const [form] = Form.useForm();
-	const newAnswer = Form.useWatch(pointRecord.id, form);
 	const [submitting, setSubmitting] = useState<boolean>(false);
-
-	useEffect(() => {
-		setPointRecord(recordFromProps);
-	}, [recordFromProps]);
 
 	const criterion = criteria.find((c) => c.id === pointRecord.contest_criterion_data.id);
 	const fieldName = answerField[pointRecord.resourcetype];
 	const answer = fieldName ? pointRecord[fieldName] : undefined;
 
+	const form = useForm<Record<string, AnswerValue>>({
+		defaultValues: {
+			[pointRecord.id]: answer as AnswerValue,
+		},
+	});
+
+	const newAnswer = useWatch({
+		control: form.control,
+		name: pointRecord.id,
+	});
+
+	useEffect(() => {
+		setPointRecord(recordFromProps);
+		form.reset({
+			[recordFromProps.id]: recordFromProps[
+				answerField[recordFromProps.resourcetype] as keyof PointRecordData
+			] as AnswerValue,
+		});
+	}, [recordFromProps, form]);
+
 	if (!criterion) return null;
 
-	const onFormFinish = async (values: Record<string, AnswerValue>): Promise<void> => {
+	const onFormSubmit = async (values: Record<string, AnswerValue>): Promise<void> => {
 		setSubmitting(true);
 		const updatedRecord = await onSave({
 			record: pointRecord,
@@ -87,31 +103,51 @@ export const CriterionRecordAnswer: React.FC<CriterionRecordAnswerProps> = ({
 		setSubmitting(false);
 	};
 
+	const handleReset = (): void => {
+		form.reset({ [pointRecord.id]: answer as AnswerValue });
+	};
+
 	const isText = pointRecord.resourcetype === "UserInputPointRecord";
+	const hasChanged = newAnswer !== answer;
 
 	return (
-		<Form form={form} onFinish={onFormFinish}>
-			<Flex wrap="nowrap" align="center">
-				<Form.Item name={pointRecord.id} initialValue={answer} noStyle>
-					<CriterionField criterion={criterion} />
-				</Form.Item>
-				{newAnswer !== answer && (
-					<Space
-						direction={isText ? "vertical" : "horizontal"}
-						style={{ marginInlineStart: 4 }}
-						size={4}
-					>
-						<Button
-							type="primary"
-							size="small"
-							htmlType="submit"
-							icon={<CheckIcon />}
-							loading={submitting}
-						/>
-						<Button size="small" htmlType="reset" icon={<XMarkIcon />} disabled={submitting} />
-					</Space>
-				)}
-			</Flex>
+		<Form {...form}>
+			<form onSubmit={form.handleSubmit(onFormSubmit)}>
+				<div className="flex flex-nowrap items-center gap-1">
+					<FormField
+						control={form.control}
+						name={pointRecord.id}
+						render={({ field }) => (
+							<FormItem>
+								<FormControl>
+									<CriterionField
+										criterion={criterion}
+										value={field.value}
+										onChange={field.onChange}
+									/>
+								</FormControl>
+							</FormItem>
+						)}
+					/>
+					{hasChanged && (
+						<div className={`flex ${isText ? "flex-col" : "flex-row"} gap-1 ms-1`}>
+							<Button type="submit" size="icon" className="h-6 w-6" disabled={submitting}>
+								<CheckIcon className="h-4 w-4" />
+							</Button>
+							<Button
+								type="button"
+								variant="outline"
+								size="icon"
+								className="h-6 w-6"
+								onClick={handleReset}
+								disabled={submitting}
+							>
+								<XMarkIcon className="h-4 w-4" />
+							</Button>
+						</div>
+					)}
+				</div>
+			</form>
 		</Form>
 	);
 };

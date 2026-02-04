@@ -1,11 +1,15 @@
-import { css } from "@emotion/css";
 import { PlusCircleIcon, PlusIcon } from "@heroicons/react/24/outline";
-import { Button, Card, Flex, Form, Input, Space } from "antd";
 import { AnimatePresence } from "framer-motion";
 import React from "react";
 // @ts-expect-error - react-beautiful-dnd types not installed
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 import { reorder } from "../../../util/contest-utils";
 import { SectionListItem } from "./section-list-item";
 import { useContestSections } from "./use-contest-sections";
@@ -18,9 +22,15 @@ export const SectionsList: React.FC = () => {
 	const { t } = useTranslation();
 	const { sections, actions } = useContestSections();
 	const [adding, setAdding] = React.useState(false);
-	const [form] = Form.useForm<AddSectionFormValues>();
+	const {
+		register,
+		handleSubmit,
+		reset,
+		watch,
+		formState: { errors },
+	} = useForm<AddSectionFormValues>();
 
-	const newSectionName = Form.useWatch("label", form);
+	const newSectionName = watch("label");
 
 	const handleAddSection = async (values: AddSectionFormValues): Promise<void> => {
 		setAdding(true);
@@ -29,7 +39,7 @@ export const SectionsList: React.FC = () => {
 				label: values.label,
 				position: sections.length,
 			});
-			form.resetFields();
+			reset();
 		} finally {
 			setAdding(false);
 		}
@@ -51,22 +61,17 @@ export const SectionsList: React.FC = () => {
 	};
 
 	return (
-		<Flex vertical gap={16}>
+		<div className="flex flex-col gap-4">
 			<DragDropContext onDragEnd={onDragEnd}>
 				<Droppable droppableId="droppable">
 					{(provided: any, snapshot: any) => (
 						<div
 							{...provided.droppableProps}
 							ref={provided.innerRef}
-							className={css`
-                padding: 4px;
-                background-color: ${
-									snapshot.isDraggingOver ? "rgba(150, 150, 150, 0.05)" : "transparent"
-								};
-                display: flex;
-                flex-direction: column;
-                gap: 16px;
-              `}
+							className={cn(
+								"p-1 flex flex-col gap-4 transition-colors",
+								snapshot.isDraggingOver && "bg-muted/50",
+							)}
 						>
 							<AnimatePresence>
 								{sections.map((section, index) => (
@@ -78,36 +83,27 @@ export const SectionsList: React.FC = () => {
 					)}
 				</Droppable>
 			</DragDropContext>
-			<Card
-				className={css`
-          border-style: dashed;
-        `}
-			>
-				<Form form={form} layout="vertical" onFinish={handleAddSection} requiredMark={false}>
-					<Form.Item
-						rules={[{ required: true, message: t("requiredField") }]}
-						label={
-							<Space align="center">
-								<PlusCircleIcon style={{ display: "block", width: 20, height: 20 }} />
+			<Card className="border-dashed">
+				<CardContent className="pt-6">
+					<form onSubmit={handleSubmit(handleAddSection)} className="space-y-4">
+						<div className="space-y-2">
+							<Label className="flex items-center gap-2">
+								<PlusCircleIcon className="h-5 w-5" />
 								{t("add-section")}
-							</Space>
-						}
-						name="label"
-					>
-						<Input placeholder={t("section-name")} />
-					</Form.Item>
-					<Button
-						type="primary"
-						htmlType="submit"
-						loading={adding}
-						icon={<PlusIcon />}
-						size="small"
-						disabled={!newSectionName}
-					>
-						{t("addSection")}
-					</Button>
-				</Form>
+							</Label>
+							<Input
+								placeholder={t("section-name")}
+								{...register("label", { required: t("requiredField") })}
+							/>
+							{errors.label && <p className="text-sm text-destructive">{errors.label.message}</p>}
+						</div>
+						<Button type="submit" size="sm" disabled={!newSectionName || adding}>
+							<PlusIcon className="h-4 w-4" />
+							{t("addSection")}
+						</Button>
+					</form>
+				</CardContent>
 			</Card>
-		</Flex>
+		</div>
 	);
 };

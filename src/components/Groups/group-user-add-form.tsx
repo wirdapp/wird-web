@@ -1,9 +1,9 @@
-import { css } from "@emotion/css";
 import { PlusCircleIcon, PlusIcon } from "@heroicons/react/24/outline";
-import { App, Button, Flex, Form, Space } from "antd";
-import useBreakpoint from "antd/es/grid/hooks/useBreakpoint";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useAddGroupMember } from "../../services/groups/queries";
 import type { GroupMember } from "../../types";
 import { GroupRole } from "../../types";
@@ -15,14 +15,6 @@ interface GroupUserAddFormProps {
 	groupId: string;
 	groupMembers: GroupMember[];
 	role: GroupRole;
-}
-
-interface FormValues {
-	contest_person: string[];
-}
-
-interface FormErrors {
-	[key: string]: string[];
 }
 
 interface ErrorObject {
@@ -40,11 +32,10 @@ export const GroupUserAddForm: React.FC<GroupUserAddFormProps> = ({
 	role,
 }) => {
 	const { currentUser } = useDashboardData();
-	const { message } = App.useApp();
 	const { t } = useTranslation();
-	const [formErrors, setFormErrors] = React.useState<FormErrors>({});
-	const [form] = Form.useForm<FormValues>();
-	const screens = useBreakpoint();
+	const [formErrors, setFormErrors] = React.useState<{ [key: string]: string[] }>({});
+	const [selectedMembers, setSelectedMembers] = React.useState<string[]>([]);
+	const isMobile = useIsMobile();
 	const addGroupMember = useAddGroupMember();
 
 	const fillErrors = (errors: ErrorObject[] | undefined) => {
@@ -65,10 +56,15 @@ export const GroupUserAddForm: React.FC<GroupUserAddFormProps> = ({
 		}
 	};
 
-	const addUsersToGroup = async (values: FormValues) => {
+	const addUsersToGroup = async (e: React.FormEvent) => {
+		e.preventDefault();
+		if (selectedMembers.length === 0) {
+			setFormErrors({ contest_person: [t("requiredField")] });
+			return;
+		}
 		setFormErrors({});
 		try {
-			const body = values.contest_person.map((id) => ({
+			const body = selectedMembers.map((id) => ({
 				contest_person: id,
 				group_role: role,
 			}));
@@ -81,16 +77,16 @@ export const GroupUserAddForm: React.FC<GroupUserAddFormProps> = ({
 				const failedUsersIds = data.errors
 					.map((error) => error.data?.contest_person)
 					.filter((id): id is string => id !== undefined);
-				form.setFieldValue("contest_person", failedUsersIds);
+				setSelectedMembers(failedUsersIds);
 				fillErrors(data.errors);
-				message.error(t("something-went-wrong"));
+				toast.error(t("something-went-wrong"));
 			} else {
-				message.success(t("group-updated"));
-				form.resetFields();
+				toast.success(t("group-updated"));
+				setSelectedMembers([]);
 			}
 		} catch (e) {
 			console.error(e);
-			message.error(t("something-went-wrong"));
+			toast.error(t("something-went-wrong"));
 			const axiosError = e as { response?: { data?: { errors?: ErrorObject[] } } };
 			fillErrors(
 				axiosError.response?.data?.errors ??
@@ -100,29 +96,13 @@ export const GroupUserAddForm: React.FC<GroupUserAddFormProps> = ({
 	};
 
 	return (
-		<Form
-			form={form}
-			layout="vertical"
-			onFinish={addUsersToGroup}
-			requiredMark={false}
-			className={css`
-        .ant-form-item {
-          margin-bottom: 0;
-          flex: 1;
-        }
-      `}
-		>
-			<Space align="center">
-				<PlusCircleIcon style={{ display: "block", width: 20, height: 20 }} />
+		<form onSubmit={addUsersToGroup} className="space-y-3">
+			<div className="flex items-center gap-2 text-sm font-medium">
+				<PlusCircleIcon className="h-5 w-5" />
 				{role === GroupRole.ADMIN ? t("add-admins") : t("add-members")}
-			</Space>
-			<Flex gap={8} vertical={!screens.md}>
-				<Form.Item
-					rules={[{ required: true, message: t("requiredField") }]}
-					name="contest_person"
-					validateStatus={formErrors.contest_person ? "error" : undefined}
-					help={formErrors.contest_person?.join(", ")}
-				>
+			</div>
+			<div className={`flex gap-2 ${isMobile ? "flex-col" : "flex-row"}`}>
+				<div className="flex-1">
 					<MembersSelect
 						placeholder={t("select-member")}
 						role={role === GroupRole.ADMIN ? Role.ADMIN : Role.MEMBER}
@@ -131,17 +111,24 @@ export const GroupUserAddForm: React.FC<GroupUserAddFormProps> = ({
 							...(groupMembers ?? []).map((m) => m.person_info.username),
 						]}
 						mode="multiple"
+						value={selectedMembers}
+						onChange={(value) => setSelectedMembers(value as string[])}
+						status={formErrors.contest_person ? "error" : undefined}
+						className="w-full"
 					/>
-				</Form.Item>
-				<Button
-					type="primary"
-					htmlType="submit"
-					loading={addGroupMember.isPending}
-					icon={<PlusIcon />}
-				>
+					{formErrors.contest_person && (
+						<p className="text-sm text-destructive mt-1">{formErrors.contest_person.join(", ")}</p>
+					)}
+				</div>
+				<Button type="submit" disabled={addGroupMember.isPending}>
+					{addGroupMember.isPending ? (
+						<span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+					) : (
+						<PlusIcon className="h-4 w-4" />
+					)}
 					{t("add")}
 				</Button>
-			</Flex>
-		</Form>
+			</div>
+		</form>
 	);
 };

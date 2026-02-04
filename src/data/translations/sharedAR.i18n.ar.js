@@ -20,6 +20,8 @@ const sharedARI18nAr = {
 	"write-contest-code-to-confirm": "اكتب كود المسابقة لتأكيد الحذف",
 	"write-contest-code": "اكتب {{code}} لتأكيد الحذف",
 	"contest-removed": "تم حذف المسابقة",
+	"current-contest": "المسابقة الحالية",
+	profile: "الملف الشخصي",
 };
 
 export default sharedARI18nAr;

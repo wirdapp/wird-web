@@ -1,6 +1,6 @@
-import { Spin } from "antd";
-import React, { createContext, type ReactNode, useContext, useEffect, useMemo } from "react";
+import { createContext, type ReactNode, useContext, useEffect, useMemo } from "react";
 import { Navigate, useLocation } from "react-router-dom";
+import { Spinner } from "@/components/ui/spinner";
 import { useCurrentUser } from "../../services/auth/queries";
 import { destroySession, isLogged, updateSessionUserDetails } from "../../services/auth/session";
 import { useContestDetails, useContests } from "../../services/contests/queries";
@@ -86,10 +86,8 @@ function DashboardDataLoader({ children }: DashboardDataLoaderProps) {
 	const isLoading = userLoading || contestsLoading || (currentContestId && contestDetailsLoading);
 	if (isLoading) {
 		return (
-			<div
-				style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}
-			>
-				<Spin size="large" />
+			<div className="flex items-center justify-center h-screen">
+				<Spinner size="lg" />
 			</div>
 		);
 	}

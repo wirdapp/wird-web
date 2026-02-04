@@ -108,6 +108,7 @@ const contestCriteriaI18nEn = {
 	option: "Option",
 	"contest-started-warning": "Cannot delete sections and criteria after the contest starts",
 	"correct-option-required": "At least one correct option is required",
+	"select-dates": "Select dates",
 };
 
 export default contestCriteriaI18nEn;

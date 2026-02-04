@@ -1,9 +1,15 @@
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
-import { Button, Dropdown, Menu } from "antd";
-import useBreakpoint from "antd/es/grid/hooks/useBreakpoint";
 import type React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 import type { Group } from "../../types";
 
 interface GroupsListProps {
@@ -13,33 +19,47 @@ interface GroupsListProps {
 
 export const GroupsList: React.FC<GroupsListProps> = ({ groups, selected }) => {
 	const { t } = useTranslation();
-	const screens = useBreakpoint();
-
-	const selectedGroup = groups.find((group) => group.id === selected);
-
+	const isMobile = useIsMobile();
 	const navigate = useNavigate();
 
-	const menuProps = {
-		items: groups.map((group) => ({
-			key: group.id,
-			label: group.name,
-			onClick: () => navigate(`/dashboard/groups/${group.id}`),
-		})),
-		selectedKeys: selected ? [selected] : [],
-	};
+	if (!isMobile) {
+		// Desktop: show as a vertical menu list
+		return (
+			<nav className="flex flex-col gap-2">
+				{groups.map((group) => (
+					<button
+						key={group.id}
+						type="button"
+						onClick={() => navigate(`/dashboard/groups/${group.id}`)}
+						className={cn(
+							"px-4 py-2 text-start rounded-md transition-colors bg-muted hover:bg-wheat-warm",
+							selected === group.id && "bg-white hover:bg-white !ring-primary ring font-medium",
+						)}
+					>
+						{group.name}
+					</button>
+				))}
+			</nav>
+		);
+	}
 
+	// Mobile: show as a select
 	return (
-		<div>
-			{screens.lg ? (
-				<Menu {...menuProps} style={{ border: "none" }} />
-			) : (
-				<Dropdown menu={menuProps} trigger={["click"]}>
-					<Button block style={{ justifyContent: "space-between" }}>
-						{selectedGroup?.name ?? t("select-group")}
-						<ChevronDownIcon style={{ display: "block", width: 20, height: 20 }} />
-					</Button>
-				</Dropdown>
-			)}
-		</div>
+		<Select
+			value={selected ?? ""}
+			onValueChange={(value) => navigate(`/dashboard/groups/${value}`)}
+			items={groups.map((g) => ({ value: g.id, label: g.name }))}
+		>
+			<SelectTrigger>
+				<SelectValue placeholder={t("select-group")} />
+			</SelectTrigger>
+			<SelectContent>
+				{groups.map((group) => (
+					<SelectItem key={group.id} value={group.id}>
+						{group.name}
+					</SelectItem>
+				))}
+			</SelectContent>
+		</Select>
 	);
 };

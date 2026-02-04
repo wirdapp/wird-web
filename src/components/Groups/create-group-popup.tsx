@@ -1,9 +1,22 @@
-import { App, Button, Form, Input, Modal, Space } from "antd";
+import { zodResolver } from "@hookform/resolvers/zod";
 import type React from "react";
+import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { useCreateGroup } from "../../services/groups/queries";
-import type { GroupFormValues } from "../../types";
 
 interface CreateGroupPopupProps {
 	open: boolean;
@@ -11,46 +24,70 @@ interface CreateGroupPopupProps {
 }
 
 export const CreateGroupPopup: React.FC<CreateGroupPopupProps> = ({ open, onClose }) => {
-	const { message } = App.useApp();
 	const { t } = useTranslation();
+
+	const createGroupSchema = z.object({
+		name: z.string().min(1, t("requiredField")),
+	});
+
+	type FormValues = z.infer<typeof createGroupSchema>;
 	const navigate = useNavigate();
 	const createGroup = useCreateGroup();
 
-	const onCreateGroup = async (values: GroupFormValues) => {
+	const form = useForm<FormValues>({
+		resolver: zodResolver(createGroupSchema),
+		defaultValues: {
+			name: "",
+		},
+	});
+
+	const onCreateGroup = async (values: FormValues) => {
 		try {
 			const createdGroup = await createGroup.mutateAsync(values);
 			navigate(`/dashboard/groups/${createdGroup.id}`);
+			form.reset();
 			onClose();
 		} catch (e) {
 			console.error(e);
-			message.error(t("something-went-wrong"));
+			toast.error(t("something-went-wrong"));
 		}
 	};
 
 	return (
-		<Modal title={t("create-group")} open={open} onCancel={onClose} width={400} footer={null}>
-			<Form
-				layout="vertical"
-				onFinish={onCreateGroup}
-				style={{ marginTop: 24 }}
-				disabled={createGroup.isPending}
-			>
-				<Form.Item
-					name="name"
-					label={t("name")}
-					rules={[{ required: true, message: t("requiredField") }]}
-				>
-					<Input />
-				</Form.Item>
-				<Form.Item>
-					<Space>
-						<Button type="primary" htmlType="submit" loading={createGroup.isPending}>
-							{t("create")}
-						</Button>
-						<Button onClick={onClose}>{t("cancel")}</Button>
-					</Space>
-				</Form.Item>
-			</Form>
-		</Modal>
+		<Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
+			<DialogContent className="max-w-[400px]">
+				<DialogHeader>
+					<DialogTitle>{t("create-group")}</DialogTitle>
+				</DialogHeader>
+				<Form {...form}>
+					<form onSubmit={form.handleSubmit(onCreateGroup)} className="space-y-4">
+						<FormField
+							control={form.control}
+							name="name"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>{t("name")}</FormLabel>
+									<FormControl>
+										<Input {...field} disabled={createGroup.isPending} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<div className="flex gap-2">
+							<Button type="submit" disabled={createGroup.isPending}>
+								{createGroup.isPending && (
+									<span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+								)}
+								{t("create")}
+							</Button>
+							<Button type="button" variant="outline" onClick={onClose}>
+								{t("cancel")}
+							</Button>
+						</div>
+					</form>
+				</Form>
+			</DialogContent>
+		</Dialog>
 	);
 };

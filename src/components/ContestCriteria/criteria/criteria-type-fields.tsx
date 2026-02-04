@@ -1,17 +1,21 @@
-import { css } from "@emotion/css";
 import { TrashIcon } from "@heroicons/react/20/solid";
-import type { FormInstance } from "antd";
-import { Alert, Button, Checkbox, Flex, Form, Input, InputNumber, Tooltip, Typography } from "antd";
-import type { CheckboxChangeEvent } from "antd/es/checkbox";
+import { Info } from "lucide-react";
 import type React from "react";
+import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 // @ts-expect-error - uuid types not installed
 import { v4 as uuidv4 } from "uuid";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { FieldTypes } from "../../../services/contest-criteria/consts";
 import { CriteriaTypeSelect } from "./criteria-type-select";
 
 interface CriteriaTypeFieldsProps {
-	form: FormInstance;
 	isEdit: boolean;
 }
 
@@ -21,145 +25,219 @@ interface CriterionOption {
 	is_correct: boolean;
 }
 
-export const CriteriaTypeFields: React.FC<CriteriaTypeFieldsProps> = ({ form, isEdit }) => {
+export const CriteriaTypeFields: React.FC<CriteriaTypeFieldsProps> = ({ isEdit }) => {
 	const { t, i18n } = useTranslation();
-	const selectedType: string | undefined = Form.useWatch("resourcetype", form);
+	const form = useFormContext();
+	const selectedType: string | undefined = form.watch("resourcetype");
+	const options: CriterionOption[] = form.watch("options") || [];
 
-	const onCheckboxChecked = (e: CheckboxChangeEvent, index: number): void => {
+	const onCheckboxChecked = (checked: boolean, index: number): void => {
 		if (selectedType !== FieldTypes.Radio) return;
-		if (e.target.checked) {
-			const currentOptions: CriterionOption[] = form.getFieldsValue().options ?? [];
-			form.setFieldsValue({
-				options: currentOptions.map((option, i) => {
-					if (i !== index) {
-						return {
-							...option,
-							is_correct: false,
-						};
-					}
-					return {
-						...option,
-						is_correct: true,
-					};
-				}),
-			});
+		if (checked) {
+			const currentOptions: CriterionOption[] = form.getValues("options") ?? [];
+			form.setValue(
+				"options",
+				currentOptions.map((option, i) => ({
+					...option,
+					is_correct: i === index,
+				})),
+			);
 		}
 	};
 
+	const addOption = () => {
+		const currentOptions: CriterionOption[] = form.getValues("options") ?? [];
+		form.setValue("options", [
+			...currentOptions,
+			{
+				id: uuidv4(),
+				label: "",
+				is_correct: false,
+			},
+		]);
+	};
+
+	const removeOption = (index: number) => {
+		const currentOptions: CriterionOption[] = form.getValues("options") ?? [];
+		form.setValue(
+			"options",
+			currentOptions.filter((_, i) => i !== index),
+		);
+	};
+
 	return (
-		<>
+		<div className="space-y-4">
 			{isEdit && (
-				<Alert
-					showIcon
-					type="info"
-					message={t("criteria-type-change-warning")}
-					style={{ marginBottom: 16 }}
+				<Alert>
+					<Info className="h-4 w-4" />
+					<AlertDescription>{t("criteria-type-change-warning")}</AlertDescription>
+				</Alert>
+			)}
+			<FormField
+				control={form.control}
+				name="resourcetype"
+				rules={{ required: t("requiredField") }}
+				render={({ field }) => (
+					<FormItem>
+						<FormLabel>{t("criteria-type")}</FormLabel>
+						<FormControl>
+							<CriteriaTypeSelect value={field.value} onChange={field.onChange} disabled={isEdit} />
+						</FormControl>
+						<FormMessage />
+					</FormItem>
+				)}
+			/>
+			{selectedType === FieldTypes.Text && (
+				<FormField
+					control={form.control}
+					name="allow_multiline"
+					render={({ field }) => (
+						<FormItem className="flex items-center gap-2 space-y-0">
+							<FormControl>
+								<Checkbox checked={field.value} onCheckedChange={field.onChange} />
+							</FormControl>
+							<FormLabel className="font-normal">{t("allow-multiline")}</FormLabel>
+						</FormItem>
+					)}
 				/>
 			)}
-			<Form.Item label={t("criteria-type")} name="resourcetype" rules={[{ required: true }]}>
-				<CriteriaTypeSelect disabled={isEdit} />
-			</Form.Item>
-			{selectedType === FieldTypes.Text && (
-				<Form.Item name="allow_multiline" valuePropName="checked" initialValue={false}>
-					<Checkbox>{t("allow-multiline")}</Checkbox>
-				</Form.Item>
-			)}
 			{selectedType === FieldTypes.Number && (
-				<>
-					<Form.Item label={t("criteria-min")} name="lower_bound" initialValue={0}>
-						<InputNumber />
-					</Form.Item>
-					<Form.Item label={t("criteria-max")} name="upper_bound" initialValue={20}>
-						<InputNumber />
-					</Form.Item>
-				</>
+				<div className="grid grid-cols-2 gap-4">
+					<FormField
+						control={form.control}
+						name="lower_bound"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>{t("criteria-min")}</FormLabel>
+								<FormControl>
+									<Input
+										type="number"
+										{...field}
+										onChange={(e) => field.onChange(Number(e.target.value))}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name="upper_bound"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>{t("criteria-max")}</FormLabel>
+								<FormControl>
+									<Input
+										type="number"
+										{...field}
+										onChange={(e) => field.onChange(Number(e.target.value))}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				</div>
 			)}
 			{selectedType === FieldTypes.Checkbox && (
-				<>
-					<Form.Item label={t("checked-label")} name="checked_label" initialValue={t("yes")}>
-						<Input />
-					</Form.Item>
-					<Form.Item
-						label={t("unchecked-label")}
+				<div className="grid grid-cols-2 gap-4">
+					<FormField
+						control={form.control}
+						name="checked_label"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>{t("checked-label")}</FormLabel>
+								<FormControl>
+									<Input {...field} />
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
 						name="unchecked_label"
-						rules={[{ required: true }]}
-						initialValue={t("no")}
-					>
-						<Input />
-					</Form.Item>
-				</>
+						rules={{ required: t("requiredField") }}
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>{t("unchecked-label")}</FormLabel>
+								<FormControl>
+									<Input {...field} />
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				</div>
 			)}
 			{selectedType === FieldTypes.MultipleChoices && (
-				<Form.Item name="partial_points" valuePropName="checked" initialValue={false}>
-					<Checkbox>{t("partial-points")}</Checkbox>
-				</Form.Item>
+				<FormField
+					control={form.control}
+					name="partial_points"
+					render={({ field }) => (
+						<FormItem className="flex items-center gap-2 space-y-0">
+							<FormControl>
+								<Checkbox checked={field.value} onCheckedChange={field.onChange} />
+							</FormControl>
+							<FormLabel className="font-normal">{t("partial-points")}</FormLabel>
+						</FormItem>
+					)}
+				/>
 			)}
 			{(selectedType === FieldTypes.Radio || selectedType === FieldTypes.MultipleChoices) && (
-				<Form.List name="options">
-					{(fields, { add, remove }) => (
-						<>
-							<Typography.Text>{t("options")}:</Typography.Text>
-							<ol>
-								{fields.map((field, index) => (
-									<li
-										key={field.key}
-										className={css`
-                        margin-bottom: 16px;
-                      `}
-									>
-										<Flex gap="small" align="center">
-											<Form.Item hidden name={[field.name, "id"]} />
-											<Form.Item
-												name={[field.name, "label"]}
-												rules={[{ required: true }]}
-												style={{ width: "100%" }}
-												noStyle
-											>
-												<Input size="small" placeholder={t("option")} />
-											</Form.Item>
-											<Tooltip
-												title={t("is-correct")}
-												placement={i18n.dir() === "ltr" ? "right" : "left"}
-											>
-												<div>
-													<Form.Item
-														noStyle
-														name={[field.name, "is_correct"]}
-														valuePropName="checked"
-													>
-														<Checkbox onChange={(e) => onCheckboxChecked(e, index)} />
-													</Form.Item>
-												</div>
-											</Tooltip>
-											<Button
-												onClick={() => remove(index)}
-												type="text"
-												size="small"
-												danger
-												icon={<TrashIcon />}
-											/>
-										</Flex>
-									</li>
-								))}
-							</ol>
-							<Button
-								type="dashed"
-								size="small"
-								onClick={() =>
-									add({
-										id: uuidv4(),
-										label: "",
-										is_correct: false,
-									})
-								}
-								block
-							>
-								{t("add-option")}
-							</Button>
-						</>
-					)}
-				</Form.List>
+				<div className="space-y-4">
+					<Label>{t("options")}:</Label>
+					<ol className="list-decimal list-inside space-y-4">
+						{options.map((option, index) => (
+							<li key={option.id} className="flex items-center gap-2">
+								<FormField
+									control={form.control}
+									name={`options.${index}.label`}
+									rules={{ required: t("requiredField") }}
+									render={({ field }) => (
+										<Input className="flex-1 h-8" placeholder={t("option")} {...field} />
+									)}
+								/>
+								<TooltipProvider>
+									<Tooltip>
+										<TooltipTrigger asChild>
+											<div>
+												<Checkbox
+													checked={options[index]?.is_correct}
+													onCheckedChange={(checked) =>
+														onCheckboxChecked(checked as boolean, index)
+													}
+												/>
+											</div>
+										</TooltipTrigger>
+										<TooltipContent side={i18n.dir() === "ltr" ? "right" : "left"}>
+											{t("is-correct")}
+										</TooltipContent>
+									</Tooltip>
+								</TooltipProvider>
+								<Button
+									type="button"
+									variant="ghost"
+									size="sm"
+									onClick={() => removeOption(index)}
+									className="text-destructive hover:text-destructive"
+								>
+									<TrashIcon className="h-4 w-4" />
+								</Button>
+							</li>
+						))}
+					</ol>
+					<Button
+						type="button"
+						variant="outline"
+						size="sm"
+						onClick={addOption}
+						className="w-full border-dashed"
+					>
+						{t("add-option")}
+					</Button>
+				</div>
 			)}
-		</>
+		</div>
 	);
 };

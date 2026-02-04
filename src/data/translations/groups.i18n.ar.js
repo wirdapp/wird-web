@@ -57,6 +57,8 @@ const groupsI18nAr = {
 	select: "اختر",
 	"add-members": "إضافة أعضاء",
 	"add-admins": "إضافة مسؤولين",
+	"no-announcements": "لا يوجد إعلانات",
+	"no-members": "لا يوجد أعضاء",
 };
 
 export default groupsI18nAr;

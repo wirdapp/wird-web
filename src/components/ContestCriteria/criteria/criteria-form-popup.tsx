@@ -1,7 +1,19 @@
 import { CheckIcon } from "@heroicons/react/24/outline";
-import { App, Form, Modal, Spin, Tabs } from "antd";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import {
+	Dialog,
+	DialogContent,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from "@/components/ui/dialog";
+import { Spinner } from "@/components/ui/spinner";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
 import { FieldTypes } from "../../../services/contest-criteria/consts";
 import type { Section, UUID } from "../../../types";
 import { CriteriaAdvancedFields } from "./criteria-advanced-fields";
@@ -50,10 +62,28 @@ export const CriteriaFormPopup: React.FC<CriteriaFormPopupProps> = ({
 }) => {
 	const [loading, setLoading] = React.useState(false);
 	const [submitting, setSubmitting] = React.useState(false);
-	const { message } = App.useApp();
 	const { t } = useTranslation();
-	const [form] = Form.useForm<CriterionFormValues>();
+	const form = useForm<CriterionFormValues>({
+		defaultValues: {
+			label: "",
+			description: "",
+			resourcetype: FieldTypes.Text,
+			points: 1,
+			visible: true,
+			active: true,
+			lower_bound: 0,
+			upper_bound: 20,
+			checked_label: t("yes"),
+			unchecked_label: t("no"),
+		},
+	});
 	const { actions } = useContestCriteria({ sectionId: section.id });
+
+	const actionsRef = useRef(actions);
+	actionsRef.current = actions;
+
+	const formRef = useRef(form);
+	formRef.current = form;
 
 	const isEdit = !!criterionId;
 
@@ -61,18 +91,29 @@ export const CriteriaFormPopup: React.FC<CriteriaFormPopupProps> = ({
 		if (!open) return;
 		if (criterionId) {
 			setLoading(true);
-			actions
+			actionsRef.current
 				.getById(criterionId)
 				.then((criterion) => {
-					form.setFieldsValue(criterion as unknown as CriterionFormValues);
+					formRef.current.reset(criterion as unknown as CriterionFormValues);
 				})
 				.finally(() => {
 					setLoading(false);
 				});
 		} else {
-			form.resetFields();
+			formRef.current.reset({
+				label: "",
+				description: "",
+				resourcetype: FieldTypes.Text,
+				points: 1,
+				visible: true,
+				active: true,
+				lower_bound: 0,
+				upper_bound: 20,
+				checked_label: t("yes"),
+				unchecked_label: t("no"),
+			});
 		}
-	}, [open, criterionId, form, actions]);
+	}, [open, criterionId, t]);
 
 	const handleFormSubmit = async (values: CriterionFormValues): Promise<void> => {
 		setSubmitting(true);
@@ -82,7 +123,8 @@ export const CriteriaFormPopup: React.FC<CriteriaFormPopupProps> = ({
 				values.resourcetype === FieldTypes.MultipleChoices
 			) {
 				if (!values.options || !values.options.some((option) => option.is_correct)) {
-					message.error(t("correct-option-required"));
+					toast.error(t("correct-option-required"));
+					setSubmitting(false);
 					return;
 				}
 			}
@@ -90,18 +132,18 @@ export const CriteriaFormPopup: React.FC<CriteriaFormPopupProps> = ({
 				await actions.update(criterionId, {
 					...values,
 				});
-				message.success(t("criteria-updated"));
+				toast.success(t("criteria-updated"));
 			} else {
 				await actions.add({
 					...values,
 					section: section.id,
 					order_in_section: index,
 				} as any);
-				message.success(t("criteria-added"));
+				toast.success(t("criteria-added"));
 			}
 			handleClose();
 		} catch (e) {
-			message.error(t("criteria-operation-failed"));
+			toast.error(t("criteria-operation-failed"));
 			console.error(e);
 		} finally {
 			setSubmitting(false);
@@ -110,59 +152,63 @@ export const CriteriaFormPopup: React.FC<CriteriaFormPopupProps> = ({
 
 	const handleClose = (): void => {
 		onClose();
-		form.resetFields();
+		form.reset();
 	};
 
 	return (
-		<Modal
-			open={open}
-			onCancel={handleClose}
-			title={isEdit ? t("update-criteria") : t("add-criteria")}
-			onOk={() => form.submit()}
-			okText={isEdit ? t("update") : t("add")}
-			cancelText={t("cancel")}
-			okButtonProps={{
-				loading: submitting,
-				disabled: loading,
-				icon: <CheckIcon />,
-			}}
-			width={600}
-			destroyOnClose
-		>
-			<Spin spinning={loading}>
-				<Form
-					onFinish={handleFormSubmit}
-					form={form}
-					layout="vertical"
-					style={{ marginBottom: 24 }}
-					initialValues={{
-						resourcetype: FieldTypes.Text,
-					}}
-					disabled={submitting || loading}
-				>
-					<Tabs
-						items={[
-							{
-								label: t("criteria-basic"),
-								key: "basic",
-								children: <CriteriaBasicFields />,
-							},
-							{
-								label: t("criteria-type"),
-								key: "type",
-								children: <CriteriaTypeFields form={form} isEdit={isEdit} />,
-								forceRender: true,
-							},
-							{
-								label: t("criteria-advanced"),
-								key: "advanced",
-								children: <CriteriaAdvancedFields form={form} />,
-								forceRender: true,
-							},
-						]}
-					/>
-				</Form>
-			</Spin>
-		</Modal>
+		<Dialog open={open} onOpenChange={(isOpen) => !isOpen && handleClose()}>
+			<DialogContent className="max-w-[600px]">
+				<DialogHeader>
+					<DialogTitle>{isEdit ? t("update-criteria") : t("add-criteria")}</DialogTitle>
+				</DialogHeader>
+				<div className="relative">
+					{loading && (
+						<div className="absolute inset-0 z-10 flex items-center justify-center bg-background/50">
+							<Spinner size="lg" />
+						</div>
+					)}
+					<FormProvider {...form}>
+						<form
+							onSubmit={form.handleSubmit(handleFormSubmit)}
+							className={cn("space-y-6", loading && "opacity-50 pointer-events-none")}
+						>
+							<Tabs defaultValue="basic">
+								<TabsList className="w-full">
+									<TabsTrigger value="basic" className="flex-1">
+										{t("criteria-basic")}
+									</TabsTrigger>
+									<TabsTrigger value="type" className="flex-1">
+										{t("criteria-type")}
+									</TabsTrigger>
+									<TabsTrigger value="advanced" className="flex-1">
+										{t("criteria-advanced")}
+									</TabsTrigger>
+								</TabsList>
+								<div className="min-h-[320px] max-h-[400px] overflow-y-auto mt-4">
+									<TabsContent value="basic" className="mt-0 p-2">
+										<CriteriaBasicFields />
+									</TabsContent>
+									<TabsContent value="type" className="mt-0 p-2">
+										<CriteriaTypeFields isEdit={isEdit} />
+									</TabsContent>
+									<TabsContent value="advanced" className="mt-0 p-2">
+										<CriteriaAdvancedFields />
+									</TabsContent>
+								</div>
+							</Tabs>
+							<DialogFooter>
+								<Button type="button" variant="outline" onClick={handleClose} disabled={submitting}>
+									{t("cancel")}
+								</Button>
+								<Button type="submit" disabled={loading || submitting}>
+									{submitting ? <Spinner size="sm" /> : <CheckIcon className="h-4 w-4" />}
+									{isEdit ? t("update") : t("add")}
+								</Button>
+							</DialogFooter>
+						</form>
+					</FormProvider>
+				</div>
+			</DialogContent>
+		</Dialog>
 	);
 };

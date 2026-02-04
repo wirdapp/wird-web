@@ -1,30 +1,40 @@
-import { css } from "@emotion/css";
-import { Alert, App, Button, Checkbox, Form, Input, InputNumber, Select, Space } from "antd";
-import dayjs, { type Dayjs } from "dayjs";
+import { zodResolver } from "@hookform/resolvers/zod";
+import dayjs from "dayjs";
 import type React from "react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
+import * as z from "zod";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+	Form,
+	FormControl,
+	FormDescription,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 import { allCountries } from "../../../data/countries";
 import { useUpdateContest } from "../../../services/contests/queries";
 import type { Contest } from "../../../types";
 import { isAtLeastSuperAdmin } from "../../../util/roles";
 import { useDashboardData } from "../../../util/routes-data";
-import { ParticipantsTitelsAtHome } from "../ContestMembers/ContestMembers.styles";
-import { EditContestFormWrapper, ParticipantsNumbers } from "./EditCompetition.styles";
 
 interface EditCompetitionFormProps {
 	contest: Contest;
-}
-
-interface ContestFormValues {
-	name: string;
-	description?: string;
-	country: string;
-	start_date: Dayjs;
-	end_date: Dayjs;
-	days_to_record_in_past?: number;
-	show_standings?: boolean;
-	readonly_mode?: boolean;
 }
 
 interface ApiErrorResponse {
@@ -34,11 +44,51 @@ interface ApiErrorResponse {
 }
 
 const EditCompetitionForm: React.FC<EditCompetitionFormProps> = ({ contest }) => {
-	const { message } = App.useApp();
 	const { t, i18n } = useTranslation();
 	const [messages, setMessages] = useState<string[]>([]);
 	const { currentUser } = useDashboardData();
 	const updateContest = useUpdateContest();
+
+	const formSchema = z.object({
+		name: z.string().min(1, t("requiredField")),
+		description: z.string().optional(),
+		country: z.string().min(1, t("requiredField")),
+		start_date: z.string().min(1, t("requiredField")),
+		end_date: z.string().min(1, t("requiredField")),
+		days_to_record_in_past: z.number().min(1).optional(),
+		show_standings: z.boolean().optional(),
+		readonly_mode: z.boolean().optional(),
+	});
+
+	type FormValues = z.infer<typeof formSchema>;
+
+	const form = useForm<FormValues>({
+		resolver: zodResolver(formSchema),
+		defaultValues: {
+			name: contest.name || "",
+			description: contest.description || "",
+			country: contest.country || "",
+			start_date: contest.start_date ? dayjs(contest.start_date).format("YYYY-MM-DD") : "",
+			end_date: contest.end_date ? dayjs(contest.end_date).format("YYYY-MM-DD") : "",
+			days_to_record_in_past: contest.days_to_record_in_past || undefined,
+			show_standings: contest.show_standings ?? false,
+			readonly_mode: contest.readonly_mode ?? false,
+		},
+	});
+
+	// Reset form when contest changes
+	useEffect(() => {
+		form.reset({
+			name: contest.name || "",
+			description: contest.description || "",
+			country: contest.country || "",
+			start_date: contest.start_date ? dayjs(contest.start_date).format("YYYY-MM-DD") : "",
+			end_date: contest.end_date ? dayjs(contest.end_date).format("YYYY-MM-DD") : "",
+			days_to_record_in_past: contest.days_to_record_in_past || undefined,
+			show_standings: contest.show_standings ?? false,
+			readonly_mode: contest.readonly_mode ?? false,
+		});
+	}, [contest, form]);
 
 	const countries = useMemo(() => {
 		return allCountries(i18n.language)
@@ -49,18 +99,18 @@ const EditCompetitionForm: React.FC<EditCompetitionFormProps> = ({ contest }) =>
 			}));
 	}, [i18n.language]);
 
-	const handleUpdateContest = async (values: ContestFormValues): Promise<void> => {
+	const handleUpdateContest = async (values: FormValues): Promise<void> => {
 		try {
 			setMessages([]);
 			await updateContest.mutateAsync({
 				id: contest.id,
 				data: {
 					...values,
-					start_date: values.start_date.format("YYYY-MM-DD"),
-					end_date: values.end_date.format("YYYY-MM-DD"),
+					start_date: values.start_date,
+					end_date: values.end_date,
 				},
 			});
-			message.success(t("contest-has-been-edited-successfully"));
+			toast.success(t("contest-has-been-edited-successfully"));
 		} catch (err) {
 			const error = err as ApiErrorResponse;
 			const errMessages: string[] = [];
@@ -77,106 +127,203 @@ const EditCompetitionForm: React.FC<EditCompetitionFormProps> = ({ contest }) =>
 	const canEdit = currentUser?.role !== undefined ? isAtLeastSuperAdmin(currentUser.role) : false;
 
 	return (
-		<EditContestFormWrapper>
-			<ParticipantsNumbers>
-				<ParticipantsTitelsAtHome>{t("contest-information")}</ParticipantsTitelsAtHome>
+		<div className="flex w-full">
+			<div className="flex w-full max-w-none flex-1 flex-col items-start gap-6 rounded-3xl bg-wheat-warm p-6 text-sm">
+				<h3 className="text-base font-bold">{t("contest-information")}</h3>
 
-				<Form
-					onFinish={handleUpdateContest}
-					labelCol={{ span: 7 }}
-					wrapperCol={{ span: 15 }}
-					initialValues={contest}
-					style={{ width: "100%" }}
-					disabled={!canEdit || updateContest.isPending}
-					validateMessages={{
-						required: t("requiredField"),
-					}}
-				>
-					<Form.Item label={t("name-label")} name="name" rules={[{ required: true }]}>
-						<Input placeholder={t("name-label")} />
-					</Form.Item>
-					<Form.Item label={t("description-label")} name="description">
-						<Input placeholder={t("description-label")} />
-					</Form.Item>
-					<Form.Item label={t("country")} name="country" rules={[{ required: true }]}>
-						<Select options={countries} showSearch optionFilterProp="label" />
-					</Form.Item>
-					<Form.Item
-						label={t("start-date")}
-						name="start_date"
-						rules={[{ required: true }]}
-						getValueFromEvent={(e: React.ChangeEvent<HTMLInputElement>) => dayjs(e.target.value)}
-						getValueProps={(value: Dayjs) => ({
-							value: value?.format("YYYY-MM-DD"),
-						})}
-					>
-						<Input type="date" />
-					</Form.Item>
-					<Form.Item
-						label={t("end-date")}
-						name="end_date"
-						rules={[{ required: true }]}
-						getValueFromEvent={(e: React.ChangeEvent<HTMLInputElement>) => dayjs(e.target.value)}
-						getValueProps={(value: Dayjs) => ({
-							value: value?.format("YYYY-MM-DD"),
-						})}
-					>
-						<Input type="date" />
-					</Form.Item>
+				<Form {...form}>
+					<form onSubmit={form.handleSubmit(handleUpdateContest)} className="w-full space-y-4">
+						<FormField
+							control={form.control}
+							name="name"
+							render={({ field }) => (
+								<FormItem className="grid grid-cols-1 gap-2 md:grid-cols-[180px_1fr] md:items-center">
+									<FormLabel>{t("name-label")}</FormLabel>
+									<FormControl>
+										<Input
+											placeholder={t("name-label")}
+											disabled={!canEdit || updateContest.isPending}
+											{...field}
+										/>
+									</FormControl>
+									<FormMessage className="md:col-start-2" />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="description"
+							render={({ field }) => (
+								<FormItem className="grid grid-cols-1 gap-2 md:grid-cols-[180px_1fr] md:items-center">
+									<FormLabel>{t("description-label")}</FormLabel>
+									<FormControl>
+										<Input
+											placeholder={t("description-label")}
+											disabled={!canEdit || updateContest.isPending}
+											{...field}
+										/>
+									</FormControl>
+									<FormMessage className="md:col-start-2" />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="country"
+							render={({ field }) => (
+								<FormItem className="grid grid-cols-1 gap-2 md:grid-cols-[180px_1fr] md:items-center">
+									<FormLabel>{t("country")}</FormLabel>
+									<Select
+										onValueChange={field.onChange}
+										value={field.value}
+										disabled={!canEdit || updateContest.isPending}
+										items={countries}
+									>
+										<FormControl>
+											<SelectTrigger>
+												<SelectValue placeholder={t("country")} />
+											</SelectTrigger>
+										</FormControl>
+										<SelectContent>
+											{countries.map((country) => (
+												<SelectItem key={country.value} value={country.value}>
+													{country.label}
+												</SelectItem>
+											))}
+										</SelectContent>
+									</Select>
+									<FormMessage className="md:col-start-2" />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="start_date"
+							render={({ field }) => (
+								<FormItem className="grid grid-cols-1 gap-2 md:grid-cols-[180px_1fr] md:items-center">
+									<FormLabel>{t("start-date")}</FormLabel>
+									<FormControl>
+										<Input type="date" disabled={!canEdit || updateContest.isPending} {...field} />
+									</FormControl>
+									<FormMessage className="md:col-start-2" />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="end_date"
+							render={({ field }) => (
+								<FormItem className="grid grid-cols-1 gap-2 md:grid-cols-[180px_1fr] md:items-center">
+									<FormLabel>{t("end-date")}</FormLabel>
+									<FormControl>
+										<Input type="date" disabled={!canEdit || updateContest.isPending} {...field} />
+									</FormControl>
+									<FormMessage className="md:col-start-2" />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="days_to_record_in_past"
+							render={({ field }) => (
+								<FormItem className="grid grid-cols-1 gap-2 md:grid-cols-[180px_1fr] md:items-center">
+									<FormLabel>{t("days-to-record-in-past")}</FormLabel>
+									<div className="flex items-center gap-2">
+										<FormControl>
+											<Input
+												type="number"
+												min={1}
+												className="w-24"
+												disabled={!canEdit || updateContest.isPending}
+												{...field}
+												value={field.value ?? ""}
+												onChange={(e) =>
+													field.onChange(e.target.value ? Number(e.target.value) : undefined)
+												}
+											/>
+										</FormControl>
+										<span className="text-muted-foreground">{t("days")}</span>
+									</div>
+									<FormDescription className="md:col-start-2">
+										{t("days-to-record-in-past-msg")}
+									</FormDescription>
+									<FormMessage className="md:col-start-2" />
+								</FormItem>
+							)}
+						/>
 
-					<Form.Item
-						name="days_to_record_in_past"
-						label={t("days-to-record-in-past")}
-						extra={t("days-to-record-in-past-msg")}
-					>
-						<InputNumber min={1} addonAfter={t("days")} />
-					</Form.Item>
+						<FormField
+							control={form.control}
+							name="show_standings"
+							render={({ field }) => (
+								<FormItem className="grid grid-cols-1 gap-2 md:grid-cols-[180px_1fr] md:items-center">
+									<div />
+									<div className="flex items-center space-x-2">
+										<FormControl>
+											<Checkbox
+												checked={field.value}
+												onCheckedChange={field.onChange}
+												disabled={!canEdit || updateContest.isPending}
+											/>
+										</FormControl>
+										<Label className="font-normal">{t("show-leaderboard-for-students")}</Label>
+									</div>
+								</FormItem>
+							)}
+						/>
 
-					<Form.Item
-						name="show_standings"
-						wrapperCol={{ offset: 7, span: 15 }}
-						valuePropName="checked"
-						style={{ marginBottom: "0px" }}
-					>
-						<Checkbox>{t("show-leaderboard-for-students")}</Checkbox>
-					</Form.Item>
-					<Form.Item
-						name="readonly_mode"
-						wrapperCol={{ offset: 7, span: 15 }}
-						valuePropName="checked"
-					>
-						<Checkbox>{t("readonly")}</Checkbox>
-					</Form.Item>
+						<FormField
+							control={form.control}
+							name="readonly_mode"
+							render={({ field }) => (
+								<FormItem className="grid grid-cols-1 gap-2 md:grid-cols-[180px_1fr] md:items-center">
+									<div />
+									<div className="flex items-center space-x-2">
+										<FormControl>
+											<Checkbox
+												checked={field.value}
+												onCheckedChange={field.onChange}
+												disabled={!canEdit || updateContest.isPending}
+											/>
+										</FormControl>
+										<Label className="font-normal">{t("readonly")}</Label>
+									</div>
+								</FormItem>
+							)}
+						/>
 
-					{messages.length > 0 && (
-						<Form.Item wrapperCol={{ offset: 7, span: 15 }} style={{ marginBottom: "4px" }}>
-							<Alert
-								className={css`
-                  margin-bottom: 14px;
-                `}
-								message={t("contest-isn't-edited-successfully")}
-								description={messages.map((msg, index) => {
-									return <div key={index}>{msg}</div>;
-								})}
-								type="error"
-								showIcon
-							/>
-						</Form.Item>
-					)}
+						{messages.length > 0 && (
+							<div className="md:ms-[180px]">
+								<Alert variant="destructive">
+									<AlertTitle>{t("contest-isn't-edited-successfully")}</AlertTitle>
+									<AlertDescription>
+										{messages.map((msg, index) => (
+											<div key={index}>{msg}</div>
+										))}
+									</AlertDescription>
+								</Alert>
+							</div>
+						)}
 
-					{canEdit && (
-						<Form.Item wrapperCol={{ offset: 7, span: 15 }}>
-							<Space>
-								<Button htmlType="submit" type="primary" loading={updateContest.isPending}>
-									{t("update")}
+						{canEdit && (
+							<div className="flex gap-2 md:ms-[180px]">
+								<Button type="submit" disabled={updateContest.isPending}>
+									{updateContest.isPending ? "..." : t("update")}
 								</Button>
-								<Button htmlType="reset">{t("reset")}</Button>
-							</Space>
-						</Form.Item>
-					)}
+								<Button
+									type="button"
+									variant="outline"
+									onClick={() => form.reset()}
+									disabled={updateContest.isPending}
+								>
+									{t("reset")}
+								</Button>
+							</div>
+						)}
+					</form>
 				</Form>
-			</ParticipantsNumbers>
-		</EditContestFormWrapper>
+			</div>
+		</div>
 	);
 };
 

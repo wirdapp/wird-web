@@ -1,10 +1,9 @@
-import { css } from "@emotion/css";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { App, Button, Flex, List } from "antd";
 import type React from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 import { useRemoveGroupMember } from "../../services/groups/queries";
-import { colors } from "../../styles";
 import type { Group, GroupMember } from "../../types";
 import { GroupRole } from "../../types";
 import { isAtLeastSuperAdmin } from "../../util/roles";
@@ -19,7 +18,6 @@ interface MemberActionsProps {
 
 const MemberActions: React.FC<MemberActionsProps> = ({ groupId, member }) => {
 	const { t } = useTranslation();
-	const { message } = App.useApp();
 	const { currentUser } = useDashboardData();
 	const removeGroupMember = useRemoveGroupMember();
 
@@ -33,22 +31,26 @@ const MemberActions: React.FC<MemberActionsProps> = ({ groupId, member }) => {
 				groupId: groupId!,
 				memberId: member.id,
 			});
-			message.success(t("group-member-removed"));
+			toast.success(t("group-member-removed"));
 		} catch (e) {
 			console.error(e);
-			message.error(t("something-went-wrong"));
+			toast.error(t("something-went-wrong"));
 		}
 	};
 
 	return (
 		<Button
-			type="text"
-			size="small"
-			danger
-			icon={<XMarkIcon />}
-			loading={removeGroupMember.isPending}
+			variant="ghost"
+			size="sm"
+			className="text-destructive hover:text-destructive hover:bg-destructive/10"
+			disabled={removeGroupMember.isPending}
 			onClick={removeMember}
 		>
+			{removeGroupMember.isPending ? (
+				<span className="mr-2 h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent" />
+			) : (
+				<XMarkIcon className="h-4 w-4" />
+			)}
 			{t("remove")}
 		</Button>
 	);
@@ -63,33 +65,26 @@ export const GroupMembers: React.FC<GroupMembersProps> = ({ group, members }) =>
 	const { t } = useTranslation();
 
 	return (
-		<Flex vertical gap={28}>
-			<List
-				className={css`
-          background: ${colors.white};
-
-          .ant-list-item-action li:last-child {
-            padding: 0 !important;
-          }
-        `}
-				bordered
-				dataSource={members}
-				renderItem={(member: GroupMember) => (
-					<List.Item actions={[<MemberActions key="actions" groupId={group.id} member={member} />]}>
-						<List.Item.Meta
-							title={getFullName(member.person_info)}
-							description={
-								<>
-									{member.group_role === GroupRole.ADMIN && t("group-roles.admin")}
-									{member.group_role === GroupRole.MEMBER && t("group-roles.member")}
-								</>
-							}
-						/>
-					</List.Item>
+		<div className="flex flex-col gap-7">
+			<div className="bg-background border rounded-lg divide-y">
+				{members.map((member) => (
+					<div key={member.id} className="flex items-center justify-between p-4">
+						<div className="flex flex-col">
+							<span className="font-medium">{getFullName(member.person_info)}</span>
+							<span className="text-sm text-muted-foreground">
+								{member.group_role === GroupRole.ADMIN && t("group-roles.admin")}
+								{member.group_role === GroupRole.MEMBER && t("group-roles.member")}
+							</span>
+						</div>
+						<MemberActions groupId={group.id} member={member} />
+					</div>
+				))}
+				{members.length === 0 && (
+					<div className="p-4 text-center text-muted-foreground">{t("no-members")}</div>
 				)}
-			/>
+			</div>
 			<GroupUserAddForm groupId={group.id} groupMembers={members} role={GroupRole.MEMBER} />
 			<GroupUserAddForm groupId={group.id} groupMembers={members} role={GroupRole.ADMIN} />
-		</Flex>
+		</div>
 	);
 };

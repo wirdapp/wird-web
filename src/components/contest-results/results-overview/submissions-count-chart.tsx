@@ -14,7 +14,6 @@ import {
 	YAxis,
 } from "recharts";
 import { colors } from "../../../styles";
-import { StyledChartTooltip } from "./results-overview.styles";
 
 interface ChartDataItem {
 	date: string;
@@ -38,18 +37,21 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label })
 
 	if (active && payload && payload.length) {
 		return (
-			<StyledChartTooltip>
+			<div className="flex flex-col gap-1 rounded-lg border bg-white p-2 shadow-md">
 				<span>{dayjs(label).format("DD MMM YYYY")}</span>
 				{payload.map((p) => (
 					<Fragment key={p.value}>
 						{dayjs().isSame(p.payload.date, "day") && <small> ({t("today")})</small>}
-						<div>
-							<span className="line-key-color" style={{ backgroundColor: p.stroke }}></span>
+						<div className="flex items-center gap-2">
+							<span
+								className="inline-block h-3 w-3 rounded-sm"
+								style={{ backgroundColor: p.stroke }}
+							/>
 							<span>{p.value}</span>
 						</div>
 					</Fragment>
 				))}
-			</StyledChartTooltip>
+			</div>
 		);
 	}
 

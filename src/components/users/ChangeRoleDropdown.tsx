@@ -1,6 +1,13 @@
-import { App, Button, Dropdown, type MenuProps } from "antd";
 import type React from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useUpdateUserContestRole } from "../../services/members/queries";
 import type { ContestPerson } from "../../types";
 import {
@@ -22,13 +29,12 @@ interface ChangeRoleDropdownProps {
 
 const ChangeRoleDropdown: React.FC<ChangeRoleDropdownProps> = ({ student, onChange }) => {
 	const { t, i18n } = useTranslation();
-	const { message } = App.useApp();
 	const { currentUser } = useDashboardData();
 	const updateUserContestRole = useUpdateUserContestRole();
 
 	const studentRole = student?.contest_role;
 
-	const dropDownItems: MenuProps["items"] = [
+	const dropDownItems = [
 		isOwner(currentUser!.role!) &&
 			!isSuperAdmin(studentRole) && {
 				label: t("role.1"),
@@ -54,36 +60,36 @@ const ChangeRoleDropdown: React.FC<ChangeRoleDropdownProps> = ({ student, onChan
 			label: t("role.6"),
 			key: Role.DEACTIVATED,
 		},
-	].filter(Boolean) as MenuProps["items"];
+	].filter(Boolean) as { label: string; key: Role }[];
 
-	const updateRole = async (role: string | number): Promise<void> => {
+	const updateRole = async (role: Role): Promise<void> => {
 		try {
 			const res = await updateUserContestRole.mutateAsync({
-				role: Number(role) as Role,
+				role: role,
 				userId: student.id,
 			});
-			message.success(t("notification.success"));
+			toast.success(t("notification.success"));
 			onChange?.(res);
-		} catch (error) {
-			message.error(t("notification.error"));
+		} catch (_error) {
+			toast.error(t("notification.error"));
 		}
 	};
 
-	const menuProps: MenuProps = {
-		items: dropDownItems,
-		onClick: ({ key }) => updateRole(key),
-	};
-
 	return !isOwner(student?.contest_role) ? (
-		<Dropdown
-			menu={menuProps}
-			trigger={["click"]}
-			placement={i18n.dir() === "rtl" ? "bottomLeft" : "bottomRight"}
-		>
-			<Button size="small" style={{ flexDirection: "row-reverse" }}>
-				{t("change-role-to")}
-			</Button>
-		</Dropdown>
+		<DropdownMenu>
+			<DropdownMenuTrigger asChild>
+				<Button variant="outline" size="sm">
+					{t("change-role-to")}
+				</Button>
+			</DropdownMenuTrigger>
+			<DropdownMenuContent align={i18n.dir() === "rtl" ? "start" : "end"}>
+				{dropDownItems.map((item) => (
+					<DropdownMenuItem key={item.key} onClick={() => updateRole(item.key)}>
+						{item.label}
+					</DropdownMenuItem>
+				))}
+			</DropdownMenuContent>
+		</DropdownMenu>
 	) : null;
 };
 

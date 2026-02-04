@@ -20,6 +20,8 @@ const sharedENI18nEn = {
 	"write-contest-code-to-confirm": "Write the contest code to confirm deletion",
 	"write-contest-code": "Write {{code}} to confirm deletion",
 	"contest-removed": "Contest has been removed",
+	"current-contest": "Current Contest",
+	profile: "Profile",
 };
 
 export default sharedENI18nEn;

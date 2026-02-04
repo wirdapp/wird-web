@@ -1,6 +1,7 @@
-import { Form, InputNumber } from "antd";
 import type React from "react";
 import { useTranslation } from "react-i18next";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface BoundsInputProps {
 	value?: [number | undefined, number | undefined];
@@ -10,22 +11,33 @@ interface BoundsInputProps {
 export const BoundsInput: React.FC<BoundsInputProps> = ({ value, onChange }) => {
 	const { t } = useTranslation();
 
-	const handleChange = (type: "min" | "max", val: number | null): void => {
+	const handleChange = (type: "min" | "max", val: string): void => {
+		const numVal = val === "" ? undefined : Number(val);
 		const newValue: [number | undefined, number | undefined] = [
 			...(value ?? [undefined, undefined]),
 		] as [number | undefined, number | undefined];
-		newValue[type === "min" ? 0 : 1] = val ?? undefined;
+		newValue[type === "min" ? 0 : 1] = numVal;
 		onChange?.(newValue);
 	};
 
 	return (
-		<>
-			<Form.Item label={t("criteria-min")}>
-				<InputNumber value={value?.[0]} onChange={(val) => handleChange("min", val)} />
-			</Form.Item>
-			<Form.Item label={t("criteria-max")}>
-				<InputNumber value={value?.[1]} onChange={(val) => handleChange("max", val)} />
-			</Form.Item>
-		</>
+		<div className="grid grid-cols-2 gap-4">
+			<div className="space-y-2">
+				<Label>{t("criteria-min")}</Label>
+				<Input
+					type="number"
+					value={value?.[0] ?? ""}
+					onChange={(e) => handleChange("min", e.target.value)}
+				/>
+			</div>
+			<div className="space-y-2">
+				<Label>{t("criteria-max")}</Label>
+				<Input
+					type="number"
+					value={value?.[1] ?? ""}
+					onChange={(e) => handleChange("max", e.target.value)}
+				/>
+			</div>
+		</div>
 	);
 };

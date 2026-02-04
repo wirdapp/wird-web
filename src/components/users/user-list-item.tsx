@@ -1,22 +1,30 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { App, Avatar, Badge, Button, Popconfirm, Space } from "antd";
 import { ReactComponent as ResultsIcon } from "assets/icons/results.svg";
 import type React from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { useRemoveUserFromContest } from "../../services/members/queries";
 import type { ContestPerson } from "../../types";
 import { isAtLeastSuperAdmin, isMember, isOwner, Role } from "../../util/roles";
 import { useDashboardData } from "../../util/routes-data";
 import { getFullName, getInitials } from "../../util/user-utils";
 import ChangeRoleDropdown from "./ChangeRoleDropdown";
-import ParticipantCards, {
-	BoldText,
-	ColumnContainer,
-	LightText,
-	ParticipantsNumbers,
-	StyledParticipantInfo,
-} from "./ParticipantCard.styles";
 
 interface UserListItemProps {
 	student: ContestPerson;
@@ -24,11 +32,11 @@ interface UserListItemProps {
 }
 
 const UserListItem: React.FC<UserListItemProps> = ({ student, onChange }) => {
-	const { message } = App.useApp();
 	const { currentUser } = useDashboardData();
 	const { t } = useTranslation();
 	const navigate = useNavigate();
 	const removeUserFromContestMutation = useRemoveUserFromContest();
+	const [confirmOpen, setConfirmOpen] = useState(false);
 
 	const canEdit =
 		student.contest_role > currentUser!.role! && isAtLeastSuperAdmin(currentUser!.role!);
@@ -36,73 +44,95 @@ const UserListItem: React.FC<UserListItemProps> = ({ student, onChange }) => {
 	const removeUserFromContest = async (userId: string): Promise<void> => {
 		try {
 			await removeUserFromContestMutation.mutateAsync(userId);
-			message.success(t("user-removed"));
+			toast.success(t("user-removed"));
 			onChange?.();
+			setConfirmOpen(false);
 		} catch (error) {
 			console.error(error);
-			message.error(t("something-went-wrong"));
+			toast.error(t("something-went-wrong"));
 		}
 	};
 
-	return (
-		<ParticipantCards data-person-id={student.id}>
-			<ParticipantsNumbers>
-				<Avatar style={{ background: "#FDD561", color: "black" }}>
-					{getInitials(student?.person_info)}
-				</Avatar>
-				<StyledParticipantInfo>
-					<ColumnContainer>
-						<BoldText>{getFullName(student?.person_info)}</BoldText>
-						<Space wrap>
-							<LightText>{student?.person_info?.username}</LightText>
-							<LightText>
-								<Badge
-									count={t(`role.${student?.contest_role}`)}
-									color={
-										student?.contest_role === Role.DEACTIVATED
-											? "red"
-											: student?.contest_role === Role.PENDING
-												? "orange"
-												: "green"
-									}
-								/>
-							</LightText>
-						</Space>
-					</ColumnContainer>
+	const getBadgeVariant = (role: Role) => {
+		if (role === Role.DEACTIVATED) return "destructive";
+		if (role === Role.PENDING) return "secondary";
+		return "default";
+	};
 
-					<Space style={{ marginTop: 8 }}>
-						{canEdit && <ChangeRoleDropdown student={student} onChange={onChange} />}
-						{isMember(student.contest_role) && (
-							<Button
-								size="small"
-								icon={<ResultsIcon />}
-								onClick={() => navigate(`/dashboard/results/members?userId=${student?.id}`)}
-							>
-								{t("show-results")}
-							</Button>
-						)}
-						{canEdit &&
-							student?.person_info?.username !== currentUser?.username &&
-							!isOwner(student.contest_role) && (
-								<Popconfirm
-									title={t("are-you-sure")}
-									onConfirm={() => removeUserFromContest(student?.id)}
-								>
+	return (
+		<div
+			data-person-id={student.id}
+			className="flex items-start gap-3 bg-muted/50 p-6 w-full rounded-3xl"
+		>
+			<Avatar className="bg-amber-300 text-black">
+				<AvatarFallback className="bg-amber-300 text-black font-medium">
+					{getInitials(student?.person_info)}
+				</AvatarFallback>
+			</Avatar>
+			<div className="flex flex-col md:flex-row md:items-center justify-between items-start flex-1">
+				<div className="flex flex-col justify-center">
+					<span className="font-bold text-base md:text-sm sm:text-xs">
+						{getFullName(student?.person_info)}
+					</span>
+					<div className="flex flex-wrap gap-2 items-center">
+						<span className="text-sm text-muted-foreground">{student?.person_info?.username}</span>
+						<Badge variant={getBadgeVariant(student?.contest_role)}>
+							{t(`role.${student?.contest_role}`)}
+						</Badge>
+					</div>
+				</div>
+
+				<div className="flex flex-wrap gap-2 mt-2 md:mt-0">
+					{canEdit && <ChangeRoleDropdown student={student} onChange={onChange} />}
+					{isMember(student.contest_role) && (
+						<Button
+							variant="outline"
+							size="sm"
+							onClick={() => navigate(`/dashboard/results/members?userId=${student?.id}`)}
+						>
+							<ResultsIcon className="h-4 w-4" />
+							{t("show-results")}
+						</Button>
+					)}
+					{canEdit &&
+						student?.person_info?.username !== currentUser?.username &&
+						!isOwner(student.contest_role) && (
+							<AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+								<AlertDialogTrigger asChild>
 									<Button
-										size="small"
-										type="text"
-										danger
-										icon={<XMarkIcon />}
-										loading={removeUserFromContestMutation.isPending}
+										variant="ghost"
+										size="sm"
+										className="text-destructive hover:text-destructive hover:bg-destructive/10"
 									>
+										<XMarkIcon className="h-4 w-4" />
 										{t("remove")}
 									</Button>
-								</Popconfirm>
-							)}
-					</Space>
-				</StyledParticipantInfo>
-			</ParticipantsNumbers>
-		</ParticipantCards>
+								</AlertDialogTrigger>
+								<AlertDialogContent>
+									<AlertDialogHeader>
+										<AlertDialogTitle>{t("are-you-sure")}</AlertDialogTitle>
+										<AlertDialogDescription>
+											{t("remove-user-confirmation", {
+												defaultValue: "This action will remove the user from the contest.",
+											})}
+										</AlertDialogDescription>
+									</AlertDialogHeader>
+									<AlertDialogFooter>
+										<AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
+										<AlertDialogAction
+											onClick={() => removeUserFromContest(student?.id)}
+											disabled={removeUserFromContestMutation.isPending}
+											className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+										>
+											{removeUserFromContestMutation.isPending ? t("loading") : t("remove")}
+										</AlertDialogAction>
+									</AlertDialogFooter>
+								</AlertDialogContent>
+							</AlertDialog>
+						)}
+				</div>
+			</div>
+		</div>
 	);
 };
 

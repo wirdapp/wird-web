@@ -5,12 +5,7 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [
-    react({
-      jsxImportSource: '@emotion/react',
-      babel: {
-        plugins: ['@emotion/babel-plugin'],
-      },
-    }),
+    react(),
     svgr({
       ref: true,
       svgo: false,
@@ -19,6 +14,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
+      '@': path.resolve(__dirname, './src'),
       assets: path.resolve(__dirname, './src/assets'),
       components: path.resolve(__dirname, './src/components'),
       services: path.resolve(__dirname, './src/services'),
@@ -28,6 +24,7 @@ export default defineConfig({
       styles: path.resolve(__dirname, './src/styles'),
       data: path.resolve(__dirname, './src/data'),
       types: path.resolve(__dirname, './src/types'),
+      lib: path.resolve(__dirname, './src/lib'),
     },
   },
   server: {

@@ -14,7 +14,7 @@ export default function Tabs(props: TabsProps) {
 
 	useEffect(() => {
 		setToggleState(props.labels.length - 1 >= 0 ? props.labels.length - 1 : 0);
-	}, [props.labels, props.contents]);
+	}, [props.labels]);
 
 	const toggleTab = (index: number) => {
 		setToggleState(index);

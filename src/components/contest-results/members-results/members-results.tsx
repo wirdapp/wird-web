@@ -1,37 +1,20 @@
-import { css } from "@emotion/css";
-import {
-	Avatar,
-	Card,
-	Col,
-	Empty,
-	Flex,
-	Form,
-	Row,
-	Skeleton,
-	Space,
-	Statistic,
-	Typography,
-} from "antd";
 import type React from "react";
-import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Empty } from "@/components/ui/empty";
+import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useMemberResults } from "../../../services/contest-results/queries";
-import { colors } from "../../../styles";
 import { Role } from "../../../util/roles";
 import { getFullName, getInitials } from "../../../util/user-utils";
 import { DailyUserSubmissions } from "./daily-user-submissions";
 import { MemberScorePerCategoryChart } from "./member-score-per-category-chart";
 import { MemberScorePerDayChart } from "./member-score-per-day-chart";
-import { StyledMembersResultsWrapper } from "./members-results.styles";
 import { MembersSelect } from "./members-select";
 
-interface FormValues {
-	userId?: string;
-}
-
 export const MembersResults: React.FC = () => {
-	const [form] = Form.useForm<FormValues>();
 	const [searchParams, setSearchParams] = useSearchParams();
 	const { t } = useTranslation();
 	const userId = searchParams.get("userId");
@@ -42,112 +25,132 @@ export const MembersResults: React.FC = () => {
 		await refetch();
 	};
 
-	const onValuesChange = async (_: Partial<FormValues>, values: FormValues): Promise<void> => {
-		setSearchParams(new URLSearchParams(values as Record<string, string>));
+	const handleUserChange = (value: string | null): void => {
+		if (value) {
+			setSearchParams(new URLSearchParams({ userId: value }));
+		}
 	};
 
-	useEffect(() => {
-		if (userId) {
-			form.setFieldsValue({ userId });
-		}
-	}, [form, userId]);
-
 	return (
-		<StyledMembersResultsWrapper>
-			<div className="side-filters">
-				<Form
-					form={form}
-					layout="vertical"
-					onValuesChange={onValuesChange}
-					initialValues={{ userId: searchParams.get("userId") ?? undefined }}
-				>
-					<Form.Item label={t("selectMember")} name="userId">
-						<MembersSelect placeholder={t("selectMember")} role={Role.MEMBER} />
-					</Form.Item>
-				</Form>
-			</div>
-			<div className="main-content">
-				{result || loading ? (
-					<Flex vertical gap={32}>
-						{loading ? (
-							<Space size="large" align="center">
-								<Skeleton.Avatar active size={64} />
-								<Skeleton.Input active />
-							</Space>
-						) : (
-							<Space size="large" align="center">
-								<Avatar
-									style={{
-										backgroundColor: colors.yellow,
-										color: colors.white,
-									}}
-									size={64}
-								>
-									{getInitials(result?.person_data)}
-								</Avatar>
-								<Space direction="vertical">
-									<Typography.Title level={3} style={{ marginBottom: 0 }}>
-										{getFullName(result?.person_data)}
-									</Typography.Title>
-									<Typography.Text>{result?.person_data?.username}</Typography.Text>
-								</Space>
-							</Space>
-						)}
-						<Flex wrap="wrap" gap={16}>
-							<Card
-								bordered={false}
-								className={css`
-                  width: 100%;
-                  flex-shrink: 0;
-                  @media (min-width: 768px) {
-                    max-width: 300px;
-                  }
-                `}
-							>
-								<Statistic
-									title={t("totalPoints")}
-									value={result?.total_points || 0}
-									loading={loading}
-								/>
-							</Card>
-							<Card
-								bordered={false}
-								className={css`
-                  width: 100%;
-                  flex-shrink: 0;
-                  @media (min-width: 768px) {
-                    max-width: 300px;
-                  }
-                `}
-							>
-								<Statistic title={t("rank")} value={result?.rank} loading={loading} />
-							</Card>
-						</Flex>
-						<Row gutter={16}>
-							<Col xs={24} lg={12} style={{ paddingBottom: 24 }}>
-								<Card bordered={false} title={t("pointsPerDay")} loading={loading}>
-									<MemberScorePerDayChart data={result?.days} />
-								</Card>
-							</Col>
-							<Col xs={24} lg={12} style={{ paddingBottom: 24 }}>
-								<Card bordered={false} title={t("scorePerCategory")} loading={loading}>
-									<MemberScorePerCategoryChart data={result?.scores} />
-								</Card>
-							</Col>
-							<Col span={24}>
-								<Card bordered={false} title={t("dailySubmissionsPopup.title")} loading={loading}>
-									<DailyUserSubmissions userId={result?.person_data?.id} onUpdated={reload} />
-								</Card>
-							</Col>
-						</Row>
-					</Flex>
-				) : (
-					<Empty
-						image={Empty.PRESENTED_IMAGE_SIMPLE}
-						description="Select a person to see results"
+		<div className="flex flex-col gap-4 h-full">
+			{/* Side filters */}
+			<div className="w-full max-w-[350px]">
+				<div className="flex flex-col gap-2">
+					<Label>{t("selectMember")}</Label>
+					<MembersSelect
+						placeholder={t("selectMember")}
+						role={Role.MEMBER}
+						value={userId ?? undefined}
+						onValueChange={handleUserChange}
 					/>
+				</div>
+			</div>
+
+			{/* Main content */}
+			<div className="flex-1 min-h-[500px] bg-muted/50 p-4 md:p-8 -mx-3.5 md:mx-0 md:rounded-2xl border border-background relative overflow-hidden">
+				{result || loading ? (
+					<div className="flex flex-col gap-8">
+						{/* User header */}
+						{loading ? (
+							<div className="flex items-center gap-4">
+								<Skeleton className="h-16 w-16 rounded-full" />
+								<div className="flex flex-col gap-2">
+									<Skeleton className="h-6 w-40" />
+									<Skeleton className="h-4 w-24" />
+								</div>
+							</div>
+						) : (
+							<div className="flex items-center gap-4">
+								<Avatar className="h-16 w-16 bg-yellow-400 text-white">
+									<AvatarFallback className="bg-yellow-400 text-white text-xl">
+										{getInitials(result?.person_data)}
+									</AvatarFallback>
+								</Avatar>
+								<div className="flex flex-col">
+									<h3 className="text-2xl font-semibold">{getFullName(result?.person_data)}</h3>
+									<span className="text-muted-foreground">{result?.person_data?.username}</span>
+								</div>
+							</div>
+						)}
+
+						{/* Stats cards */}
+						<div className="flex flex-wrap gap-4">
+							<Card className="w-full md:max-w-[300px] shrink-0 border-none">
+								<CardHeader className="pb-2">
+									<CardTitle className="text-sm font-normal text-muted-foreground">
+										{t("totalPoints")}
+									</CardTitle>
+								</CardHeader>
+								<CardContent>
+									{loading ? (
+										<Skeleton className="h-8 w-20" />
+									) : (
+										<p className="text-3xl font-bold">{result?.total_points || 0}</p>
+									)}
+								</CardContent>
+							</Card>
+							<Card className="w-full md:max-w-[300px] shrink-0 border-none">
+								<CardHeader className="pb-2">
+									<CardTitle className="text-sm font-normal text-muted-foreground">
+										{t("rank")}
+									</CardTitle>
+								</CardHeader>
+								<CardContent>
+									{loading ? (
+										<Skeleton className="h-8 w-12" />
+									) : (
+										<p className="text-3xl font-bold">{result?.rank}</p>
+									)}
+								</CardContent>
+							</Card>
+						</div>
+
+						{/* Charts row */}
+						<div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+							<Card className="border-none">
+								<CardHeader>
+									<CardTitle className="text-base">{t("pointsPerDay")}</CardTitle>
+								</CardHeader>
+								<CardContent>
+									{loading ? (
+										<Skeleton className="h-[250px] w-full" />
+									) : (
+										<MemberScorePerDayChart data={result?.days} />
+									)}
+								</CardContent>
+							</Card>
+							<Card className="border-none">
+								<CardHeader>
+									<CardTitle className="text-base">{t("scorePerCategory")}</CardTitle>
+								</CardHeader>
+								<CardContent>
+									{loading ? (
+										<Skeleton className="h-[250px] w-full" />
+									) : (
+										<MemberScorePerCategoryChart data={result?.scores} />
+									)}
+								</CardContent>
+							</Card>
+						</div>
+
+						{/* Daily submissions */}
+						<Card className="border-none">
+							<CardHeader>
+								<CardTitle className="text-base">{t("dailySubmissionsPopup.title")}</CardTitle>
+							</CardHeader>
+							<CardContent>
+								{loading ? (
+									<Skeleton className="h-[200px] w-full" />
+								) : (
+									<DailyUserSubmissions userId={result?.person_data?.id} onUpdated={reload} />
+								)}
+							</CardContent>
+						</Card>
+					</div>
+				) : (
+					<Empty description="Select a person to see results" className="mt-24" />
 				)}
 			</div>
-		</StyledMembersResultsWrapper>
+		</div>
 	);
 };

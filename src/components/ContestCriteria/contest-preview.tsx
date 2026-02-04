@@ -1,8 +1,7 @@
-import { css } from "@emotion/css";
-import { Empty, Flex, Form } from "antd";
 import { AnimatePresence, motion } from "framer-motion";
 import type React from "react";
 import { useTranslation } from "react-i18next";
+import { Empty } from "@/components/ui/empty";
 import { useContestCriteria } from "./criteria/use-contest-criteria";
 import { CriterionField } from "./criterion-field";
 import { useContestSections } from "./sections/use-contest-sections";
@@ -13,25 +12,8 @@ export const ContestPreview: React.FC = () => {
 	const { criteriaItems } = useContestCriteria();
 
 	return (
-		<Flex
-			vertical
-			gap="small"
-			className={css`
-        max-width: 350px;
-        width: 100%;
-        background: #fff;
-        border-radius: 4px;
-        margin: 0 auto;
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
-        @media (min-width: 992px) {
-          height: 600px;
-          overflow-y: auto;
-        }
-      `}
-		>
-			{sections.length === 0 && (
-				<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={t("no-sections")} />
-			)}
+		<div className="flex flex-col gap-2 max-w-[350px] w-full bg-white rounded mx-auto shadow-sm lg:h-[600px] lg:overflow-y-auto">
+			{sections.length === 0 && <Empty description={t("no-sections")} />}
 			<AnimatePresence>
 				{sections.map((section) => {
 					const sectionCriteria = criteriaItems.filter(
@@ -45,74 +27,31 @@ export const ContestPreview: React.FC = () => {
 							animate={{ opacity: 1, y: 0 }}
 							exit={{ opacity: 0, y: -20 }}
 						>
-							<Form
-								layout="vertical"
-								className={css`
-                  padding: 16px;
-                  border-bottom: 3px solid #eee;
-                `}
-							>
-								<div
-									className={css`
-                    font-weight: bold;
-                    font-size: 18px;
-                    line-height: 24px;
-                    margin-bottom: 16px;
-                  `}
-								>
-									{section.label}
-								</div>
-								{sectionCriteria.length === 0 && (
-									<Empty
-										image={Empty.PRESENTED_IMAGE_SIMPLE}
-										description={t("no-criterias-added")}
-									/>
-								)}
+							<div className="p-4 border-b-[3px] border-muted">
+								<div className="font-bold text-lg leading-6 mb-4">{section.label}</div>
+								{sectionCriteria.length === 0 && <Empty description={t("no-criterias-added")} />}
 								{sectionCriteria.map((c) => (
-									<Form.Item
-										className={css`
-                      margin: 4px -6px;
-                      padding: 16px 6px;
-                      border-radius: 4px;
-                      border-bottom: 1px solid #f5f5f5;
-
-                      &:last-child {
-                        border-bottom: none;
-                      }
-
-                      .ant-form-item-label label {
-                        width: 100%;
-                        justify-content: space-between;
-                        font-weight: 600;
-
-                        &:after {
-                          content: none;
-                        }
-                      }
-                    `}
-										label={
-											<>
-												<span>{c.label}</span>
-												<i
-													className={css`
-                            color: #aaa;
-                          `}
-												>
-													({t("points", { count: (c as any).points })})
-												</i>
-											</>
-										}
+									<div
 										key={c.id}
-										extra={c.description}
+										className="mx-[-6px] p-4 px-1.5 rounded border-b border-muted last:border-b-0"
 									>
+										<div className="flex justify-between items-center mb-2">
+											<span className="font-semibold">{c.label}</span>
+											<span className="text-muted-foreground italic text-sm">
+												({t("points", { count: (c as any).points })})
+											</span>
+										</div>
+										{c.description && (
+											<p className="text-sm text-muted-foreground mb-2">{c.description}</p>
+										)}
 										<CriterionField criterion={c as any} />
-									</Form.Item>
+									</div>
 								))}
-							</Form>
+							</div>
 						</motion.div>
 					);
 				})}
 			</AnimatePresence>
-		</Flex>
+		</div>
 	);
 };
