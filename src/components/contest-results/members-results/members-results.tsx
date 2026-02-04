@@ -1,6 +1,11 @@
 import type React from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Empty } from "@/components/ui/empty";
+import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useMemberResults } from "../../../services/contest-results/queries";
 import { Role } from "../../../util/roles";
 import { getFullName, getInitials } from "../../../util/user-utils";
@@ -8,11 +13,6 @@ import { DailyUserSubmissions } from "./daily-user-submissions";
 import { MemberScorePerCategoryChart } from "./member-score-per-category-chart";
 import { MemberScorePerDayChart } from "./member-score-per-day-chart";
 import { MembersSelect } from "./members-select";
-import { Empty } from "@/components/ui/empty";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export const MembersResults: React.FC = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
@@ -25,8 +25,10 @@ export const MembersResults: React.FC = () => {
 		await refetch();
 	};
 
-	const handleUserChange = (value: string): void => {
-		setSearchParams(new URLSearchParams({ userId: value }));
+	const handleUserChange = (value: string | null): void => {
+		if (value) {
+			setSearchParams(new URLSearchParams({ userId: value }));
+		}
 	};
 
 	return (
@@ -65,12 +67,8 @@ export const MembersResults: React.FC = () => {
 									</AvatarFallback>
 								</Avatar>
 								<div className="flex flex-col">
-									<h3 className="text-2xl font-semibold">
-										{getFullName(result?.person_data)}
-									</h3>
-									<span className="text-muted-foreground">
-										{result?.person_data?.username}
-									</span>
+									<h3 className="text-2xl font-semibold">{getFullName(result?.person_data)}</h3>
+									<span className="text-muted-foreground">{result?.person_data?.username}</span>
 								</div>
 							</div>
 						)}
@@ -138,9 +136,7 @@ export const MembersResults: React.FC = () => {
 						{/* Daily submissions */}
 						<Card className="border-none">
 							<CardHeader>
-								<CardTitle className="text-base">
-									{t("dailySubmissionsPopup.title")}
-								</CardTitle>
+								<CardTitle className="text-base">{t("dailySubmissionsPopup.title")}</CardTitle>
 							</CardHeader>
 							<CardContent>
 								{loading ? (
@@ -152,10 +148,7 @@ export const MembersResults: React.FC = () => {
 						</Card>
 					</div>
 				) : (
-					<Empty
-						description="Select a person to see results"
-						className="mt-24"
-					/>
+					<Empty description="Select a person to see results" className="mt-24" />
 				)}
 			</div>
 		</div>

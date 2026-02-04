@@ -1,13 +1,13 @@
 import type React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Spinner } from "@/components/ui/spinner";
+import { cn } from "@/lib/utils";
 import SeeMore from "../../../assets/icons/Home/SeeMore.svg";
 import type { ContestPerson, LeaderboardEntry } from "../../../types";
 import { getFullName, getInitials } from "../../../util/user-utils";
 import NumberAndAbbreviationOfNames from "../../shared/NumberAndAbbreviationOfNames";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Spinner } from "@/components/ui/spinner";
-import { cn } from "@/lib/utils";
 
 interface TopRanksProps {
 	topMembers: LeaderboardEntry[];
@@ -83,45 +83,45 @@ function TopRanks({
 					{/* Top 3 ranks content */}
 					<div className="flex flex-row items-center p-6 gap-6 w-full bg-[#fbf9f7] rounded-3xl justify-start flex-1 max-[500px]:p-[1rem_0.75rem] max-[500px]:gap-[0.125rem] max-[500px]:justify-center">
 						{!topMembersLoading ? (
-							<>
-								{(topMembers?.length ?? 0) > 0 ? (
-									<div className="flex flex-row gap-4 w-full p-0 justify-start max-[1400px]:flex-col">
-										{(topMembers ?? []).map((topMember, i) => (
-											<Link
-												to={`/dashboard/results/members?userId=${topMember.id}`}
-												key={i}
+							(topMembers?.length ?? 0) > 0 ? (
+								<div className="flex flex-row gap-4 w-full p-0 justify-start max-[1400px]:flex-col">
+									{(topMembers ?? []).map((topMember, i) => (
+										<Link
+											to={`/dashboard/results/members?userId=${topMember.id}`}
+											key={i}
+											className={cn(
+												"flex flex-row items-center py-[10px] px-4 gap-2 rounded-[14px] bg-transparent transition-all text-[#444] hover:bg-white hover:text-black no-underline",
+												"max-[1400px]:mt-[0.3125rem]",
+											)}
+										>
+											<Avatar
 												className={cn(
-													"flex flex-row items-center py-[10px] px-4 gap-2 rounded-[14px] bg-transparent transition-all text-[#444] hover:bg-white hover:text-black no-underline",
-													"max-[1400px]:mt-[0.3125rem]"
-												)}
-											>
-												<Avatar className={cn(
 													"h-10 w-10 rounded-xl",
 													i === 0 && "bg-[#fb6d3b] text-white",
 													i === 1 && "bg-[#fb6d3b]/60",
-													i === 2 && "bg-[#fb6d3b]/25"
-												)}>
-													<AvatarFallback className={cn(
+													i === 2 && "bg-[#fb6d3b]/25",
+												)}
+											>
+												<AvatarFallback
+													className={cn(
 														"rounded-xl text-sm font-bold",
 														i === 0 && "bg-[#fb6d3b] text-white",
 														i === 1 && "bg-[#fb6d3b]/60",
-														i === 2 && "bg-[#fb6d3b]/25"
-													)}>
-														{getInitials(topMember.person_info)}
-													</AvatarFallback>
-												</Avatar>
-												<div className="font-bold text-base leading-5">
-													{getFullName(topMember.person_info)}
-												</div>
-											</Link>
-										))}
-									</div>
-								) : (
-									<div className="text-center italic font-normal text-[#a79f97] w-full">
-										No data
-									</div>
-								)}
-							</>
+														i === 2 && "bg-[#fb6d3b]/25",
+													)}
+												>
+													{getInitials(topMember.person_info)}
+												</AvatarFallback>
+											</Avatar>
+											<div className="font-bold text-base leading-5">
+												{getFullName(topMember.person_info)}
+											</div>
+										</Link>
+									))}
+								</div>
+							) : (
+								<div className="text-center italic font-normal text-[#a79f97] w-full">No data</div>
+							)
 						) : (
 							<Spinner />
 						)}

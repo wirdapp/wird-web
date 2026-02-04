@@ -38,28 +38,40 @@ export function useContestCriteria({
 		return await ContestCriteriaService.getById({ id });
 	}, []);
 
-	const add = useCallback(async (criterion: CriterionCreateData): Promise<void> => {
-		await addCriteriaMutation.mutateAsync(criterion);
-	}, [addCriteriaMutation]);
+	const add = useCallback(
+		async (criterion: CriterionCreateData): Promise<void> => {
+			await addCriteriaMutation.mutateAsync(criterion);
+		},
+		[addCriteriaMutation],
+	);
 
-	const update = useCallback(async (id: string, criterion: CriterionUpdateData): Promise<void> => {
-		await updateCriteriaMutation.mutateAsync({ id, criterion });
-	}, [updateCriteriaMutation]);
+	const update = useCallback(
+		async (id: string, criterion: CriterionUpdateData): Promise<void> => {
+			await updateCriteriaMutation.mutateAsync({ id, criterion });
+		},
+		[updateCriteriaMutation],
+	);
 
-	const remove = useCallback(async (id: string): Promise<void> => {
-		await deleteCriteriaMutation.mutateAsync(id);
-	}, [deleteCriteriaMutation]);
+	const remove = useCallback(
+		async (id: string): Promise<void> => {
+			await deleteCriteriaMutation.mutateAsync(id);
+		},
+		[deleteCriteriaMutation],
+	);
 
-	const updateOrder = useCallback(async (newCriteriaItems: Criterion[]): Promise<Criterion[]> => {
-		const newCriteriaItemsWithPositions = criteria.items.map((criterion) => {
-			const newIndex = newCriteriaItems.findIndex((c) => c.id === criterion.id);
-			return {
-				...criterion,
-				order_in_section: newIndex !== -1 ? newIndex : criterion.order_in_section,
-			};
-		});
-		return await updateCriteriaOrderMutation.mutateAsync(newCriteriaItemsWithPositions);
-	}, [criteria.items, updateCriteriaOrderMutation]);
+	const updateOrder = useCallback(
+		async (newCriteriaItems: Criterion[]): Promise<Criterion[]> => {
+			const newCriteriaItemsWithPositions = criteria.items.map((criterion) => {
+				const newIndex = newCriteriaItems.findIndex((c) => c.id === criterion.id);
+				return {
+					...criterion,
+					order_in_section: newIndex !== -1 ? newIndex : criterion.order_in_section,
+				};
+			});
+			return await updateCriteriaOrderMutation.mutateAsync(newCriteriaItemsWithPositions);
+		},
+		[criteria.items, updateCriteriaOrderMutation],
+	);
 
 	const criteriaItems = useMemo(() => {
 		if (!criteria.items) return [];
@@ -70,13 +82,16 @@ export function useContestCriteria({
 		return items.sort((a, b) => a.order_in_section - b.order_in_section);
 	}, [criteria.items, sectionId]);
 
-	const actions = useMemo(() => ({
-		getById,
-		add,
-		update,
-		remove,
-		updateOrder,
-	}), [getById, add, update, remove, updateOrder]);
+	const actions = useMemo(
+		() => ({
+			getById,
+			add,
+			update,
+			remove,
+			updateOrder,
+		}),
+		[getById, add, update, remove, updateOrder],
+	);
 
 	return {
 		criteriaItems,

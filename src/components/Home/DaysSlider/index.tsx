@@ -11,9 +11,7 @@ function DaysSlider(): React.ReactElement {
 	const { t } = useTranslation();
 	return (
 		<div className="mx-auto mt-12 w-full rounded-3xl max-w-[59.375rem]">
-			<div className="font-bold text-2xl leading-[1.8125rem] text-black">
-				{t("ongingContst")}
-			</div>
+			<div className="font-bold text-2xl leading-[1.8125rem] text-black">{t("ongingContst")}</div>
 
 			<div className="flex items-center w-auto justify-between">
 				{/* Left arrow */}
@@ -31,7 +29,10 @@ function DaysSlider(): React.ReactElement {
 						onSwiper={(swiper: SwiperType) => console.log(swiper)}
 					>
 						<SwiperSlide style={{ width: "auto" }}>
-							<button className="flex mx-auto flex-col items-center p-[1.125rem] gap-[0.375rem] w-[7.125rem] h-[5.625rem] bg-transparent rounded-xl focus:bg-white focus:shadow-[0rem_0.75rem_1.5rem_rgba(167,159,151,0.24)]">
+							<button
+								type="button"
+								className="flex mx-auto flex-col items-center p-[1.125rem] gap-[0.375rem] w-[7.125rem] h-[5.625rem] bg-transparent rounded-xl focus:bg-white focus:shadow-[0rem_0.75rem_1.5rem_rgba(167,159,151,0.24)]"
+							>
 								<div className="flex w-5 h-[1.8125rem] font-bold text-2xl leading-[1.8125rem] text-center text-black">
 									12
 								</div>
@@ -42,7 +43,10 @@ function DaysSlider(): React.ReactElement {
 						</SwiperSlide>
 
 						<SwiperSlide style={{ width: "auto" }}>
-							<button className="flex mx-auto flex-col items-center p-[1.125rem] gap-[0.375rem] w-[7.125rem] h-[5.625rem] bg-transparent rounded-xl focus:bg-white focus:shadow-[0rem_0.75rem_1.5rem_rgba(167,159,151,0.24)]">
+							<button
+								type="button"
+								className="flex mx-auto flex-col items-center p-[1.125rem] gap-[0.375rem] w-[7.125rem] h-[5.625rem] bg-transparent rounded-xl focus:bg-white focus:shadow-[0rem_0.75rem_1.5rem_rgba(167,159,151,0.24)]"
+							>
 								<div className="flex w-5 h-[1.8125rem] font-bold text-2xl leading-[1.8125rem] text-center text-black">
 									13
 								</div>
@@ -53,7 +57,10 @@ function DaysSlider(): React.ReactElement {
 						</SwiperSlide>
 
 						<SwiperSlide style={{ width: "auto" }}>
-							<button className="flex mx-auto flex-col items-center p-[1.125rem] gap-[0.375rem] w-[7.125rem] h-[5.625rem] bg-transparent rounded-xl focus:bg-white focus:shadow-[0rem_0.75rem_1.5rem_rgba(167,159,151,0.24)]">
+							<button
+								type="button"
+								className="flex mx-auto flex-col items-center p-[1.125rem] gap-[0.375rem] w-[7.125rem] h-[5.625rem] bg-transparent rounded-xl focus:bg-white focus:shadow-[0rem_0.75rem_1.5rem_rgba(167,159,151,0.24)]"
+							>
 								<div className="flex flex-row items-center p-0 gap-[0.375rem] w-[2.6875rem] h-[1.8125rem]">
 									<div className="flex w-5 h-[1.8125rem] font-bold text-2xl leading-[1.8125rem] text-center text-black">
 										14
@@ -67,7 +74,10 @@ function DaysSlider(): React.ReactElement {
 						</SwiperSlide>
 
 						<SwiperSlide style={{ width: "auto" }}>
-							<button className="flex flex-col items-center p-[1.125rem] gap-[0.375rem] w-[7.125rem] h-[5.625rem] bg-transparent opacity-[0.24] rounded-xl">
+							<button
+								type="button"
+								className="flex flex-col items-center p-[1.125rem] gap-[0.375rem] w-[7.125rem] h-[5.625rem] bg-transparent opacity-[0.24] rounded-xl"
+							>
 								<div className="w-[1.5625rem] h-[1.8125rem] font-bold text-2xl leading-[1.8125rem] text-center text-black">
 									15
 								</div>
@@ -78,7 +88,10 @@ function DaysSlider(): React.ReactElement {
 						</SwiperSlide>
 
 						<SwiperSlide style={{ width: "auto" }}>
-							<button className="flex flex-col items-center p-[1.125rem] gap-[0.375rem] w-[7.125rem] h-[5.625rem] bg-transparent opacity-[0.24] rounded-xl">
+							<button
+								type="button"
+								className="flex flex-col items-center p-[1.125rem] gap-[0.375rem] w-[7.125rem] h-[5.625rem] bg-transparent opacity-[0.24] rounded-xl"
+							>
 								<div className="w-[1.5625rem] h-[1.8125rem] font-bold text-2xl leading-[1.8125rem] text-center text-black">
 									16
 								</div>
@@ -89,7 +102,10 @@ function DaysSlider(): React.ReactElement {
 						</SwiperSlide>
 
 						<SwiperSlide style={{ width: "auto" }}>
-							<button className="flex flex-col items-center p-[1.125rem] gap-[0.375rem] w-[7.125rem] h-[5.625rem] bg-transparent opacity-[0.24] rounded-xl">
+							<button
+								type="button"
+								className="flex flex-col items-center p-[1.125rem] gap-[0.375rem] w-[7.125rem] h-[5.625rem] bg-transparent opacity-[0.24] rounded-xl"
+							>
 								<div className="w-[1.5625rem] h-[1.8125rem] font-bold text-2xl leading-[1.8125rem] text-center text-black">
 									17
 								</div>
@@ -100,7 +116,10 @@ function DaysSlider(): React.ReactElement {
 						</SwiperSlide>
 
 						<SwiperSlide style={{ width: "auto" }}>
-							<button className="flex flex-col items-center p-[1.125rem] gap-[0.375rem] w-[7.125rem] h-[5.625rem] bg-transparent opacity-[0.24] rounded-xl">
+							<button
+								type="button"
+								className="flex flex-col items-center p-[1.125rem] gap-[0.375rem] w-[7.125rem] h-[5.625rem] bg-transparent opacity-[0.24] rounded-xl"
+							>
 								<div className="w-[1.5625rem] h-[1.8125rem] font-bold text-2xl leading-[1.8125rem] text-center text-black">
 									18
 								</div>
@@ -111,7 +130,10 @@ function DaysSlider(): React.ReactElement {
 						</SwiperSlide>
 
 						<SwiperSlide style={{ width: "auto" }}>
-							<button className="flex flex-col items-center p-[1.125rem] gap-[0.375rem] w-[7.125rem] h-[5.625rem] bg-transparent opacity-[0.24] rounded-xl">
+							<button
+								type="button"
+								className="flex flex-col items-center p-[1.125rem] gap-[0.375rem] w-[7.125rem] h-[5.625rem] bg-transparent opacity-[0.24] rounded-xl"
+							>
 								<div className="w-[1.5625rem] h-[1.8125rem] font-bold text-2xl leading-[1.8125rem] text-center text-black">
 									19
 								</div>

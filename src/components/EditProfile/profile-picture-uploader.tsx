@@ -3,16 +3,11 @@ import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { useDashboardData } from "../../util/routes-data";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Spinner } from "@/components/ui/spinner";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { useDashboardData } from "../../util/routes-data";
 import type { UpdateUserInfoValues } from "./index";
 
 interface ProfilePictureUploaderProps {
@@ -68,7 +63,7 @@ export const ProfilePictureUploader: React.FC<ProfilePictureUploaderProps> = ({ 
 							"relative rounded-full overflow-hidden cursor-pointer",
 							"w-[100px] h-[100px]",
 							"border-2 border-dashed border-input hover:border-primary/50",
-							"transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+							"transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
 						)}
 					>
 						<input
@@ -104,9 +99,7 @@ export const ProfilePictureUploader: React.FC<ProfilePictureUploaderProps> = ({ 
 						)}
 					</button>
 				</TooltipTrigger>
-				<TooltipContent side="bottom">
-					{t("change-profile-photo")}
-				</TooltipContent>
+				<TooltipContent side="bottom">{t("change-profile-photo")}</TooltipContent>
 			</Tooltip>
 		</TooltipProvider>
 	);

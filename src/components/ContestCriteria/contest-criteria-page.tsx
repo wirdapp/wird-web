@@ -1,12 +1,12 @@
 import type React from "react";
 import { useTranslation } from "react-i18next";
+import { Result } from "@/components/ui/result";
 import { AnimatedPage } from "../../ui/animated-page";
 import { isAtLeastSuperAdmin } from "../../util/roles";
 import { useDashboardData } from "../../util/routes-data";
 import { ContestCriteriaProvider } from "./contest-criteria-context";
 import { ContestPreview } from "./contest-preview";
 import { SectionsList } from "./sections/sections-list";
-import { Result } from "@/components/ui/result";
 
 export function ContestCriteria(): React.ReactElement {
 	const { t } = useTranslation();

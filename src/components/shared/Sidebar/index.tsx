@@ -8,9 +8,9 @@ import { ReactComponent as WirdLogo } from "assets/icons/Shared/wirdLogo.svg";
 import { ReactComponent as ParticipantsIcon } from "assets/icons/students.svg";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
+import { cn } from "@/lib/utils";
 import { isAtLeastSuperAdmin } from "../../../util/roles";
 import { useDashboardData } from "../../../util/routes-data";
-import { cn } from "@/lib/utils";
 
 function Sidebar() {
 	const { currentUser } = useDashboardData();
@@ -23,7 +23,7 @@ function Sidebar() {
 		"hover:bg-brand-red-light hover:text-black",
 		"focus:bg-brand-red-light focus:text-black",
 		"[&.active]:bg-brand-red-light [&.active]:text-black",
-		"max-lg:text-sm max-lg:w-full max-lg:justify-center"
+		"max-lg:text-sm max-lg:w-full max-lg:justify-center",
 	);
 
 	return (
@@ -38,29 +38,51 @@ function Sidebar() {
 						<HomeIcon />
 						<span className="cursor-pointer p-0 border-none w-full">{t("home-page")}</span>
 					</NavLink>
-					<NavLink to="/dashboard/competition" title={t("contest-information")} className={menuLinkClasses}>
+					<NavLink
+						to="/dashboard/competition"
+						title={t("contest-information")}
+						className={menuLinkClasses}
+					>
 						<CompInfoIcon />
-						<span className="cursor-pointer p-0 border-none w-full">{t("contest-information")}</span>
+						<span className="cursor-pointer p-0 border-none w-full">
+							{t("contest-information")}
+						</span>
 					</NavLink>
 					<NavLink to="/dashboard/groups" title={t("groups-page")} className={menuLinkClasses}>
 						<GroupsIcon />
 						<span className="cursor-pointer p-0 border-none w-full">{t("groups-page")}</span>
 					</NavLink>
 
-					<NavLink to="/dashboard/results/overview" title={t("results-page")} className={menuLinkClasses}>
+					<NavLink
+						to="/dashboard/results/overview"
+						title={t("results-page")}
+						className={menuLinkClasses}
+					>
 						<ResultsIcon />
 						<span className="cursor-pointer p-0 border-none w-full">{t("results-page")}</span>
 					</NavLink>
-					<NavLink to="/dashboard/leaderboard" title={t("leaders-board")} className={menuLinkClasses}>
+					<NavLink
+						to="/dashboard/leaderboard"
+						title={t("leaders-board")}
+						className={menuLinkClasses}
+					>
 						<LeaderBoard />
 						<span className="cursor-pointer p-0 border-none w-full">{t("leaders-board")}</span>
 					</NavLink>
-					<NavLink to="/dashboard/participants" title={t("participants")} className={menuLinkClasses}>
+					<NavLink
+						to="/dashboard/participants"
+						title={t("participants")}
+						className={menuLinkClasses}
+					>
 						<ParticipantsIcon />
 						<span className="cursor-pointer p-0 border-none w-full">{t("participants")}</span>
 					</NavLink>
 					{isSuperAdmin && (
-						<NavLink to="/dashboard/contest-criteria" title={t("criterias")} className={menuLinkClasses}>
+						<NavLink
+							to="/dashboard/contest-criteria"
+							title={t("criterias")}
+							className={menuLinkClasses}
+						>
 							<CriteriaIcon />
 							<span className="cursor-pointer p-0 border-none w-full">{t("criterias")}</span>
 						</NavLink>

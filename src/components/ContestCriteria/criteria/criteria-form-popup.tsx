@@ -1,14 +1,9 @@
 import { CheckIcon } from "@heroicons/react/24/outline";
 import React, { useEffect, useRef } from "react";
-import { useForm, FormProvider } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { FieldTypes } from "../../../services/contest-criteria/consts";
-import type { Section, UUID } from "../../../types";
-import { CriteriaAdvancedFields } from "./criteria-advanced-fields";
-import { CriteriaBasicFields } from "./criteria-basic-fields";
-import { CriteriaTypeFields } from "./criteria-type-fields";
-import { useContestCriteria } from "./use-contest-criteria";
+import { Button } from "@/components/ui/button";
 import {
 	Dialog,
 	DialogContent,
@@ -16,10 +11,15 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Spinner } from "@/components/ui/spinner";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
+import { FieldTypes } from "../../../services/contest-criteria/consts";
+import type { Section, UUID } from "../../../types";
+import { CriteriaAdvancedFields } from "./criteria-advanced-fields";
+import { CriteriaBasicFields } from "./criteria-basic-fields";
+import { CriteriaTypeFields } from "./criteria-type-fields";
+import { useContestCriteria } from "./use-contest-criteria";
 
 interface CriteriaFormPopupProps {
 	criterionId: UUID | null;
@@ -113,7 +113,7 @@ export const CriteriaFormPopup: React.FC<CriteriaFormPopupProps> = ({
 				unchecked_label: t("no"),
 			});
 		}
-	}, [open, criterionId]);
+	}, [open, criterionId, t]);
 
 	const handleFormSubmit = async (values: CriterionFormValues): Promise<void> => {
 		setSubmitting(true);
@@ -159,9 +159,7 @@ export const CriteriaFormPopup: React.FC<CriteriaFormPopupProps> = ({
 		<Dialog open={open} onOpenChange={(isOpen) => !isOpen && handleClose()}>
 			<DialogContent className="max-w-[600px]">
 				<DialogHeader>
-					<DialogTitle>
-						{isEdit ? t("update-criteria") : t("add-criteria")}
-					</DialogTitle>
+					<DialogTitle>{isEdit ? t("update-criteria") : t("add-criteria")}</DialogTitle>
 				</DialogHeader>
 				<div className="relative">
 					{loading && (
@@ -199,23 +197,11 @@ export const CriteriaFormPopup: React.FC<CriteriaFormPopupProps> = ({
 								</div>
 							</Tabs>
 							<DialogFooter>
-								<Button
-									type="button"
-									variant="outline"
-									onClick={handleClose}
-									disabled={submitting}
-								>
+								<Button type="button" variant="outline" onClick={handleClose} disabled={submitting}>
 									{t("cancel")}
 								</Button>
-								<Button
-									type="submit"
-									disabled={loading || submitting}
-								>
-									{submitting ? (
-										<Spinner size="sm" />
-									) : (
-										<CheckIcon className="h-4 w-4" />
-									)}
+								<Button type="submit" disabled={loading || submitting}>
+									{submitting ? <Spinner size="sm" /> : <CheckIcon className="h-4 w-4" />}
 									{isEdit ? t("update") : t("add")}
 								</Button>
 							</DialogFooter>

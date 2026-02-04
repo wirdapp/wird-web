@@ -10,10 +10,14 @@ import {
 } from "@/components/ui/input-group";
 import { cn } from "@/lib/utils";
 
-const ComboboxAnchorContext = React.createContext<React.RefObject<HTMLElement | null> | null>(null);
+const ComboboxAnchorContext = React.createContext<React.RefObject<HTMLDivElement | null> | null>(
+	null,
+);
 
-function Combobox(props: ComboboxPrimitive.Root.Props) {
-	const anchorRef = React.useRef<HTMLElement | null>(null);
+function Combobox<Value = string, Multiple extends boolean | undefined = false>(
+	props: ComboboxPrimitive.Root.Props<Value, Multiple>,
+) {
+	const anchorRef = React.useRef<HTMLDivElement | null>(null);
 	return (
 		<ComboboxAnchorContext.Provider value={anchorRef}>
 			<ComboboxPrimitive.Root {...props} />

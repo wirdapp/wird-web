@@ -1,8 +1,5 @@
 import type React from "react";
 import { useEffect, useMemo, useState } from "react";
-import { MembersService } from "../../../services/members/members.service";
-import type { ContestPerson, Role } from "../../../types";
-import { getFullName } from "../../../util/user-utils";
 import {
 	Select,
 	SelectContent,
@@ -10,8 +7,11 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { cn } from "@/lib/utils";
 import { Spinner } from "@/components/ui/spinner";
+import { cn } from "@/lib/utils";
+import { MembersService } from "../../../services/members/members.service";
+import type { ContestPerson, Role } from "../../../types";
+import { getFullName } from "../../../util/user-utils";
 
 interface MemberOption {
 	value: string;
@@ -25,11 +25,14 @@ interface MembersSelectProps {
 	role?: Role;
 	valueField?: string | ValueFieldFunction;
 	excludeUsernames?: string[];
-	value?: string;
-	onValueChange?: (value: string) => void;
+	value?: string | string[];
+	onValueChange?: (value: string | null) => void;
+	onChange?: (value: string | string[]) => void;
 	placeholder?: string;
 	className?: string;
 	disabled?: boolean;
+	mode?: "multiple" | "single";
+	status?: "error" | undefined;
 }
 
 export const MembersSelect: React.FC<MembersSelectProps> = ({
@@ -38,9 +41,12 @@ export const MembersSelect: React.FC<MembersSelectProps> = ({
 	excludeUsernames,
 	value,
 	onValueChange,
+	onChange: _onChange,
 	placeholder,
 	className,
 	disabled,
+	mode: _mode,
+	status: _status,
 }) => {
 	const [members, setMembers] = useState<MemberOption[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
@@ -69,7 +75,12 @@ export const MembersSelect: React.FC<MembersSelectProps> = ({
 	);
 
 	return (
-		<Select value={value} onValueChange={onValueChange} disabled={disabled || loading} items={filteredMembers.map((m) => ({ value: m.value, label: m.label }))}>
+		<Select
+			value={Array.isArray(value) ? value[0] : value}
+			onValueChange={onValueChange}
+			disabled={disabled || loading}
+			items={filteredMembers.map((m) => ({ value: m.value, label: m.label }))}
+		>
 			<SelectTrigger className={cn("w-full", className)}>
 				{loading ? (
 					<div className="flex items-center gap-2">

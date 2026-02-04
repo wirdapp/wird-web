@@ -1,11 +1,11 @@
-import { Mail, AlertTriangle } from "lucide-react";
+import { AlertTriangle, Mail } from "lucide-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { AuthService } from "../../services/auth/auth.service";
-import { useDashboardData } from "../../util/routes-data";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { AuthService } from "../../services/auth/auth.service";
+import { useDashboardData } from "../../util/routes-data";
 
 export const EmailNotVerifiedAlert: React.FC = () => {
 	const { t } = useTranslation();

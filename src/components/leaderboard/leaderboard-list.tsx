@@ -2,12 +2,12 @@ import { ArrowLeft, ArrowRight, Crown } from "lucide-react";
 import type React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import { Empty } from "@/components/ui/empty";
+import { cn } from "@/lib/utils";
 import { ContestStatus } from "../../services/contests/utils";
 import type { LeaderboardEntry } from "../../types";
 import { useDashboardData } from "../../util/routes-data";
 import { getFullName } from "../../util/user-utils";
-import { Empty } from "@/components/ui/empty";
-import { cn } from "@/lib/utils";
 
 interface LeaderboardListProps {
 	topStudents: LeaderboardEntry[];
@@ -30,7 +30,8 @@ export const LeaderboardList: React.FC<LeaderboardListProps> = ({ topStudents })
 	return (
 		<div className="w-auto flex mx-auto gap-3 justify-center flex-col">
 			{topStudents.map((student, index) => {
-				const crownColor = index === 0 ? "text-yellow-400" : index === 1 ? "text-gray-400" : "text-amber-600";
+				const crownColor =
+					index === 0 ? "text-yellow-400" : index === 1 ? "text-gray-400" : "text-amber-600";
 
 				return (
 					<div
@@ -38,10 +39,7 @@ export const LeaderboardList: React.FC<LeaderboardListProps> = ({ topStudents })
 						className="relative flex items-center bg-wheat-warm border-2 border-white p-4 md:px-6 gap-4 max-w-[800px] mx-auto w-full rounded-2xl"
 					>
 						{index < 3 && (
-							<Crown
-								className={cn("absolute -top-2.5 -end-2.5", crownColor)}
-								size={30}
-							/>
+							<Crown className={cn("absolute -top-2.5 -end-2.5", crownColor)} size={30} />
 						)}
 						<div className="font-bold text-xs leading-7 text-white bg-brand-red w-[30px] h-[30px] text-center shrink-0 rounded-[10px] flex items-center justify-center">
 							{index + 1}

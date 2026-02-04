@@ -5,15 +5,6 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { useRemoveUserFromContest } from "../../services/members/queries";
-import type { ContestPerson } from "../../types";
-import { isAtLeastSuperAdmin, isMember, isOwner, Role } from "../../util/roles";
-import { useDashboardData } from "../../util/routes-data";
-import { getFullName, getInitials } from "../../util/user-utils";
-import ChangeRoleDropdown from "./ChangeRoleDropdown";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -25,6 +16,15 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { useRemoveUserFromContest } from "../../services/members/queries";
+import type { ContestPerson } from "../../types";
+import { isAtLeastSuperAdmin, isMember, isOwner, Role } from "../../util/roles";
+import { useDashboardData } from "../../util/routes-data";
+import { getFullName, getInitials } from "../../util/user-utils";
+import ChangeRoleDropdown from "./ChangeRoleDropdown";
 
 interface UserListItemProps {
 	student: ContestPerson;
@@ -75,9 +75,7 @@ const UserListItem: React.FC<UserListItemProps> = ({ student, onChange }) => {
 						{getFullName(student?.person_info)}
 					</span>
 					<div className="flex flex-wrap gap-2 items-center">
-						<span className="text-sm text-muted-foreground">
-							{student?.person_info?.username}
-						</span>
+						<span className="text-sm text-muted-foreground">{student?.person_info?.username}</span>
 						<Badge variant={getBadgeVariant(student?.contest_role)}>
 							{t(`role.${student?.contest_role}`)}
 						</Badge>
@@ -126,9 +124,7 @@ const UserListItem: React.FC<UserListItemProps> = ({ student, onChange }) => {
 											disabled={removeUserFromContestMutation.isPending}
 											className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
 										>
-											{removeUserFromContestMutation.isPending
-												? t("loading")
-												: t("remove")}
+											{removeUserFromContestMutation.isPending ? t("loading") : t("remove")}
 										</AlertDialogAction>
 									</AlertDialogFooter>
 								</AlertDialogContent>

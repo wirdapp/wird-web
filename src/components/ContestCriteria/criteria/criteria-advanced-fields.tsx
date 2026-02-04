@@ -2,8 +2,6 @@ import type React from "react";
 import { useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { getContestDays } from "../../../util/contest-utils";
-import { useDashboardData } from "../../../util/routes-data";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
 	Combobox,
@@ -16,12 +14,9 @@ import {
 	ComboboxList,
 	ComboboxValue,
 } from "@/components/ui/combobox";
-import {
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-} from "@/components/ui/form";
+import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { getContestDays } from "../../../util/contest-utils";
+import { useDashboardData } from "../../../util/routes-data";
 
 interface DateOption {
 	value: string;
@@ -33,8 +28,7 @@ export const CriteriaAdvancedFields: React.FC = () => {
 	const { currentContest } = useDashboardData();
 	const form = useFormContext();
 	const activateOnDates: string[] | undefined = form.watch("activate_on_dates");
-	const deactivateOnDates: string[] | undefined =
-		form.watch("deactivate_on_dates");
+	const deactivateOnDates: string[] | undefined = form.watch("deactivate_on_dates");
 
 	const { activateOnDatesOptions, deactivateOnDatesOptions } = useMemo<{
 		activateOnDatesOptions: DateOption[];
@@ -68,14 +62,9 @@ export const CriteriaAdvancedFields: React.FC = () => {
 					render={({ field }) => (
 						<FormItem className="flex items-center gap-2 space-y-0">
 							<FormControl>
-								<Checkbox
-									checked={field.value}
-									onCheckedChange={field.onChange}
-								/>
+								<Checkbox checked={field.value} onCheckedChange={field.onChange} />
 							</FormControl>
-							<FormLabel className="font-normal">
-								{t("criteria-visible")}
-							</FormLabel>
+							<FormLabel className="font-normal">{t("criteria-visible")}</FormLabel>
 						</FormItem>
 					)}
 				/>
@@ -85,14 +74,9 @@ export const CriteriaAdvancedFields: React.FC = () => {
 					render={({ field }) => (
 						<FormItem className="flex items-center gap-2 space-y-0">
 							<FormControl>
-								<Checkbox
-									checked={field.value}
-									onCheckedChange={field.onChange}
-								/>
+								<Checkbox checked={field.value} onCheckedChange={field.onChange} />
 							</FormControl>
-							<FormLabel className="font-normal">
-								{t("criteria-active")}
-							</FormLabel>
+							<FormLabel className="font-normal">{t("criteria-active")}</FormLabel>
 						</FormItem>
 					)}
 				/>
@@ -106,25 +90,23 @@ export const CriteriaAdvancedFields: React.FC = () => {
 						<FormControl>
 							<Combobox
 								items={activateOnDatesOptions}
-								itemToStringValue={(item) => item.label}
+								itemToStringValue={(item: DateOption) => item.label}
 								multiple
 								value={
 									field.value
-										? activateOnDatesOptions.filter((opt) =>
+										? activateOnDatesOptions.filter((opt: DateOption) =>
 												field.value.includes(opt.value),
 											)
 										: []
 								}
-								onValueChange={(items) => {
-									field.onChange(items.map((item) => item.value));
+								onValueChange={(items: DateOption[]) => {
+									field.onChange(items.map((item: DateOption) => item.value));
 								}}
 							>
 								<ComboboxChips className="min-h-10 text-base">
 									<ComboboxValue>
 										{(field.value || []).map((dateValue: string) => {
-											const option = activateOnDatesOptions.find(
-												(opt) => opt.value === dateValue,
-											);
+											const option = activateOnDatesOptions.find((opt) => opt.value === dateValue);
 											return option ? (
 												<ComboboxChip key={option.value} className="text-sm py-1">
 													{option.label}
@@ -158,17 +140,17 @@ export const CriteriaAdvancedFields: React.FC = () => {
 						<FormControl>
 							<Combobox
 								items={deactivateOnDatesOptions}
-								itemToStringValue={(item) => item.label}
+								itemToStringValue={(item: DateOption) => item.label}
 								multiple
 								value={
 									field.value
-										? deactivateOnDatesOptions.filter((opt) =>
+										? deactivateOnDatesOptions.filter((opt: DateOption) =>
 												field.value.includes(opt.value),
 											)
 										: []
 								}
-								onValueChange={(items) => {
-									field.onChange(items.map((item) => item.value));
+								onValueChange={(items: DateOption[]) => {
+									field.onChange(items.map((item: DateOption) => item.value));
 								}}
 							>
 								<ComboboxChips className="min-h-10 text-base">

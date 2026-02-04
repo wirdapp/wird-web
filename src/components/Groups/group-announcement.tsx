@@ -1,16 +1,13 @@
 import { TrashIcon } from "@heroicons/react/20/solid";
 import { PlusCircleIcon, PlusIcon } from "@heroicons/react/24/outline";
+import { zodResolver } from "@hookform/resolvers/zod";
 import dayjs from "dayjs";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useUpdateGroup } from "../../services/groups/queries";
-import type { Group, GroupAnnouncement as GroupAnnouncementType } from "../../types";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import {
 	Form,
 	FormControl,
@@ -19,6 +16,9 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
+import { Textarea } from "@/components/ui/textarea";
+import { useUpdateGroup } from "../../services/groups/queries";
+import type { Group, GroupAnnouncement as GroupAnnouncementType } from "../../types";
 
 interface GroupAnnouncementProps {
 	group: Group & { announcements: GroupAnnouncementType[] };
@@ -86,10 +86,7 @@ export const GroupAnnouncement: React.FC<GroupAnnouncementProps> = ({ group }) =
 		<div className="flex flex-col gap-6">
 			<div className="bg-background border rounded-lg divide-y">
 				{announcements.map((item: LegacyAnnouncement, index: number) => (
-					<div
-						key={`${item.date}-${index}`}
-						className="flex items-start justify-between p-4 gap-4"
-					>
+					<div key={`${item.date}-${index}`} className="flex items-start justify-between p-4 gap-4">
 						<div className="flex items-start gap-3 min-w-0">
 							<span className="text-muted-foreground shrink-0">{index + 1}.</span>
 							<div className="flex flex-col min-w-0">
@@ -113,9 +110,7 @@ export const GroupAnnouncement: React.FC<GroupAnnouncementProps> = ({ group }) =
 					</div>
 				))}
 				{announcements.length === 0 && (
-					<div className="p-4 text-center text-muted-foreground">
-						{t("no-announcements")}
-					</div>
+					<div className="p-4 text-center text-muted-foreground">{t("no-announcements")}</div>
 				)}
 			</div>
 			<Form {...form}>
@@ -130,20 +125,13 @@ export const GroupAnnouncement: React.FC<GroupAnnouncementProps> = ({ group }) =
 									{t("make-an-announcement")}
 								</FormLabel>
 								<FormControl>
-									<Textarea
-										placeholder={t("make-an-announcement")}
-										{...field}
-									/>
+									<Textarea placeholder={t("make-an-announcement")} {...field} />
 								</FormControl>
 								<FormMessage />
 							</FormItem>
 						)}
 					/>
-					<Button
-						type="submit"
-						size="sm"
-						disabled={!newAnnouncementText || updateGroup.isPending}
-					>
+					<Button type="submit" size="sm" disabled={!newAnnouncementText || updateGroup.isPending}>
 						{updateGroup.isPending ? (
 							<span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
 						) : (

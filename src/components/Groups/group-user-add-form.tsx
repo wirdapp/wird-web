@@ -2,14 +2,14 @@ import { PlusCircleIcon, PlusIcon } from "@heroicons/react/24/outline";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useAddGroupMember } from "../../services/groups/queries";
 import type { GroupMember } from "../../types";
 import { GroupRole } from "../../types";
 import { Role } from "../../util/roles";
 import { useDashboardData } from "../../util/routes-data";
 import { MembersSelect } from "../contest-results/members-results/members-select";
-import { Button } from "@/components/ui/button";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 interface GroupUserAddFormProps {
 	groupId: string;
@@ -117,15 +117,10 @@ export const GroupUserAddForm: React.FC<GroupUserAddFormProps> = ({
 						className="w-full"
 					/>
 					{formErrors.contest_person && (
-						<p className="text-sm text-destructive mt-1">
-							{formErrors.contest_person.join(", ")}
-						</p>
+						<p className="text-sm text-destructive mt-1">{formErrors.contest_person.join(", ")}</p>
 					)}
 				</div>
-				<Button
-					type="submit"
-					disabled={addGroupMember.isPending}
-				>
+				<Button type="submit" disabled={addGroupMember.isPending}>
 					{addGroupMember.isPending ? (
 						<span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
 					) : (

@@ -1,6 +1,6 @@
 import { createContext, type ReactNode, useContext, useEffect, useMemo } from "react";
-import { Spinner } from "@/components/ui/spinner";
 import { Navigate, useLocation } from "react-router-dom";
+import { Spinner } from "@/components/ui/spinner";
 import { useCurrentUser } from "../../services/auth/queries";
 import { destroySession, isLogged, updateSessionUserDetails } from "../../services/auth/session";
 import { useContestDetails, useContests } from "../../services/contests/queries";

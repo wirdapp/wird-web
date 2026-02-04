@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import {
 	Dialog,
 	DialogContent,
@@ -6,7 +7,6 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 
 interface ModalProps {
 	setOpenModal: (open: boolean) => void;
@@ -29,9 +29,7 @@ export default function Modal(props: ModalProps) {
 					<DialogTitle className="text-center">{props.title}</DialogTitle>
 				</DialogHeader>
 
-				<DialogDescription className="text-center text-lg py-4">
-					{props.content}
-				</DialogDescription>
+				<DialogDescription className="text-center text-lg py-4">{props.content}</DialogDescription>
 
 				<DialogFooter className="flex justify-center gap-2 sm:justify-center">
 					<Button variant="outline" onClick={handleCloseBtnChange}>

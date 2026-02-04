@@ -2,10 +2,10 @@ import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import type React from "react";
 import { useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
-import type { Criterion } from "../../../types";
-import { CriterionField } from "../../ContestCriteria/criterion-field";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import type { Criterion } from "../../../types";
+import { CriterionField } from "../../ContestCriteria/criterion-field";
 
 type AnswerValue = string | number | boolean | string[];
 
@@ -69,9 +69,9 @@ export const CriterionRecordAnswer: React.FC<CriterionRecordAnswerProps> = ({
 	const fieldName = answerField[pointRecord.resourcetype];
 	const answer = fieldName ? pointRecord[fieldName] : undefined;
 
-	const form = useForm({
+	const form = useForm<Record<string, AnswerValue>>({
 		defaultValues: {
-			[pointRecord.id]: answer,
+			[pointRecord.id]: answer as AnswerValue,
 		},
 	});
 
@@ -82,7 +82,11 @@ export const CriterionRecordAnswer: React.FC<CriterionRecordAnswerProps> = ({
 
 	useEffect(() => {
 		setPointRecord(recordFromProps);
-		form.reset({ [recordFromProps.id]: recordFromProps[answerField[recordFromProps.resourcetype] as keyof PointRecordData] });
+		form.reset({
+			[recordFromProps.id]: recordFromProps[
+				answerField[recordFromProps.resourcetype] as keyof PointRecordData
+			] as AnswerValue,
+		});
 	}, [recordFromProps, form]);
 
 	if (!criterion) return null;
@@ -100,7 +104,7 @@ export const CriterionRecordAnswer: React.FC<CriterionRecordAnswerProps> = ({
 	};
 
 	const handleReset = (): void => {
-		form.reset({ [pointRecord.id]: answer });
+		form.reset({ [pointRecord.id]: answer as AnswerValue });
 	};
 
 	const isText = pointRecord.resourcetype === "UserInputPointRecord";
@@ -127,12 +131,7 @@ export const CriterionRecordAnswer: React.FC<CriterionRecordAnswerProps> = ({
 					/>
 					{hasChanged && (
 						<div className={`flex ${isText ? "flex-col" : "flex-row"} gap-1 ms-1`}>
-							<Button
-								type="submit"
-								size="icon"
-								className="h-6 w-6"
-								disabled={submitting}
-							>
+							<Button type="submit" size="icon" className="h-6 w-6" disabled={submitting}>
 								<CheckIcon className="h-4 w-4" />
 							</Button>
 							<Button

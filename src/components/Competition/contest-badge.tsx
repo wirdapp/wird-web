@@ -30,7 +30,7 @@ export const ContestBadge: React.FC<ContestBadgeProps> = ({ status, variant = "b
 		<div
 			className={cn(
 				"inline-flex items-center justify-center rounded-xl px-2 py-1 text-xs font-bold uppercase text-white",
-				statusClasses[status]
+				statusClasses[status],
 			)}
 		>
 			{t(`contestStatus.${status}`)}

@@ -1,25 +1,11 @@
 import { TrashIcon } from "@heroicons/react/20/solid";
+import { zodResolver } from "@hookform/resolvers/zod";
 import type React from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useDeleteGroup, useUpdateGroup } from "../../services/groups/queries";
-import type { Group } from "../../types";
-import { isAtLeastSuperAdmin } from "../../util/roles";
-import { useDashboardData } from "../../util/routes-data";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -31,6 +17,20 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useDeleteGroup, useUpdateGroup } from "../../services/groups/queries";
+import type { Group } from "../../types";
+import { isAtLeastSuperAdmin } from "../../util/roles";
+import { useDashboardData } from "../../util/routes-data";
 
 interface GroupInfoProps {
 	group: Group;
@@ -95,10 +95,7 @@ export const GroupInfo: React.FC<GroupInfoProps> = ({ group }) => {
 						<FormItem>
 							<FormLabel>{t("name")}</FormLabel>
 							<FormControl>
-								<Input
-									{...field}
-									disabled={!isSuperAdmin || updateGroup.isPending}
-								/>
+								<Input {...field} disabled={!isSuperAdmin || updateGroup.isPending} />
 							</FormControl>
 							<FormMessage />
 						</FormItem>
@@ -131,9 +128,7 @@ export const GroupInfo: React.FC<GroupInfoProps> = ({ group }) => {
 							<AlertDialogContent>
 								<AlertDialogHeader>
 									<AlertDialogTitle>{t("delete-group-confirm")}</AlertDialogTitle>
-									<AlertDialogDescription>
-										{t("delete-group-confirm")}
-									</AlertDialogDescription>
+									<AlertDialogDescription>{t("delete-group-confirm")}</AlertDialogDescription>
 								</AlertDialogHeader>
 								<AlertDialogFooter>
 									<AlertDialogCancel>{t("cancel")}</AlertDialogCancel>

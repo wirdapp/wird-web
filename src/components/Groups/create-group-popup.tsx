@@ -1,19 +1,12 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import type React from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useCreateGroup } from "../../services/groups/queries";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-	Dialog,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import {
 	Form,
 	FormControl,
@@ -22,6 +15,8 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useCreateGroup } from "../../services/groups/queries";
 
 interface CreateGroupPopupProps {
 	open: boolean;

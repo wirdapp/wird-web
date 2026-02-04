@@ -44,9 +44,7 @@ const ContestMembers: React.FC = () => {
 							to="/dashboard/participants"
 							className="flex h-5 flex-row items-start gap-1.5 no-underline"
 						>
-							<span className="text-base font-normal text-brand-red">
-								{t("seeAll")}
-							</span>
+							<span className="text-base font-normal text-brand-red">{t("seeAll")}</span>
 							<img src={SeeMore} alt="" />
 						</Link>
 					</div>
@@ -70,9 +68,7 @@ const ContestMembers: React.FC = () => {
 							to="/dashboard/participants"
 							className="flex h-5 flex-row items-start gap-1.5 no-underline"
 						>
-							<span className="text-base font-normal text-brand-red">
-								{t("seeAll")}
-							</span>
+							<span className="text-base font-normal text-brand-red">{t("seeAll")}</span>
 							<img src={SeeMore} alt="" />
 						</Link>
 					</div>
@@ -96,9 +92,7 @@ const ContestMembers: React.FC = () => {
 							to="/dashboard/groups"
 							className="flex h-5 flex-row items-start gap-1.5 no-underline"
 						>
-							<span className="text-base font-normal text-brand-red">
-								{t("seeAll")}
-							</span>
+							<span className="text-base font-normal text-brand-red">{t("seeAll")}</span>
 							<img src={SeeMore} alt="" />
 						</Link>
 					</div>

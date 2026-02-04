@@ -1,7 +1,7 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -89,11 +89,7 @@ export const JoinContestPopup: React.FC<JoinContestPopupProps> = ({ visible, onC
 								<FormItem>
 									<FormLabel>{t("code-label")}</FormLabel>
 									<FormControl>
-										<Input
-											placeholder={t("code-label")}
-											disabled={submitting}
-											{...field}
-										/>
+										<Input placeholder={t("code-label")} disabled={submitting} {...field} />
 									</FormControl>
 									<FormMessage>{serverError}</FormMessage>
 								</FormItem>

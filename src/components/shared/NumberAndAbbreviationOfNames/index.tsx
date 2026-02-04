@@ -1,11 +1,7 @@
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { ContestPerson } from "../../../types";
 import { getFullName, getInitials } from "../../../util/user-utils";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipTrigger,
-} from "@/components/ui/tooltip";
 
 const avatarStyles = [
 	"bg-[#FDD561] text-black",
@@ -33,9 +29,7 @@ function NumberAndAbbreviationOfNames(props: NumberAndAbbreviationOfNamesProps) 
 								</AvatarFallback>
 							</Avatar>
 						</TooltipTrigger>
-						<TooltipContent>
-							{getFullName(user.person_info)}
-						</TooltipContent>
+						<TooltipContent>{getFullName(user.person_info)}</TooltipContent>
 					</Tooltip>
 				))}
 				{remainingCount > 0 && (

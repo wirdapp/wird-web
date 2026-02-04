@@ -1,14 +1,11 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import type { AxiosError } from "axios";
 import type React from "react";
-import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { AuthService } from "../../services/auth/auth.service";
-import type { ChangePasswordFormData } from "../../types";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { PasswordInput } from "@/components/ui/password-input";
 import {
 	Form,
 	FormControl,
@@ -17,6 +14,9 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
+import { PasswordInput } from "@/components/ui/password-input";
+import { AuthService } from "../../services/auth/auth.service";
+import type { ChangePasswordFormData } from "../../types";
 
 interface ChangePasswordFormValues {
 	new_password1: string;
@@ -66,9 +66,7 @@ export const ChangePasswordForm: React.FC = () => {
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)} className="flex-grow">
 				<fieldset className="border border-primary rounded-md p-3">
-					<legend className="text-sm text-foreground px-2 mx-1 mb-2">
-						{t("change-password")}
-					</legend>
+					<legend className="text-sm text-foreground px-2 mx-1 mb-2">{t("change-password")}</legend>
 					<div className="space-y-4">
 						<FormField
 							control={form.control}
@@ -77,10 +75,7 @@ export const ChangePasswordForm: React.FC = () => {
 								<FormItem>
 									<FormLabel>{t("new-password")}</FormLabel>
 									<FormControl>
-										<PasswordInput
-											placeholder={t("new-password")}
-											{...field}
-										/>
+										<PasswordInput placeholder={t("new-password")} {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -93,19 +88,14 @@ export const ChangePasswordForm: React.FC = () => {
 								<FormItem>
 									<FormLabel>{t("confirm-new-password")}</FormLabel>
 									<FormControl>
-										<PasswordInput
-											placeholder={t("confirm-new-password")}
-											{...field}
-										/>
+										<PasswordInput placeholder={t("confirm-new-password")} {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
 							)}
 						/>
 						<div className="flex gap-2">
-							<Button type="submit">
-								{t("save")}
-							</Button>
+							<Button type="submit">{t("save")}</Button>
 							<Button type="button" variant="ghost" onClick={handleReset}>
 								{t("cancel")}
 							</Button>

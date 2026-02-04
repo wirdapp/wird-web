@@ -1,14 +1,13 @@
 import type React from "react";
 import { useTranslation } from "react-i18next";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
 import { FieldTypes } from "../../services/contest-criteria/consts";
 import type { Criterion } from "../../types";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
-import { Checkbox } from "@/components/ui/checkbox";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
 
 interface CriterionFieldProps {
 	criterion: Criterion & {
@@ -22,6 +21,8 @@ interface CriterionFieldProps {
 		points?: number;
 		visible?: boolean;
 	};
+	value?: string | number | boolean | string[];
+	onChange?: (value: string | number | boolean | string[]) => void;
 }
 
 export const CriterionField: React.FC<CriterionFieldProps> = ({ criterion }) => {

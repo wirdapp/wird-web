@@ -1,21 +1,25 @@
-import { PlusIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { AnimatePresence, motion } from "framer-motion";
+import { MagnifyingGlassIcon, PlusIcon } from "@heroicons/react/24/outline";
+import { AnimatePresence, type MotionProps, motion } from "framer-motion";
 import type React from "react";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Button } from "@/components/ui/button";
+import { Empty } from "@/components/ui/empty";
+import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useMembers } from "../../services/members/queries";
 import type { ContestPerson } from "../../types";
+import { AnimatedPage } from "../../ui/animated-page";
 import { isAtLeastSuperAdmin, type Role } from "../../util/roles";
 import { useDashboardData } from "../../util/routes-data";
 import { debounce } from "../../util/utils";
 import { AddUserPopup } from "./add-user-popup";
 import { RolesSelect } from "./roles-select";
 import UserListItem from "./user-list-item";
-import { AnimatedPage } from "../../ui/animated-page";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Empty } from "@/components/ui/empty";
+
+const MotionDiv = motion.div as React.FC<
+	MotionProps & React.HTMLAttributes<HTMLDivElement> & { children?: React.ReactNode }
+>;
 
 interface StudentChangeResult {
 	id?: string;
@@ -72,12 +76,7 @@ export default function Students(): React.ReactElement {
 					</div>
 					<div className="flex gap-4 items-center flex-wrap">
 						<span className="text-muted-foreground">{t("show")}:</span>
-						<RolesSelect
-							showAll
-							value={role}
-							onChange={setRole}
-							className="w-full max-w-[300px]"
-						/>
+						<RolesSelect showAll value={role} onChange={setRole} className="w-full max-w-[300px]" />
 						<span className="text-sm text-muted-foreground">
 							{(!isLoading && students.length && `${t("showing")} ${students.length}`) || ""}
 						</span>
@@ -102,22 +101,17 @@ export default function Students(): React.ReactElement {
 					</form>
 					<AnimatePresence mode="wait">
 						{students.length === 0 ? (
-							<>
-								{isLoading ? (
-									<div className="flex flex-col gap-3 w-full">
-										<Skeleton className="h-24 w-full rounded-3xl" />
-										<Skeleton className="h-24 w-full rounded-3xl" />
-										<Skeleton className="h-24 w-full rounded-3xl" />
-									</div>
-								) : (
-									<Empty
-										description={t("dailySubmissionsPopup.noData")}
-										className="w-full"
-									/>
-								)}
-							</>
+							isLoading ? (
+								<div className="flex flex-col gap-3 w-full">
+									<Skeleton className="h-24 w-full rounded-3xl" />
+									<Skeleton className="h-24 w-full rounded-3xl" />
+									<Skeleton className="h-24 w-full rounded-3xl" />
+								</div>
+							) : (
+								<Empty description={t("dailySubmissionsPopup.noData")} className="w-full" />
+							)
 						) : (
-							<motion.div
+							<MotionDiv
 								initial={{ opacity: 0 }}
 								animate={{ opacity: 1 }}
 								transition={{ duration: 0.3 }}
@@ -126,7 +120,7 @@ export default function Students(): React.ReactElement {
 								{students?.map?.((student: ContestPerson, idx: number) => {
 									return <UserListItem key={idx} student={student} onChange={onStudentChange} />;
 								})}
-							</motion.div>
+							</MotionDiv>
 						)}
 					</AnimatePresence>
 				</div>

@@ -1,15 +1,9 @@
 import type React from "react";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
 
 export const CriteriaBasicFields: React.FC = () => {
 	const { t } = useTranslation();

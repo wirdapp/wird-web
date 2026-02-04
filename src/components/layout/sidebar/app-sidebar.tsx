@@ -15,11 +15,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { i18n } = useTranslation();
 
 	return (
-		<Sidebar
-			collapsible="icon"
-			side={i18n.dir() === "rtl" ? "right" : "left"}
-			{...props}
-		>
+		<Sidebar collapsible="icon" side={i18n.dir() === "rtl" ? "right" : "left"} {...props}>
 			<SidebarHeader>
 				<div className="flex justify-center py-2">
 					<WirdLogo className="h-10 w-10 shrink-0" />

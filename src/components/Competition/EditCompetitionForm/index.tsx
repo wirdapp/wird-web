@@ -1,12 +1,14 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import dayjs from "dayjs";
 import type React from "react";
-import { useMemo, useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { toast } from "sonner";
-import dayjs from "dayjs";
+import * as z from "zod";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
 	Form,
 	FormControl,
@@ -17,6 +19,7 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
 	Select,
 	SelectContent,
@@ -24,9 +27,6 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Label } from "@/components/ui/label";
 import { allCountries } from "../../../data/countries";
 import { useUpdateContest } from "../../../services/contests/queries";
 import type { Contest } from "../../../types";
@@ -55,7 +55,7 @@ const EditCompetitionForm: React.FC<EditCompetitionFormProps> = ({ contest }) =>
 		country: z.string().min(1, t("requiredField")),
 		start_date: z.string().min(1, t("requiredField")),
 		end_date: z.string().min(1, t("requiredField")),
-		days_to_record_in_past: z.coerce.number().min(1).optional(),
+		days_to_record_in_past: z.number().min(1).optional(),
 		show_standings: z.boolean().optional(),
 		readonly_mode: z.boolean().optional(),
 	});
@@ -132,10 +132,7 @@ const EditCompetitionForm: React.FC<EditCompetitionFormProps> = ({ contest }) =>
 				<h3 className="text-base font-bold">{t("contest-information")}</h3>
 
 				<Form {...form}>
-					<form
-						onSubmit={form.handleSubmit(handleUpdateContest)}
-						className="w-full space-y-4"
-					>
+					<form onSubmit={form.handleSubmit(handleUpdateContest)} className="w-full space-y-4">
 						<FormField
 							control={form.control}
 							name="name"
@@ -206,11 +203,7 @@ const EditCompetitionForm: React.FC<EditCompetitionFormProps> = ({ contest }) =>
 								<FormItem className="grid grid-cols-1 gap-2 md:grid-cols-[180px_1fr] md:items-center">
 									<FormLabel>{t("start-date")}</FormLabel>
 									<FormControl>
-										<Input
-											type="date"
-											disabled={!canEdit || updateContest.isPending}
-											{...field}
-										/>
+										<Input type="date" disabled={!canEdit || updateContest.isPending} {...field} />
 									</FormControl>
 									<FormMessage className="md:col-start-2" />
 								</FormItem>
@@ -223,11 +216,7 @@ const EditCompetitionForm: React.FC<EditCompetitionFormProps> = ({ contest }) =>
 								<FormItem className="grid grid-cols-1 gap-2 md:grid-cols-[180px_1fr] md:items-center">
 									<FormLabel>{t("end-date")}</FormLabel>
 									<FormControl>
-										<Input
-											type="date"
-											disabled={!canEdit || updateContest.isPending}
-											{...field}
-										/>
+										<Input type="date" disabled={!canEdit || updateContest.isPending} {...field} />
 									</FormControl>
 									<FormMessage className="md:col-start-2" />
 								</FormItem>
@@ -249,9 +238,7 @@ const EditCompetitionForm: React.FC<EditCompetitionFormProps> = ({ contest }) =>
 												{...field}
 												value={field.value ?? ""}
 												onChange={(e) =>
-													field.onChange(
-														e.target.value ? Number(e.target.value) : undefined
-													)
+													field.onChange(e.target.value ? Number(e.target.value) : undefined)
 												}
 											/>
 										</FormControl>
@@ -279,9 +266,7 @@ const EditCompetitionForm: React.FC<EditCompetitionFormProps> = ({ contest }) =>
 												disabled={!canEdit || updateContest.isPending}
 											/>
 										</FormControl>
-										<Label className="font-normal">
-											{t("show-leaderboard-for-students")}
-										</Label>
+										<Label className="font-normal">{t("show-leaderboard-for-students")}</Label>
 									</div>
 								</FormItem>
 							)}

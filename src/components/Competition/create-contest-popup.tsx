@@ -1,11 +1,11 @@
 import { PlusCircleIcon } from "@heroicons/react/20/solid";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { isAxiosError } from "axios";
 import React, { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { toast } from "sonner";
+import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -23,7 +23,7 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Result } from "@/components/ui/result";
 import {
 	Select,
 	SelectContent,
@@ -31,7 +31,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { Result } from "@/components/ui/result";
+import { Textarea } from "@/components/ui/textarea";
 import { allCountries } from "../../data/countries";
 import { ContestsService } from "../../services/contests/contests.service";
 import { changeCurrentContest } from "../../services/contests/utils";
@@ -242,11 +242,7 @@ export const CreateContestPopup: React.FC<CreateContestPopupProps> = ({ visible,
 									<FormItem>
 										<FormLabel>{t("start-date")}</FormLabel>
 										<FormControl>
-											<Input
-												type="date"
-												disabled={!isEmailVerified || submitting}
-												{...field}
-											/>
+											<Input type="date" disabled={!isEmailVerified || submitting} {...field} />
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -259,23 +255,14 @@ export const CreateContestPopup: React.FC<CreateContestPopupProps> = ({ visible,
 									<FormItem>
 										<FormLabel>{t("end-date")}</FormLabel>
 										<FormControl>
-											<Input
-												type="date"
-												disabled={!isEmailVerified || submitting}
-												{...field}
-											/>
+											<Input type="date" disabled={!isEmailVerified || submitting} {...field} />
 										</FormControl>
 										<FormMessage />
 									</FormItem>
 								)}
 							/>
 							<DialogFooter>
-								<Button
-									type="button"
-									variant="outline"
-									onClick={handleClose}
-									disabled={submitting}
-								>
+								<Button type="button" variant="outline" onClick={handleClose} disabled={submitting}>
 									{t("cancel")}
 								</Button>
 								<Button type="submit" disabled={!isEmailVerified || submitting}>

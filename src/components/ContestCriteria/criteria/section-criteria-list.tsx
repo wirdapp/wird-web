@@ -7,21 +7,16 @@ import { useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { Separator } from "@/components/ui/separator";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import { FieldTypes, FieldTypesIcons } from "../../../services/contest-criteria/consts";
 import type { Criterion, Section, UUID } from "../../../types";
 import { reorder } from "../../../util/contest-utils";
 import { CriteriaFormPopup } from "./criteria-form-popup";
 import { useContestCriteria } from "./use-contest-criteria";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { ConfirmDialog } from "@/components/ui/confirm-dialog";
-import { cn } from "@/lib/utils";
 
 interface SectionCriteriaListProps {
 	section: Section;
@@ -76,10 +71,7 @@ export const SectionCriteriaList: React.FC<SectionCriteriaListProps> = ({ sectio
 						<div
 							ref={provided.innerRef}
 							{...provided.droppableProps}
-							className={cn(
-								"bg-white transition-colors",
-								snapshot.isDraggingOver && "bg-muted"
-							)}
+							className={cn("bg-white transition-colors", snapshot.isDraggingOver && "bg-muted")}
 						>
 							{criteriaItems.map((item: Criterion, index: number) => {
 								const Icon =
@@ -92,25 +84,21 @@ export const SectionCriteriaList: React.FC<SectionCriteriaListProps> = ({ sectio
 												{...provided.draggableProps}
 												className={cn(
 													"flex items-center justify-between p-3 border-b last:border-b-0",
-													(item as any).archived && "opacity-50"
+													(item as any).archived && "opacity-50",
 												)}
 											>
 												<div className="flex items-center gap-3 flex-1 min-w-0">
 													<Icon className="h-6 w-6 shrink-0" />
 													<div className="flex-1 min-w-0">
 														<div className="flex items-center gap-2">
-															<span className="font-medium truncate">
-																{item.label}
-															</span>
+															<span className="font-medium truncate">{item.label}</span>
 															{!(item as any).visible && (
 																<TooltipProvider>
 																	<Tooltip>
 																		<TooltipTrigger>
 																			<EyeSlashIcon className="h-4 w-4 text-muted-foreground" />
 																		</TooltipTrigger>
-																		<TooltipContent>
-																			{t("criteria-not-visible")}
-																		</TooltipContent>
+																		<TooltipContent>{t("criteria-not-visible")}</TooltipContent>
 																	</Tooltip>
 																</TooltipProvider>
 															)}
@@ -119,13 +107,8 @@ export const SectionCriteriaList: React.FC<SectionCriteriaListProps> = ({ sectio
 															<span className="whitespace-nowrap">
 																{t("points", { count: (item as any).points })}
 															</span>
-															<Separator
-																orientation="vertical"
-																className="mx-2 h-4"
-															/>
-															<span className="truncate">
-																{item.description}
-															</span>
+															<Separator orientation="vertical" className="mx-2 h-4" />
+															<span className="truncate">{item.description}</span>
 														</div>
 													</div>
 												</div>

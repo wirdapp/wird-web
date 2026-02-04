@@ -1,13 +1,7 @@
-import { ArrowLeftRight, Check, ChevronsUpDown, Copy, LayoutGrid, PlusCircle, UserPlus } from "lucide-react";
+import { Check, ChevronsUpDown, Copy, LayoutGrid, PlusCircle, UserPlus } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { changeCurrentContest } from "../../../services/contests/utils";
-import type { ContestRaw } from "../../../types";
-import { useDashboardData } from "../../../util/routes-data";
-import { ContestBadge } from "../../Competition/contest-badge";
-import { CreateContestPopup } from "../../Competition/create-contest-popup";
-import { JoinContestPopup } from "../../Competition/join-contest-popup";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -22,6 +16,12 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "@/components/ui/sidebar";
+import { changeCurrentContest } from "../../../services/contests/utils";
+import type { ContestRaw } from "../../../types";
+import { useDashboardData } from "../../../util/routes-data";
+import { ContestBadge } from "../../Competition/contest-badge";
+import { CreateContestPopup } from "../../Competition/create-contest-popup";
+import { JoinContestPopup } from "../../Competition/join-contest-popup";
 
 export function ContestSwitcher() {
 	const { currentContest, contests } = useDashboardData();

@@ -1,12 +1,8 @@
 import type React from "react";
 import { useTranslation } from "react-i18next";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import CarouselPry from "../../../assets/Carousel/CarouselPry.svg";
 import WirdLogo from "../../../assets/Logo/WirdLogosvg.svg";
-import {
-	Carousel,
-	CarouselContent,
-	CarouselItem,
-} from "@/components/ui/carousel";
 
 export default function CarouselStatistics(): React.ReactElement {
 	const { t } = useTranslation();

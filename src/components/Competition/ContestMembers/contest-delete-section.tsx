@@ -3,6 +3,7 @@ import { ExclamationTriangleIcon } from "@heroicons/react/24/solid";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -11,7 +12,6 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ContestsService } from "../../../services/contests/contests.service";

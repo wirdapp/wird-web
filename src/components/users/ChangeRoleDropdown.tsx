@@ -1,6 +1,13 @@
 import type React from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useUpdateUserContestRole } from "../../services/members/queries";
 import type { ContestPerson } from "../../types";
 import {
@@ -14,13 +21,6 @@ import {
 	Role,
 } from "../../util/roles";
 import { useDashboardData } from "../../util/routes-data";
-import { Button } from "@/components/ui/button";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 interface ChangeRoleDropdownProps {
 	student: ContestPerson;
@@ -70,7 +70,7 @@ const ChangeRoleDropdown: React.FC<ChangeRoleDropdownProps> = ({ student, onChan
 			});
 			toast.success(t("notification.success"));
 			onChange?.(res);
-		} catch (error) {
+		} catch (_error) {
 			toast.error(t("notification.error"));
 		}
 	};
@@ -82,14 +82,9 @@ const ChangeRoleDropdown: React.FC<ChangeRoleDropdownProps> = ({ student, onChan
 					{t("change-role-to")}
 				</Button>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent
-				align={i18n.dir() === "rtl" ? "start" : "end"}
-			>
+			<DropdownMenuContent align={i18n.dir() === "rtl" ? "start" : "end"}>
 				{dropDownItems.map((item) => (
-					<DropdownMenuItem
-						key={item.key}
-						onClick={() => updateRole(item.key)}
-					>
+					<DropdownMenuItem key={item.key} onClick={() => updateRole(item.key)}>
 						{item.label}
 					</DropdownMenuItem>
 				))}

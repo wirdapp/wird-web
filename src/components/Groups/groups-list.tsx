@@ -1,8 +1,6 @@
 import type React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import type { Group } from "../../types";
-import { useIsMobile } from "@/hooks/use-mobile";
 import {
 	Select,
 	SelectContent,
@@ -10,7 +8,9 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
+import type { Group } from "../../types";
 
 interface GroupsListProps {
 	groups: Group[];
@@ -33,8 +33,7 @@ export const GroupsList: React.FC<GroupsListProps> = ({ groups, selected }) => {
 						onClick={() => navigate(`/dashboard/groups/${group.id}`)}
 						className={cn(
 							"px-4 py-2 text-start rounded-md transition-colors bg-muted hover:bg-wheat-warm",
-							selected === group.id &&
-								"bg-white hover:bg-white !ring-primary ring font-medium",
+							selected === group.id && "bg-white hover:bg-white !ring-primary ring font-medium",
 						)}
 					>
 						{group.name}

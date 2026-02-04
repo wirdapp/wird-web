@@ -1,7 +1,6 @@
 import type React from "react";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Role } from "../../util/roles";
 import {
 	Select,
 	SelectContent,
@@ -10,6 +9,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { Role } from "../../util/roles";
 
 interface RolesSelectProps {
 	value?: Role | number;

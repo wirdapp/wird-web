@@ -2,6 +2,7 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import type React from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 import { useRemoveGroupMember } from "../../services/groups/queries";
 import type { Group, GroupMember } from "../../types";
 import { GroupRole } from "../../types";
@@ -9,7 +10,6 @@ import { isAtLeastSuperAdmin } from "../../util/roles";
 import { useDashboardData } from "../../util/routes-data";
 import { getFullName } from "../../util/user-utils";
 import { GroupUserAddForm } from "./group-user-add-form";
-import { Button } from "@/components/ui/button";
 
 interface MemberActionsProps {
 	groupId: string;
@@ -68,14 +68,9 @@ export const GroupMembers: React.FC<GroupMembersProps> = ({ group, members }) =>
 		<div className="flex flex-col gap-7">
 			<div className="bg-background border rounded-lg divide-y">
 				{members.map((member) => (
-					<div
-						key={member.id}
-						className="flex items-center justify-between p-4"
-					>
+					<div key={member.id} className="flex items-center justify-between p-4">
 						<div className="flex flex-col">
-							<span className="font-medium">
-								{getFullName(member.person_info)}
-							</span>
+							<span className="font-medium">{getFullName(member.person_info)}</span>
 							<span className="text-sm text-muted-foreground">
 								{member.group_role === GroupRole.ADMIN && t("group-roles.admin")}
 								{member.group_role === GroupRole.MEMBER && t("group-roles.member")}
@@ -85,9 +80,7 @@ export const GroupMembers: React.FC<GroupMembersProps> = ({ group, members }) =>
 					</div>
 				))}
 				{members.length === 0 && (
-					<div className="p-4 text-center text-muted-foreground">
-						{t("no-members")}
-					</div>
+					<div className="p-4 text-center text-muted-foreground">{t("no-members")}</div>
 				)}
 			</div>
 			<GroupUserAddForm groupId={group.id} groupMembers={members} role={GroupRole.MEMBER} />

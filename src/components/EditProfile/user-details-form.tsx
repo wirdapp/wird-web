@@ -1,18 +1,12 @@
 import type React from "react";
 import { useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
-import { useDashboardData } from "../../util/routes-data";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-} from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
+import { useDashboardData } from "../../util/routes-data";
 import type { UpdateUserInfoValues } from "./index";
 
 interface UserDetailsFormProps {
@@ -45,7 +39,7 @@ export const UserDetailsForm: React.FC<UserDetailsFormProps> = ({ onSubmit }) =>
 	useEffect(() => {
 		resetForm();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [resetForm]);
 
 	const handleFormSubmit = (values: UserDetailsFormValues) => {
 		onSubmit(values);
@@ -55,9 +49,7 @@ export const UserDetailsForm: React.FC<UserDetailsFormProps> = ({ onSubmit }) =>
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(handleFormSubmit)} className="flex-grow">
 				<fieldset className="border border-primary rounded-md p-3">
-					<legend className="text-sm text-foreground px-2 mx-1 mb-2">
-						{t("user-details")}
-					</legend>
+					<legend className="text-sm text-foreground px-2 mx-1 mb-2">{t("user-details")}</legend>
 					<div className="space-y-4">
 						<div>
 							<Label>{t("email")}</Label>
@@ -92,9 +84,7 @@ export const UserDetailsForm: React.FC<UserDetailsFormProps> = ({ onSubmit }) =>
 							)}
 						/>
 						<div className="flex gap-2">
-							<Button type="submit">
-								{t("save")}
-							</Button>
+							<Button type="submit">{t("save")}</Button>
 							<Button type="button" variant="ghost" onClick={resetForm}>
 								{t("cancel")}
 							</Button>

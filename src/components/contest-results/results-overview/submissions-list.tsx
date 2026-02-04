@@ -4,16 +4,11 @@ import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import type { DailySubmissionSummary, TopThreeUser } from "../../../types";
 import { getFullName } from "../../../util/user-utils";
 import { Avatar } from "../../shared/Avatar";
-import { cn } from "@/lib/utils";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "@/components/ui/tooltip";
 
 interface SubmissionsListProps {
 	results: DailySubmissionSummary[];
@@ -31,7 +26,7 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({ results }) => 
 		if (todayItem && listRef.current) {
 			listRef.current.scrollTop = (todayItem as HTMLElement).offsetTop - 150;
 		}
-	}, [results]);
+	}, []);
 
 	useEffect(() => {
 		const list = listRef.current;
@@ -66,7 +61,7 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({ results }) => 
 					className={cn(
 						"absolute left-0 top-0 w-full h-10 pointer-events-none opacity-0 invisible transition-all duration-200",
 						"bg-gradient-to-b from-muted to-transparent",
-						topOverflow && "opacity-100 visible"
+						topOverflow && "opacity-100 visible",
 					)}
 				/>
 				{/* Bottom overflow indicator */}
@@ -74,7 +69,7 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({ results }) => 
 					className={cn(
 						"absolute left-0 bottom-0 w-full h-10 pointer-events-none opacity-0 invisible transition-all duration-200",
 						"bg-gradient-to-t from-muted to-transparent",
-						bottomOverflow && "opacity-100 visible"
+						bottomOverflow && "opacity-100 visible",
 					)}
 				/>
 
@@ -89,7 +84,7 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({ results }) => 
 								className={cn(
 									"results-overview-list-item flex flex-col lg:flex-row gap-4 p-4 bg-background rounded-lg lg:items-center lg:justify-between",
 									isToday && "today",
-									isAfterToday && "after-today opacity-30"
+									isAfterToday && "after-today opacity-30",
 								)}
 							>
 								{/* Day cell */}
@@ -99,7 +94,7 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({ results }) => 
 											"w-12 h-12 flex justify-center items-center rounded-xl",
 											isToday
 												? "bg-yellow-400 shadow-[0_0_0_3px_rgba(253,213,97,0.5)]"
-												: "bg-red-100"
+												: "bg-red-100",
 										)}
 									>
 										<CalendarIcon className="w-6 h-6 text-foreground" />
@@ -131,9 +126,7 @@ export const SubmissionsList: React.FC<SubmissionsListProps> = ({ results }) => 
 													<div
 														className={cn(
 															"inline-flex cursor-pointer transition-all duration-200",
-															userIndex === 0
-																? "ms-0"
-																: "-ms-2.5 lg:-ms-2.5 hover:ms-1"
+															userIndex === 0 ? "ms-0" : "-ms-2.5 lg:-ms-2.5 hover:ms-1",
 														)}
 													>
 														<Avatar

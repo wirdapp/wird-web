@@ -2,6 +2,9 @@ import { PlusIcon } from "@heroicons/react/24/outline";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Outlet, useParams } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Empty } from "@/components/ui/empty";
+import { Spinner } from "@/components/ui/spinner";
 import { useGroups } from "../../services/groups/queries";
 import { AnimatedPage } from "../../ui/animated-page";
 import { isAtLeastSuperAdmin } from "../../util/roles";
@@ -9,10 +12,6 @@ import { useDashboardData } from "../../util/routes-data";
 import Loader from "../Loader";
 import { CreateGroupPopup } from "./create-group-popup";
 import { GroupsList } from "./groups-list";
-import { Button } from "@/components/ui/button";
-import { Empty } from "@/components/ui/empty";
-import { Spinner } from "@/components/ui/spinner";
-import { cn } from "@/lib/utils";
 
 export function Group(): React.ReactElement | null {
 	const { t } = useTranslation();
@@ -21,8 +20,7 @@ export function Group(): React.ReactElement | null {
 	const { currentUser } = useDashboardData();
 	const { data: groups = [], isLoading, isFetching } = useGroups();
 
-	const isSuperAdmin =
-		currentUser?.role !== undefined && isAtLeastSuperAdmin(currentUser.role);
+	const isSuperAdmin = currentUser?.role !== undefined && isAtLeastSuperAdmin(currentUser.role);
 
 	if (isLoading) {
 		return <Loader />;
@@ -42,10 +40,7 @@ export function Group(): React.ReactElement | null {
 							<div className="flex items-center justify-between gap-4 mb-6">
 								<h4 className="text-lg font-semibold m-0">{t("select")}:</h4>
 								{isSuperAdmin && (
-									<Button
-										variant="outline"
-										onClick={() => setCreateGroupPopupOpen(true)}
-									>
+									<Button variant="outline" onClick={() => setCreateGroupPopupOpen(true)}>
 										<PlusIcon className="h-4 w-4" />
 										{t("create-group")}
 									</Button>
@@ -66,10 +61,7 @@ export function Group(): React.ReactElement | null {
 					</div>
 				</div>
 			) : (
-				<Empty
-					description={t("no-groups-found")}
-					className="mt-12 max-w-[500px] mx-auto"
-				>
+				<Empty description={t("no-groups-found")} className="mt-12 max-w-[500px] mx-auto">
 					<div className="flex flex-col items-center gap-4">
 						<p className="text-muted-foreground">{t("groups-description")}</p>
 						{isSuperAdmin && (

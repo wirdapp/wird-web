@@ -2,13 +2,13 @@ import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import type React from "react";
 import { useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { FieldTypes } from "../../../services/contest-criteria/consts";
 import type { Criterion } from "../../../types";
 import { isAtLeastSuperAdmin } from "../../../util/roles";
 import { useDashboardData } from "../../../util/routes-data";
-import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 
 interface PointRecordData {
 	id: string;
@@ -132,12 +132,7 @@ export const CriterionRecordPoints: React.FC<CriterionRecordPointsProps> = ({
 					)}
 					{canEdit && hasChanged && (
 						<div className="flex gap-1 ms-1">
-							<Button
-								type="submit"
-								size="icon"
-								className="h-6 w-6"
-								disabled={submitting}
-							>
+							<Button type="submit" size="icon" className="h-6 w-6" disabled={submitting}>
 								<CheckIcon className="h-4 w-4" />
 							</Button>
 							<Button

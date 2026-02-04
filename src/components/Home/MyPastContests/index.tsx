@@ -12,9 +12,7 @@ function MyPastContests(): React.ReactElement {
 	return (
 		<div className="mx-auto mt-12 w-full rounded-3xl max-w-[59.375rem] max-[1400px]:w-auto">
 			<div className="flex items-center justify-between mx-auto">
-				<div className="font-bold text-2xl leading-[1.8125rem] text-black">
-					{t("pastContest")}
-				</div>
+				<div className="font-bold text-2xl leading-[1.8125rem] text-black">{t("pastContest")}</div>
 
 				<div className="flex w-40">
 					<div className="flex ms-4 flex-row items-center p-[1.125rem] gap-3 w-[3.75rem] h-[3.75rem] bg-[#f9eaea] rounded-full">
@@ -30,9 +28,7 @@ function MyPastContests(): React.ReactElement {
 			<div className="flex mx-auto w-auto justify-between max-[1000px]:flex-col">
 				{/* Left past contest */}
 				<div className="w-full">
-					<div className="font-normal text-base leading-5 text-[#a79f97]">
-						12 months ago
-					</div>
+					<div className="font-normal text-base leading-5 text-[#a79f97]">12 months ago</div>
 
 					<div className="flex mx-auto w-auto bg-[#fbf9f7] rounded-3xl max-w-[59.3125rem] mt-8 w-[90%] items-start max-[1400px]:w-[90%] max-[1000px]:mt-4">
 						<div className="flex flex-col p-0 gap-[2.625rem] ms-6 me-6 w-full items-start flex-col">
@@ -118,9 +114,7 @@ function MyPastContests(): React.ReactElement {
 											>
 												Am
 											</div>
-											<div className="font-bold text-base leading-5 w-auto">
-												Ameen Betawi
-											</div>
+											<div className="font-bold text-base leading-5 w-auto">Ameen Betawi</div>
 										</Link>
 
 										<Link
@@ -156,7 +150,10 @@ function MyPastContests(): React.ReactElement {
 								</div>
 							</div>
 
-							<button className="flex flex-col justify-center items-center py-5 px-6 gap-[0.625rem] w-full h-[3.75rem] bg-[#fdd561] rounded-full font-bold text-base leading-5 text-black">
+							<button
+								type="button"
+								className="flex flex-col justify-center items-center py-5 px-6 gap-[0.625rem] w-full h-[3.75rem] bg-[#fdd561] rounded-full font-bold text-base leading-5 text-black"
+							>
 								{t("see-contest-result")}
 							</button>
 						</div>
@@ -165,9 +162,7 @@ function MyPastContests(): React.ReactElement {
 
 				{/* Right past contest */}
 				<div className="w-full">
-					<div className="font-normal text-base leading-5 text-[#a79f97]">
-						24 months ago
-					</div>
+					<div className="font-normal text-base leading-5 text-[#a79f97]">24 months ago</div>
 
 					<div className="flex mx-auto w-auto bg-[#fbf9f7] rounded-3xl max-w-[59.3125rem] mt-8 w-[90%] items-start max-[1400px]:w-[90%] max-[1000px]:mt-4">
 						<div className="flex flex-col p-0 gap-[2.625rem] ms-6 me-6 w-full items-start flex-col">
@@ -253,9 +248,7 @@ function MyPastContests(): React.ReactElement {
 											>
 												Am
 											</div>
-											<div className="font-bold text-base leading-5 w-auto">
-												Ameen Betawi
-											</div>
+											<div className="font-bold text-base leading-5 w-auto">Ameen Betawi</div>
 										</Link>
 
 										<Link
@@ -291,7 +284,10 @@ function MyPastContests(): React.ReactElement {
 								</div>
 							</div>
 
-							<button className="flex flex-col justify-center items-center py-5 px-6 gap-[0.625rem] w-full h-[3.75rem] bg-[#fdd561] rounded-full font-bold text-base leading-5 text-black">
+							<button
+								type="button"
+								className="flex flex-col justify-center items-center py-5 px-6 gap-[0.625rem] w-full h-[3.75rem] bg-[#fdd561] rounded-full font-bold text-base leading-5 text-black"
+							>
 								{t("see-contest-result")}
 							</button>
 						</div>

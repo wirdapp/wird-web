@@ -18,13 +18,10 @@ export default function Img(): React.ReactElement {
 						<div className="mt-6 pe-8 text-right font-extrabold text-[1.8rem] text-[#2980b9]">
 							{t("ourName")}
 						</div>
-						<div className="mt-8 text-right text-[1.4rem] text-orange-500">
-							{t("welcomeMsg")}
-						</div>
+						<div className="mt-8 text-right text-[1.4rem] text-orange-500">{t("welcomeMsg")}</div>
 					</section>
 				</div>
-				<div className="w-[40rem] h-[0.3rem] bg-[#e94f57] mx-auto mt-16 rounded-[20px] me-0">
-				</div>
+				<div className="w-[40rem] h-[0.3rem] bg-[#e94f57] mx-auto mt-16 rounded-[20px] me-0"></div>
 				<h3>{t("ourName")} </h3>
 				<p> {t("welcomeMsg")}</p>
 			</section>

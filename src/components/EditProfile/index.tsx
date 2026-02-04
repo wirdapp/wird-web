@@ -1,11 +1,11 @@
 import type { AxiosError } from "axios";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 import { useIsMobile } from "../../hooks/use-mobile";
 import { useUpdateUserInfo } from "../../services/auth/queries";
 import { useDashboardData } from "../../util/routes-data";
 import { getFullName } from "../../util/user-utils";
-import { cn } from "@/lib/utils";
 import { ChangePasswordForm } from "./change-password-form";
 import { ProfilePictureUploader } from "./profile-picture-uploader";
 import { UserDetailsForm } from "./user-details-form";
@@ -54,18 +54,11 @@ function EditProfile() {
 			<div className="flex items-center gap-6">
 				<ProfilePictureUploader onSubmit={handleSubmit} />
 				<div className="flex flex-col gap-1">
-					<h3 className="text-xl font-semibold m-0">
-						{getFullName(currentUser)}
-					</h3>
+					<h3 className="text-xl font-semibold m-0">{getFullName(currentUser)}</h3>
 					<span className="text-muted-foreground">{currentUser?.email}</span>
 				</div>
 			</div>
-			<div
-				className={cn(
-					"flex gap-6 mt-6 w-full",
-					isMobile && "flex-col"
-				)}
-			>
+			<div className={cn("flex gap-6 mt-6 w-full", isMobile && "flex-col")}>
 				<UserDetailsForm onSubmit={handleSubmit} />
 				<ChangePasswordForm />
 			</div>

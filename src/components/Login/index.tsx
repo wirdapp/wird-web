@@ -1,18 +1,13 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ReactComponent as WirdLogo } from "assets/icons/Shared/wirdLogo.svg";
 import { useHandleError } from "hooks/handleError";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { login } from "../../services/auth/session";
-import type { LoginFormValues } from "../../types";
-import { AuthPageFooter } from "../shared/auth-page-footer";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { PasswordInput } from "@/components/ui/password-input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import {
 	Form,
 	FormControl,
@@ -21,6 +16,11 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
+import { login } from "../../services/auth/session";
+import type { LoginFormValues } from "../../types";
+import { AuthPageFooter } from "../shared/auth-page-footer";
 
 function Login() {
 	const { t } = useTranslation();
@@ -74,11 +74,7 @@ function Login() {
 								<FormItem>
 									<FormLabel>{t("username")}</FormLabel>
 									<FormControl>
-										<Input
-											placeholder={t("username")}
-											className="h-12"
-											{...field}
-										/>
+										<Input placeholder={t("username")} className="h-12" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -92,11 +88,7 @@ function Login() {
 								<FormItem>
 									<FormLabel>{t("passwordKey")}</FormLabel>
 									<FormControl>
-										<PasswordInput
-											placeholder={t("passwordKey")}
-											className="h-12"
-											{...field}
-										/>
+										<PasswordInput placeholder={t("passwordKey")} className="h-12" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -114,26 +106,23 @@ function Login() {
 						)}
 
 						<div className="flex flex-col items-center gap-4">
-							<Button
-								type="submit"
-								className="w-full h-12 mt-6"
-								disabled={loading}
-							>
+							<Button type="submit" className="w-full h-12 mt-6" disabled={loading}>
 								{loading ? t("loading") : t("login")}
 							</Button>
 
 							<div className="flex items-center gap-2">
 								<span className="text-muted-foreground">{t("notAccount")}</span>
-								<Button variant="link" asChild className="p-0 h-auto">
-									<Link to="/signup">{t("signUpKey")}</Link>
+								<Button variant="link" render={<Link to="/signup" />} className="p-0 h-auto">
+									{t("signUpKey")}
 								</Button>
 							</div>
 
-							<Button variant="link" asChild className="p-0 h-auto">
-								<a href={`${import.meta.env.VITE_MAIN_URL}/user/forgot-password`}>
-									{t("forgetPassOrUsername")}
-								</a>
-							</Button>
+							<a
+								href={`${import.meta.env.VITE_MAIN_URL}/user/forgot-password`}
+								className="text-primary underline-offset-4 hover:underline p-0 h-auto text-sm font-medium"
+							>
+								{t("forgetPassOrUsername")}
+							</a>
 						</div>
 					</form>
 				</Form>

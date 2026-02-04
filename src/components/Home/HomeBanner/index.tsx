@@ -3,12 +3,12 @@ import type React from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import StudentBannerimg2 from "../../../assets/icons/studentImgAtBanner/studentBanner2.svg";
 import StudentBannerimg1 from "../../../assets/icons/studentImgAtBanner/studentBanner3.svg";
 import { useDashboardData } from "../../../util/routes-data";
 import { CreateContestPopup } from "../../Competition/create-contest-popup";
 import { JoinContestPopup } from "../../Competition/join-contest-popup";
-import { Button } from "@/components/ui/button";
 
 interface HomeBannerProps {
 	name: string | null;
@@ -46,8 +46,11 @@ function HomeBanner(props: HomeBannerProps): React.ReactElement {
 					</div>
 
 					{currentContest ? (
-						<Button asChild className="bg-[#fdd561] text-black hover:bg-[#fdd561]/90 rounded-full px-6 py-5 font-bold">
-							<Link to="/dashboard/results/overview">{t("see-contest-result")}</Link>
+						<Button
+							render={<Link to="/dashboard/results/overview" />}
+							className="bg-[#fdd561] text-black hover:bg-[#fdd561]/90 rounded-full px-6 py-5 font-bold"
+						>
+							{t("see-contest-result")}
 						</Button>
 					) : (
 						<div className="flex flex-row gap-2">
@@ -79,11 +82,7 @@ function HomeBanner(props: HomeBannerProps): React.ReactElement {
 
 				{/* Student banner images - hidden below 1100px */}
 				<div className="me-[-6rem] justify-end items-start hidden min-[1100px]:flex">
-					<img
-						src={StudentBannerimg2}
-						alt=""
-						className="relative w-[13.5rem] h-[13.5rem]"
-					/>
+					<img src={StudentBannerimg2} alt="" className="relative w-[13.5rem] h-[13.5rem]" />
 					<img
 						src={StudentBannerimg1}
 						alt=""

@@ -1,20 +1,15 @@
-import { Upload as UploadIcon } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ReactComponent as WirdLogo } from "assets/icons/Shared/wirdLogo.svg";
 import { isAxiosError } from "axios";
-import { useState, useRef } from "react";
+import { Upload as UploadIcon } from "lucide-react";
+import { useRef, useState } from "react";
+import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { AuthService } from "../../services/auth/auth.service";
-import { login } from "../../services/auth/session";
-import { AuthPageFooter } from "../shared/auth-page-footer";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { PasswordInput } from "@/components/ui/password-input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
 	Form,
 	FormControl,
@@ -23,6 +18,11 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
+import { AuthService } from "../../services/auth/auth.service";
+import { login } from "../../services/auth/session";
+import { AuthPageFooter } from "../shared/auth-page-footer";
 
 interface SignupFormValues {
 	username: string;
@@ -242,7 +242,9 @@ function Signup() {
 									</FormControl>
 									<FormMessage />
 									{serverErrors.phone_number && (
-										<p className="text-sm text-destructive">{serverErrors.phone_number.join(", ")}</p>
+										<p className="text-sm text-destructive">
+											{serverErrors.phone_number.join(", ")}
+										</p>
 									)}
 								</FormItem>
 							)}
@@ -315,8 +317,8 @@ function Signup() {
 
 							<div className="flex items-center gap-2">
 								<span className="text-muted-foreground">{t("alreadyHaveAccount")}</span>
-								<Button variant="link" asChild className="p-0 h-auto">
-									<Link to="/login">{t("loginNow")}</Link>
+								<Button variant="link" render={<Link to="/login" />} className="p-0 h-auto">
+									{t("loginNow")}
 								</Button>
 							</div>
 						</div>

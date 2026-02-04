@@ -1,7 +1,5 @@
 import type React from "react";
 import { useTranslation } from "react-i18next";
-import { FieldTypesIcons, FieldTypesOptions } from "../../../services/contest-criteria/consts";
-import { colors } from "../../../styles";
 import {
 	Select,
 	SelectContent,
@@ -9,6 +7,8 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { FieldTypesIcons, FieldTypesOptions } from "../../../services/contest-criteria/consts";
+import { colors } from "../../../styles";
 
 interface CriteriaTypeSelectProps {
 	value?: string;
@@ -25,7 +25,12 @@ export const CriteriaTypeSelect: React.FC<CriteriaTypeSelectProps> = ({
 	const items = FieldTypesOptions.map((o) => ({ value: o.value, label: t(o.label) }));
 
 	return (
-		<Select value={value} onValueChange={onChange} disabled={disabled} items={items}>
+		<Select
+			value={value}
+			onValueChange={(val) => val !== null && onChange?.(val)}
+			disabled={disabled}
+			items={items}
+		>
 			<SelectTrigger>
 				<SelectValue />
 			</SelectTrigger>
@@ -35,10 +40,7 @@ export const CriteriaTypeSelect: React.FC<CriteriaTypeSelectProps> = ({
 					return (
 						<SelectItem key={o.value} value={o.value}>
 							<div className="flex items-center gap-2">
-								<Icon
-									className="w-4 h-4"
-									style={{ color: colors.orange }}
-								/>
+								<Icon className="w-4 h-4" style={{ color: colors.orange }} />
 								{t(o.label)}
 							</div>
 						</SelectItem>

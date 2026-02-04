@@ -1,5 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { createContext, type ReactNode, useCallback, useContext, useMemo } from "react";
+import { Spinner } from "@/components/ui/spinner";
+import { cn } from "@/lib/utils";
 import {
 	contestCriteriaKeys,
 	useCriteria,
@@ -7,8 +9,6 @@ import {
 } from "../../services/contest-criteria/queries";
 import { getCurrentContestId } from "../../services/contests/utils";
 import type { Criterion, Section } from "../../types";
-import { Spinner } from "@/components/ui/spinner";
-import { cn } from "@/lib/utils";
 
 interface ItemsState<T> {
 	items: T[];

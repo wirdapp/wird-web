@@ -1,9 +1,5 @@
 import { TrashIcon } from "@heroicons/react/20/solid";
-import {
-	CheckIcon,
-	ChevronDownIcon,
-	XMarkIcon,
-} from "@heroicons/react/24/outline";
+import { CheckIcon, ChevronDownIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Bars2Icon } from "@heroicons/react/24/solid";
 import { motion } from "framer-motion";
 import type React from "react";
@@ -12,10 +8,6 @@ import { useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { colors } from "../../../styles";
-import type { Section } from "../../../types";
-import { SectionCriteriaList } from "../criteria/section-criteria-list";
-import { useContestSections } from "./use-contest-sections";
 import {
 	Accordion,
 	AccordionContent,
@@ -23,9 +15,13 @@ import {
 	AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { colors } from "../../../styles";
+import type { Section } from "../../../types";
+import { SectionCriteriaList } from "../criteria/section-criteria-list";
+import { useContestSections } from "./use-contest-sections";
 
 interface SectionListItemProps {
 	section: Section;
@@ -97,7 +93,7 @@ export const SectionListItem: React.FC<SectionListItemProps> = ({ section, index
 								type="single"
 								collapsible
 								value={!snapshot.isDragging ? expanded : undefined}
-								onValueChange={setExpanded}
+								onValueChange={(val) => setExpanded(Array.isArray(val) ? val[0] : val || undefined)}
 							>
 								<AccordionItem value={section.id} className="border-0">
 									<div className="flex items-center gap-2 p-3">
@@ -105,7 +101,7 @@ export const SectionListItem: React.FC<SectionListItemProps> = ({ section, index
 											<ChevronDownIcon
 												className={cn(
 													"h-4 w-4 transition-transform duration-200",
-													expanded === section.id && "rotate-180"
+													expanded === section.id && "rotate-180",
 												)}
 											/>
 										</AccordionTrigger>

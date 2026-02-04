@@ -1,5 +1,4 @@
-import { Squares2X2Icon } from "@heroicons/react/24/outline";
-import { ClipboardDocumentIcon } from "@heroicons/react/24/outline";
+import { ClipboardDocumentIcon, Squares2X2Icon } from "@heroicons/react/24/outline";
 import dayjs from "dayjs";
 import type React from "react";
 import { useTranslation } from "react-i18next";

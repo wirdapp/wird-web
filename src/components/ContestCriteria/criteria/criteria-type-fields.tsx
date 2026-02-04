@@ -1,30 +1,19 @@
 import { TrashIcon } from "@heroicons/react/20/solid";
+import { Info } from "lucide-react";
 import type React from "react";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 // @ts-expect-error - uuid types not installed
 import { v4 as uuidv4 } from "uuid";
-import { FieldTypes } from "../../../services/contest-criteria/consts";
-import { CriteriaTypeSelect } from "./criteria-type-select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
-import { Info } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { FieldTypes } from "../../../services/contest-criteria/consts";
+import { CriteriaTypeSelect } from "./criteria-type-select";
 
 interface CriteriaTypeFieldsProps {
 	isEdit: boolean;
@@ -51,7 +40,7 @@ export const CriteriaTypeFields: React.FC<CriteriaTypeFieldsProps> = ({ isEdit }
 				currentOptions.map((option, i) => ({
 					...option,
 					is_correct: i === index,
-				}))
+				})),
 			);
 		}
 	};
@@ -72,7 +61,7 @@ export const CriteriaTypeFields: React.FC<CriteriaTypeFieldsProps> = ({ isEdit }
 		const currentOptions: CriterionOption[] = form.getValues("options") ?? [];
 		form.setValue(
 			"options",
-			currentOptions.filter((_, i) => i !== index)
+			currentOptions.filter((_, i) => i !== index),
 		);
 	};
 
@@ -92,11 +81,7 @@ export const CriteriaTypeFields: React.FC<CriteriaTypeFieldsProps> = ({ isEdit }
 					<FormItem>
 						<FormLabel>{t("criteria-type")}</FormLabel>
 						<FormControl>
-							<CriteriaTypeSelect
-								value={field.value}
-								onChange={field.onChange}
-								disabled={isEdit}
-							/>
+							<CriteriaTypeSelect value={field.value} onChange={field.onChange} disabled={isEdit} />
 						</FormControl>
 						<FormMessage />
 					</FormItem>
@@ -109,14 +94,9 @@ export const CriteriaTypeFields: React.FC<CriteriaTypeFieldsProps> = ({ isEdit }
 					render={({ field }) => (
 						<FormItem className="flex items-center gap-2 space-y-0">
 							<FormControl>
-								<Checkbox
-									checked={field.value}
-									onCheckedChange={field.onChange}
-								/>
+								<Checkbox checked={field.value} onCheckedChange={field.onChange} />
 							</FormControl>
-							<FormLabel className="font-normal">
-								{t("allow-multiline")}
-							</FormLabel>
+							<FormLabel className="font-normal">{t("allow-multiline")}</FormLabel>
 						</FormItem>
 					)}
 				/>
@@ -197,14 +177,9 @@ export const CriteriaTypeFields: React.FC<CriteriaTypeFieldsProps> = ({ isEdit }
 					render={({ field }) => (
 						<FormItem className="flex items-center gap-2 space-y-0">
 							<FormControl>
-								<Checkbox
-									checked={field.value}
-									onCheckedChange={field.onChange}
-								/>
+								<Checkbox checked={field.value} onCheckedChange={field.onChange} />
 							</FormControl>
-							<FormLabel className="font-normal">
-								{t("partial-points")}
-							</FormLabel>
+							<FormLabel className="font-normal">{t("partial-points")}</FormLabel>
 						</FormItem>
 					)}
 				/>
@@ -220,11 +195,7 @@ export const CriteriaTypeFields: React.FC<CriteriaTypeFieldsProps> = ({ isEdit }
 									name={`options.${index}.label`}
 									rules={{ required: t("requiredField") }}
 									render={({ field }) => (
-										<Input
-											className="flex-1 h-8"
-											placeholder={t("option")}
-											{...field}
-										/>
+										<Input className="flex-1 h-8" placeholder={t("option")} {...field} />
 									)}
 								/>
 								<TooltipProvider>
@@ -239,9 +210,7 @@ export const CriteriaTypeFields: React.FC<CriteriaTypeFieldsProps> = ({ isEdit }
 												/>
 											</div>
 										</TooltipTrigger>
-										<TooltipContent
-											side={i18n.dir() === "ltr" ? "right" : "left"}
-										>
+										<TooltipContent side={i18n.dir() === "ltr" ? "right" : "left"}>
 											{t("is-correct")}
 										</TooltipContent>
 									</Tooltip>

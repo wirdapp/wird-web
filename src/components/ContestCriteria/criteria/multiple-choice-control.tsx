@@ -35,12 +35,7 @@ export const MultipleChoiceControl: React.FC<MultipleChoiceControlProps> = ({
 					</li>
 				))}
 			</ol>
-			<Button
-				type="button"
-				variant="outline"
-				className="ms-10 border-dashed"
-				onClick={addOption}
-			>
+			<Button type="button" variant="outline" className="ms-10 border-dashed" onClick={addOption}>
 				<PlusIcon className="h-4 w-4" />
 				{t("add-option")}
 			</Button>

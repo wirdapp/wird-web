@@ -3,10 +3,6 @@ import type React from "react";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { useUpdatePointRecord } from "../../../services/contest-results/queries";
-import type { Criterion, PointRecordUpdateData } from "../../../types";
-import { CriterionRecordAnswer } from "./criterion-record-answer";
-import { CriterionRecordPoints } from "./criterion-record-points";
 import {
 	Table,
 	TableBody,
@@ -15,6 +11,10 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import { useUpdatePointRecord } from "../../../services/contest-results/queries";
+import type { Criterion, PointRecordUpdateData } from "../../../types";
+import { CriterionRecordAnswer } from "./criterion-record-answer";
+import { CriterionRecordPoints } from "./criterion-record-points";
 
 interface PointRecordData {
 	id: string;
@@ -65,7 +65,7 @@ export const DailySubmissionsTable: React.FC<DailySubmissionsTableProps> = ({
 				toast.success(t("saved-successfully"));
 				onUpdated?.(updatedRecord as unknown as PointRecordData);
 				return updatedRecord as unknown as PointRecordData;
-			} catch (error) {
+			} catch (_error) {
 				toast.error(t("failedToSave"));
 			}
 			return record;
@@ -79,12 +79,8 @@ export const DailySubmissionsTable: React.FC<DailySubmissionsTableProps> = ({
 				<TableHeader>
 					<TableRow>
 						<TableHead className="w-[50px]">#</TableHead>
-						<TableHead className="w-[250px]">
-							{t("dailySubmissionsPopup.criteriaTitle")}
-						</TableHead>
-						<TableHead className="w-[200px]">
-							{t("dailySubmissionsPopup.points")}
-						</TableHead>
+						<TableHead className="w-[250px]">{t("dailySubmissionsPopup.criteriaTitle")}</TableHead>
+						<TableHead className="w-[200px]">{t("dailySubmissionsPopup.points")}</TableHead>
 						<TableHead>{t("dailySubmissionsPopup.answer")}</TableHead>
 						<TableHead>{t("dailySubmissionsPopup.lastUpdated")}</TableHead>
 					</TableRow>
@@ -108,9 +104,7 @@ export const DailySubmissionsTable: React.FC<DailySubmissionsTableProps> = ({
 									onSave={onUpdateRecord}
 								/>
 							</TableCell>
-							<TableCell>
-								{dayjs(submission.timestamp).format("YYYY-MM-DD hh:mm A")}
-							</TableCell>
+							<TableCell>{dayjs(submission.timestamp).format("YYYY-MM-DD hh:mm A")}</TableCell>
 						</TableRow>
 					))}
 				</TableBody>

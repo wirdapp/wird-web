@@ -1,18 +1,18 @@
 import { PlusCircleIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { AnimatePresence } from "framer-motion";
 import React from "react";
-import { useForm } from "react-hook-form";
 // @ts-expect-error - react-beautiful-dnd types not installed
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { reorder } from "../../../util/contest-utils";
-import { SectionListItem } from "./section-list-item";
-import { useContestSections } from "./use-contest-sections";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { reorder } from "../../../util/contest-utils";
+import { SectionListItem } from "./section-list-item";
+import { useContestSections } from "./use-contest-sections";
 
 interface AddSectionFormValues {
 	label: string;
@@ -22,7 +22,13 @@ export const SectionsList: React.FC = () => {
 	const { t } = useTranslation();
 	const { sections, actions } = useContestSections();
 	const [adding, setAdding] = React.useState(false);
-	const { register, handleSubmit, reset, watch, formState: { errors } } = useForm<AddSectionFormValues>();
+	const {
+		register,
+		handleSubmit,
+		reset,
+		watch,
+		formState: { errors },
+	} = useForm<AddSectionFormValues>();
 
 	const newSectionName = watch("label");
 
@@ -64,7 +70,7 @@ export const SectionsList: React.FC = () => {
 							ref={provided.innerRef}
 							className={cn(
 								"p-1 flex flex-col gap-4 transition-colors",
-								snapshot.isDraggingOver && "bg-muted/50"
+								snapshot.isDraggingOver && "bg-muted/50",
 							)}
 						>
 							<AnimatePresence>
@@ -89,15 +95,9 @@ export const SectionsList: React.FC = () => {
 								placeholder={t("section-name")}
 								{...register("label", { required: t("requiredField") })}
 							/>
-							{errors.label && (
-								<p className="text-sm text-destructive">{errors.label.message}</p>
-							)}
+							{errors.label && <p className="text-sm text-destructive">{errors.label.message}</p>}
 						</div>
-						<Button
-							type="submit"
-							size="sm"
-							disabled={!newSectionName || adding}
-						>
+						<Button type="submit" size="sm" disabled={!newSectionName || adding}>
 							<PlusIcon className="h-4 w-4" />
 							{t("addSection")}
 						</Button>

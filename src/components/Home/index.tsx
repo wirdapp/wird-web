@@ -3,10 +3,10 @@ import { useEffect, useState } from "react";
 import { ContestResultsService } from "../../services/contest-results/contest-results.service";
 import { MembersService } from "../../services/members/members.service";
 import type { ContestPerson, LeaderboardEntry } from "../../types";
+import { AnimatedPage } from "../../ui/animated-page";
 import { useDashboardData } from "../../util/routes-data";
 import { getFullName } from "../../util/user-utils";
 import { ContestDetailsBox } from "../Competition/contest-details-box";
-import { AnimatedPage } from "../../ui/animated-page";
 import HomeBanner from "./HomeBanner";
 import TopRanks from "./TopRanks";
 
@@ -52,7 +52,7 @@ function Home(): React.ReactElement {
 		initStudents();
 		initTopMembers();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [currentContest]);
+	}, [currentContest, initStudents, initTopMembers]);
 
 	return (
 		<AnimatedPage className="flex flex-col justify-center items-start gap-4 min-[900px]:gap-8">

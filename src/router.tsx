@@ -1,4 +1,3 @@
-import React from "react";
 import { createBrowserRouter, redirect } from "react-router-dom";
 import Competition from "./components/Competition";
 import ContestCriteria from "./components/ContestCriteria";

@@ -1,19 +1,15 @@
+import { ShieldX } from "lucide-react";
 import type React from "react";
 import { useTranslation } from "react-i18next";
 import { Outlet, useMatches } from "react-router-dom";
+import { Result } from "@/components/ui/result";
+import { Separator } from "@/components/ui/separator";
+import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { isAtLeastAdmin } from "../../util/roles";
 import { useDashboardData, usePageTitle } from "../../util/routes-data";
 import { NoContestYet } from "../Competition/no-contest-yet";
 import { EmailNotVerifiedAlert } from "./email-not-verified-alert";
 import { AppSidebar } from "./sidebar/app-sidebar";
-import { Result } from "@/components/ui/result";
-import { Separator } from "@/components/ui/separator";
-import { ShieldX } from "lucide-react";
-import {
-	SidebarInset,
-	SidebarProvider,
-	SidebarTrigger,
-} from "@/components/ui/sidebar";
 
 export const DashboardLayout: React.FC = () => {
 	const { t } = useTranslation();

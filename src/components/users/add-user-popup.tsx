@@ -1,25 +1,14 @@
 import { PlusIcon } from "@heroicons/react/24/outline";
+import { zodResolver } from "@hookform/resolvers/zod";
 import type { AxiosError } from "axios";
 import type React from "react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { useAddUserToContest } from "../../services/members/queries";
-import type { ContestPerson } from "../../types";
-import { Role } from "../../util/roles";
-import { useDashboardData } from "../../util/routes-data";
-import { RolesSelect } from "./roles-select";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-	Dialog,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import {
 	Form,
 	FormControl,
@@ -28,6 +17,12 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useAddUserToContest } from "../../services/members/queries";
+import type { ContestPerson } from "../../types";
+import { Role } from "../../util/roles";
+import { useDashboardData } from "../../util/routes-data";
+import { RolesSelect } from "./roles-select";
 
 interface AddUserPopupProps {
 	open: boolean;
@@ -105,9 +100,7 @@ export const AddUserPopup: React.FC<AddUserPopupProps> = ({ open, onClose, onAdd
 										<Input placeholder={t("username")} {...field} />
 									</FormControl>
 									<FormMessage />
-									{formError && (
-										<p className="text-sm text-destructive">{formError}</p>
-									)}
+									{formError && <p className="text-sm text-destructive">{formError}</p>}
 								</FormItem>
 							)}
 						/>
@@ -128,10 +121,7 @@ export const AddUserPopup: React.FC<AddUserPopupProps> = ({ open, onClose, onAdd
 								</FormItem>
 							)}
 						/>
-						<Button
-							type="submit"
-							disabled={addUserToContest.isPending}
-						>
+						<Button type="submit" disabled={addUserToContest.isPending}>
 							<PlusIcon className="h-4 w-4" />
 							{addUserToContest.isPending ? t("loading") : t("add-user")}
 						</Button>

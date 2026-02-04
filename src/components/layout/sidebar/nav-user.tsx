@@ -1,16 +1,6 @@
-import {
-	ChevronsUpDown,
-	HelpCircle,
-	Languages,
-	LogOut,
-	User,
-} from "lucide-react";
+import { ChevronsUpDown, HelpCircle, Languages, LogOut, User } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { destroySession } from "../../../services/auth/session";
-import { changeLanguage } from "../../../util/roles";
-import { useDashboardData } from "../../../util/routes-data";
-import { getFullName, getInitials } from "../../../util/user-utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
 	DropdownMenu,
@@ -27,6 +17,10 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "@/components/ui/sidebar";
+import { destroySession } from "../../../services/auth/session";
+import { changeLanguage } from "../../../util/roles";
+import { useDashboardData } from "../../../util/routes-data";
+import { getFullName, getInitials } from "../../../util/user-utils";
 
 export function NavUser() {
 	const { currentUser } = useDashboardData();
@@ -45,20 +39,16 @@ export function NavUser() {
 						>
 							<Avatar className="h-8 w-8 rounded-md">
 								<AvatarImage
-									src={currentUser?.profile_photo}
-									alt={getFullName(currentUser)}
+									src={currentUser?.profile_photo ?? undefined}
+									alt={getFullName(currentUser) ?? undefined}
 								/>
 								<AvatarFallback className="rounded-md bg-sidebar-primary text-sidebar-primary-foreground">
 									{getInitials(currentUser)}
 								</AvatarFallback>
 							</Avatar>
 							<div className="grid flex-1 text-start text-sm leading-tight">
-								<span className="truncate font-semibold">
-									{getFullName(currentUser)}
-								</span>
-								<span className="truncate text-xs text-muted-foreground">
-									{currentUser?.email}
-								</span>
+								<span className="truncate font-semibold">{getFullName(currentUser)}</span>
+								<span className="truncate text-xs text-muted-foreground">{currentUser?.email}</span>
 							</div>
 							<ChevronsUpDown className="ms-auto size-4" />
 						</SidebarMenuButton>
@@ -73,17 +63,15 @@ export function NavUser() {
 							<div className="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
 								<Avatar className="h-8 w-8 rounded-md">
 									<AvatarImage
-										src={currentUser?.profile_photo}
-										alt={getFullName(currentUser)}
+										src={currentUser?.profile_photo ?? undefined}
+										alt={getFullName(currentUser) ?? undefined}
 									/>
 									<AvatarFallback className="rounded-md bg-sidebar-primary text-sidebar-primary-foreground">
 										{getInitials(currentUser)}
 									</AvatarFallback>
 								</Avatar>
 								<div className="grid flex-1 text-start text-sm leading-tight">
-									<span className="truncate font-semibold">
-										{getFullName(currentUser)}
-									</span>
+									<span className="truncate font-semibold">{getFullName(currentUser)}</span>
 									<span className="truncate text-xs text-muted-foreground">
 										{currentUser?.email}
 									</span>
@@ -98,10 +86,7 @@ export function NavUser() {
 							</DropdownMenuItem>
 							<DropdownMenuItem
 								onClick={() => {
-									window.open(
-										`${import.meta.env.VITE_MAIN_URL}/help`,
-										"_blank",
-									);
+									window.open(`${import.meta.env.VITE_MAIN_URL}/help`, "_blank");
 								}}
 							>
 								<HelpCircle className="me-2 size-4" />
