@@ -19,7 +19,7 @@ jobs:
           bun-version: latest
       - run: bun install --frozen-lockfile
       - name: Biome Check
-        run: bunx biome check src/ --diagnostic-level=error
+        run: bun run check
 
   typecheck:
     name: Type Check

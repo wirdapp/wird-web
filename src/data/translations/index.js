@@ -16,6 +16,8 @@ import moderatorsI18nAr from "./moderators.i18n.ar";
 import moderatorsI18nEn from "./moderators.i18n.en";
 import navbarI18nAr from "./navbar.i18n.ar";
 import navbarI18nEn from "./navbar.i18n.en";
+import publicI18nAr from "./public.i18n.ar";
+import publicI18nEn from "./public.i18n.en";
 import reviewI18nAr from "./review.i18n.ar";
 import reviewI18nEn from "./review.i18n.en";
 import sharedAR from "./sharedAR.i18n.ar";
@@ -41,6 +43,7 @@ const translations = {
 			...reviewI18nEn,
 			...contestResultsI18nEn,
 			...navbarI18nEn,
+			...publicI18nEn,
 		},
 	},
 	ar: {
@@ -58,6 +61,7 @@ const translations = {
 			...reviewI18nAr,
 			...contestResultsI18nAr,
 			...navbarI18nAr,
+			...publicI18nAr,
 		},
 	},
 };

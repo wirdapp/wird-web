@@ -33,10 +33,6 @@ export async function getCurrentContest(contests: ContestRaw[] = []): Promise<Co
 	return ContestsService.getContestDetails(currentContestId);
 }
 
-export function getInviteLink(contestId: string): string {
-	return `${import.meta.env.VITE_MAIN_URL}/contest/${contestId}`;
-}
-
 export function getContestStatus(contest: ContestRaw): ContestStatus {
 	const now = dayjs();
 	if (dayjs(contest.end_date).isBefore(now)) return ContestStatus.FINISHED;
