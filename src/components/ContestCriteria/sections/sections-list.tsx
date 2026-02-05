@@ -1,7 +1,13 @@
+import {
+	DragDropContext,
+	Droppable,
+	type DroppableProvided,
+	type DroppableStateSnapshot,
+	type DropResult,
+} from "@hello-pangea/dnd";
 import { PlusCircleIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { AnimatePresence } from "motion/react";
 import React from "react";
-import { DragDropContext, Droppable, type DroppableProvided, type DroppableStateSnapshot, type DropResult } from "@hello-pangea/dnd";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";

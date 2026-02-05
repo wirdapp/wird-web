@@ -1,10 +1,10 @@
+import { Draggable, type DraggableProvided, type DraggableStateSnapshot } from "@hello-pangea/dnd";
 import { TrashIcon } from "@heroicons/react/20/solid";
 import { CheckIcon, ChevronDownIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Bars2Icon } from "@heroicons/react/24/solid";
 import { motion } from "motion/react";
 import type React from "react";
 import { useEffect, useState } from "react";
-import { Draggable, type DraggableProvided, type DraggableStateSnapshot } from "@hello-pangea/dnd";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import {

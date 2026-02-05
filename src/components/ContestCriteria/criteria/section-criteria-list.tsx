@@ -1,9 +1,17 @@
+import {
+	DragDropContext,
+	Draggable,
+	type DraggableProvided,
+	Droppable,
+	type DroppableProvided,
+	type DroppableStateSnapshot,
+	type DropResult,
+} from "@hello-pangea/dnd";
 import { TrashIcon } from "@heroicons/react/20/solid";
 import { EyeSlashIcon, PencilSquareIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { Bars2Icon } from "@heroicons/react/24/solid";
 import type React from "react";
 import { useState } from "react";
-import { DragDropContext, Draggable, type DraggableProvided, Droppable, type DroppableProvided, type DroppableStateSnapshot, type DropResult } from "@hello-pangea/dnd";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
