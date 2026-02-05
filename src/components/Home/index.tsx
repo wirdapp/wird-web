@@ -1,8 +1,6 @@
 import type React from "react";
-import { useEffect, useState } from "react";
-import { ContestResultsService } from "../../services/contest-results/contest-results.service";
-import { MembersService } from "../../services/members/members.service";
-import type { ContestPerson, LeaderboardEntry } from "../../types";
+import { useLeaderboard } from "../../services/contest-results/queries";
+import { useMembers } from "../../services/members/queries";
 import { AnimatedPage } from "../../ui/animated-page";
 import { useDashboardData } from "../../util/routes-data";
 import { getFullName } from "../../util/user-utils";
@@ -12,47 +10,17 @@ import TopRanks from "./TopRanks";
 
 function Home(): React.ReactElement {
 	const { currentUser, currentContest } = useDashboardData();
-	const [studentsLoading, setStudentsLoading] = useState<boolean>(false);
-	const [topMembersLoading, setTopMembersLoading] = useState<boolean>(false);
-	const [students, setStudents] = useState<ContestPerson[]>([]);
-	const [topMembers, setTopMembers] = useState<LeaderboardEntry[]>([]);
 
-	const initStudents = async (): Promise<void> => {
-		try {
-			setStudentsLoading(true);
-			const response = await MembersService.getMembers({
-				contestId: currentContest!.id,
-			});
-			setStudents(response.results);
-		} catch (err: unknown) {
-			const error = err as { data?: unknown };
-			console.log("Failed to retrieve students : ", error.data);
-		} finally {
-			setStudentsLoading(false);
-		}
-	};
+	const { data: membersData, isLoading: studentsLoading } = useMembers({
+		contestId: currentContest?.id,
+	});
 
-	const initTopMembers = async (): Promise<void> => {
-		try {
-			setTopMembersLoading(true);
-			const topMembers = await ContestResultsService.leaderboard({
-				contestId: currentContest!.id,
-			});
-			setTopMembers(topMembers?.slice(0, 3) ?? []);
-		} catch (err: unknown) {
-			const error = err as { data?: unknown };
-			console.log("Failed to retrieve top members : ", error.data);
-		} finally {
-			setTopMembersLoading(false);
-		}
-	};
+	const { data: leaderboardData, isLoading: topMembersLoading } = useLeaderboard(
+		currentContest?.id,
+	);
 
-	useEffect(() => {
-		if (!currentContest) return;
-		initStudents();
-		initTopMembers();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [currentContest, initStudents, initTopMembers]);
+	const students = membersData?.results ?? [];
+	const topMembers = leaderboardData?.slice(0, 3) ?? [];
 
 	return (
 		<AnimatedPage className="flex flex-col justify-center items-start gap-4 min-[900px]:gap-8">
