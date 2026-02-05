@@ -1,6 +1,6 @@
+import { cn } from "lib/utils";
 import { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
-import { cn } from "lib/utils";
 import { Section } from "./Section";
 
 type Props = {

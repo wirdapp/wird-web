@@ -1,5 +1,11 @@
 import dayjs from "dayjs";
-import type { Contest, ContestCreateData, ContestRaw, ContestUpdateData, GeneralStats } from "../../types";
+import type {
+	Contest,
+	ContestCreateData,
+	ContestRaw,
+	ContestUpdateData,
+	GeneralStats,
+} from "../../types";
 import { BaseService } from "../base.service";
 import { getContestStatus } from "./utils";
 

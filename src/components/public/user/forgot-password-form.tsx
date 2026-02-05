@@ -1,21 +1,15 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { AxiosError } from "axios";
+import { SubmitButton } from "components/public/submit-button";
+import { Alert, AlertDescription, AlertTitle } from "components/ui/alert";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "components/ui/form";
+import { Input } from "components/ui/input";
 import { CheckCircle } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import * as z from "zod";
-import { SubmitButton } from "components/public/submit-button";
-import { Alert, AlertDescription, AlertTitle } from "components/ui/alert";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormMessage,
-} from "components/ui/form";
-import { Input } from "components/ui/input";
 import { useRequestPasswordReset } from "services/auth/queries";
+import * as z from "zod";
 
 const forgotPasswordSchema = z.object({
 	username: z.string().min(1, "Username is required"),
@@ -58,9 +52,7 @@ export const ForgotPasswordForm = () => {
 		<Alert variant="success" className="max-w-md w-full">
 			<CheckCircle className="size-4" />
 			<AlertTitle>{t("ForgotPasswordPage.emailSent")}</AlertTitle>
-			<AlertDescription>
-				{t("ForgotPasswordPage.emailSentMessage")}
-			</AlertDescription>
+			<AlertDescription>{t("ForgotPasswordPage.emailSentMessage")}</AlertDescription>
 		</Alert>
 	) : (
 		<Form {...form}>
@@ -78,10 +70,7 @@ export const ForgotPasswordForm = () => {
 						render={({ field }) => (
 							<FormItem>
 								<FormControl>
-									<Input
-										placeholder={t("ForgotPasswordPage.username")}
-										{...field}
-									/>
+									<Input placeholder={t("ForgotPasswordPage.username")} {...field} />
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -93,11 +82,7 @@ export const ForgotPasswordForm = () => {
 						render={({ field }) => (
 							<FormItem>
 								<FormControl>
-									<Input
-										type="email"
-										placeholder={t("ForgotPasswordPage.email")}
-										{...field}
-									/>
+									<Input type="email" placeholder={t("ForgotPasswordPage.email")} {...field} />
 								</FormControl>
 								<FormMessage />
 							</FormItem>

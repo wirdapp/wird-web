@@ -1,7 +1,5 @@
 import adminI18nAr from "./admin.i18n.ar";
 import adminI18nEn from "./admin.i18n.en";
-import publicI18nAr from "./public.i18n.ar";
-import publicI18nEn from "./public.i18n.en";
 import contestResultsI18nAr from "./contest-results.i18n.ar";
 import contestResultsI18nEn from "./contest-results.i18n.en";
 import contestCriteriaI18nAr from "./contestCriteria.i18n.ar";
@@ -18,6 +16,8 @@ import moderatorsI18nAr from "./moderators.i18n.ar";
 import moderatorsI18nEn from "./moderators.i18n.en";
 import navbarI18nAr from "./navbar.i18n.ar";
 import navbarI18nEn from "./navbar.i18n.en";
+import publicI18nAr from "./public.i18n.ar";
+import publicI18nEn from "./public.i18n.en";
 import reviewI18nAr from "./review.i18n.ar";
 import reviewI18nEn from "./review.i18n.en";
 import sharedAR from "./sharedAR.i18n.ar";

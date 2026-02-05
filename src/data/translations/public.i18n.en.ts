@@ -61,8 +61,7 @@ export default {
 	},
 	ContactUsSection: {
 		title: "Contact Us",
-		description:
-			"To start a contest for your organization, your team, or your family.",
+		description: "To start a contest for your organization, your team, or your family.",
 		volunteer: "Volunteer with us",
 		inquiries: "Contact and Inquiries",
 		followUs: "Follow us",
@@ -76,8 +75,7 @@ export default {
 		confirmed: "Email Confirmed",
 		confirmedMessage: "Your email has been confirmed. You can now login.",
 		invalidLink: "Invalid Confirmation Link",
-		invalidLinkMessage:
-			"The confirmation link is invalid or expired. Please try again.",
+		invalidLinkMessage: "The confirmation link is invalid or expired. Please try again.",
 	},
 	ResetPasswordPage: {
 		title: "Reset Password",

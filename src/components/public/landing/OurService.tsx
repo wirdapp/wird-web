@@ -1,6 +1,6 @@
-import { useTranslation } from "react-i18next";
 import { AppLinks } from "components/public/landing/app-links";
 import { Card, CardContent } from "components/ui/card";
+import { useTranslation } from "react-i18next";
 import { Section } from "./Section";
 
 export const OurService = () => {
@@ -46,9 +46,7 @@ export const OurService = () => {
 							<h3 className="text-lg text-gray-700 mb-4 font-bold">
 								{t("ServiceSection.participant.title")}
 							</h3>
-							<p className="mb-2">
-								{t("ServiceSection.participant.description")}
-							</p>
+							<p className="mb-2">{t("ServiceSection.participant.description")}</p>
 							<ul className="list-disc list-inside mb-4 pis-2">
 								<li>{t("ServiceSection.participant.items.0")}</li>
 								<li>{t("ServiceSection.participant.items.1")}</li>

@@ -1,5 +1,5 @@
-import { useTranslation } from "react-i18next";
 import { SEO } from "components/public/SEO";
+import { useTranslation } from "react-i18next";
 
 export function HelpPage() {
 	const { t, i18n } = useTranslation();
@@ -15,9 +15,7 @@ export function HelpPage() {
 			/>
 			<div className="max-w-5xl mx-auto w-full py-10">
 				<h1 className="text-3xl font-bold mb-8 text-gray-700">{t("help")}</h1>
-				<h2 className="text-xl font-bold mb-8 text-gray-700">
-					{t("adminPanelHelp")}
-				</h2>
+				<h2 className="text-xl font-bold mb-8 text-gray-700">{t("adminPanelHelp")}</h2>
 				<p className="mb-4">{t("adminPanelHelpText")}</p>
 				{locale === "ar" ? (
 					<iframe

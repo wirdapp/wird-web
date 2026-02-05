@@ -1,5 +1,11 @@
 import { type UseQueryOptions, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { Contest, ContestCreateData, ContestRaw, ContestUpdateData, GeneralStats } from "../../types";
+import type {
+	Contest,
+	ContestCreateData,
+	ContestRaw,
+	ContestUpdateData,
+	GeneralStats,
+} from "../../types";
 import { ContestsService } from "./contests.service";
 import { changeCurrentContest, getCurrentContestId } from "./utils";
 

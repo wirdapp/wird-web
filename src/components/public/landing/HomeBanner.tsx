@@ -23,12 +23,8 @@ export function HomeBanner() {
 				<div className="flex flex-col-reverse md:flex-row justify-between items-center w-full h-full pt-5 md:pt-0">
 					<div className="relative mx-auto md:mis-12 flex flex-col items-center md:items-start gap-0 md:gap-2 lg:gap-5 py-6 md:py-2">
 						<div className="flex flex-col items-center md:items-start gap-2 max-w-[650px] text-center md:text-start">
-							<div className="font-bold text-xl lg:text-2xl text-white ">
-								{t("welcome")}
-							</div>
-							<div className="text-base lg:text-lg text-[#ffe7ea] px-1">
-								{t("siteDescription")}
-							</div>
+							<div className="font-bold text-xl lg:text-2xl text-white ">{t("welcome")}</div>
+							<div className="text-base lg:text-lg text-[#ffe7ea] px-1">{t("siteDescription")}</div>
 						</div>
 					</div>
 

@@ -18,9 +18,7 @@ export function removeCurrentContest(): void {
 	Cookies.remove("currentContest");
 }
 
-export async function getCurrentContest(
-	contests: ContestRaw[] = [],
-): Promise<Contest | null> {
+export async function getCurrentContest(contests: ContestRaw[] = []): Promise<Contest | null> {
 	// Import dynamically to avoid circular dependency
 	const { ContestsService } = await import("./contests.service");
 
@@ -46,8 +44,6 @@ export const isUserAdminOnAnyContest = (
 	contests: Array<{ person_contest_role?: Role }>,
 ): boolean => {
 	return contests.some(
-		(contest) =>
-			contest.person_contest_role !== undefined &&
-			isAdmin(contest.person_contest_role),
+		(contest) => contest.person_contest_role !== undefined && isAdmin(contest.person_contest_role),
 	);
 };

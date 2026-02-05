@@ -1,9 +1,9 @@
+import { Paper } from "components/public/paper";
+import { SEO } from "components/public/SEO";
 import { CheckCircle, TriangleAlert } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router";
-import { Paper } from "components/public/paper";
-import { SEO } from "components/public/SEO";
 import { useVerifyEmail } from "services/auth/queries";
 
 export function EmailConfirmPage() {
@@ -57,9 +57,7 @@ export function EmailConfirmPage() {
 						<div className="text-lg md:text-2xl font-bold text-gray-700">
 							{t("EmailConfirmPage.confirmed")}
 						</div>
-						<div className="text-gray-500">
-							{t("EmailConfirmPage.confirmedMessage")}
-						</div>
+						<div className="text-gray-500">{t("EmailConfirmPage.confirmedMessage")}</div>
 					</div>
 				</Paper>
 			</>
@@ -80,9 +78,7 @@ export function EmailConfirmPage() {
 					<div className="text-lg md:text-2xl font-bold text-gray-700">
 						{t("EmailConfirmPage.invalidLink")}
 					</div>
-					<div className="text-gray-500">
-						{t("EmailConfirmPage.invalidLinkMessage")}
-					</div>
+					<div className="text-gray-500">{t("EmailConfirmPage.invalidLinkMessage")}</div>
 				</div>
 			</Paper>
 		</>

@@ -1,16 +1,10 @@
+import { Button } from "components/ui/button";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "components/ui/sheet";
+import { cn } from "lib/utils";
 import { Menu } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router";
-import { Button } from "components/ui/button";
-import {
-	Sheet,
-	SheetContent,
-	SheetHeader,
-	SheetTitle,
-	SheetTrigger,
-} from "components/ui/sheet";
-import { cn } from "lib/utils";
 
 type Props = {
 	locale: string;
@@ -81,9 +75,7 @@ export function Nav({ items, locale }: Props) {
 				{items.map((item, index) => (
 					<Link key={index} to={item.href}>
 						<Button
-							variant={
-								item.className?.includes("border") ? "outline" : "ghost"
-							}
+							variant={item.className?.includes("border") ? "outline" : "ghost"}
 							size="sm"
 							className={cn(item.className)}
 						>

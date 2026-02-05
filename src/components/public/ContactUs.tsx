@@ -1,14 +1,8 @@
-import { useTranslation } from "react-i18next";
 import { Section } from "components/public/landing/Section";
 import { Card, CardContent } from "components/ui/card";
+import { useTranslation } from "react-i18next";
 
-const ContactUsLink = ({
-	href,
-	children,
-}: {
-	href: string;
-	children: React.ReactNode;
-}) => (
+const ContactUsLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
 	<a target="_blank" rel="noopener noreferrer" href={href} className="block">
 		<Card className="bg-[#f9eaea] hover:bg-white transition w-[270px] h-[150px] hover:shadow-xl hover:shadow-gray-200">
 			<CardContent className="flex flex-col items-center justify-center gap-2 h-full p-5">
@@ -38,12 +32,7 @@ export function ContactUs() {
 				</ContactUsLink>
 				<ContactUsLink href="https://t.me/wird_platform">
 					<span className="text-lg">{t("ContactUsSection.telegram")}</span>
-					<img
-						src="/assets/telegram-icon.svg"
-						alt="TelegramIcon"
-						width={40}
-						height={40}
-					/>
+					<img src="/assets/telegram-icon.svg" alt="TelegramIcon" width={40} height={40} />
 				</ContactUsLink>
 				<ContactUsLink href="https://web.facebook.com/Wird.Competition">
 					<span className="text-lg">{t("ContactUsSection.followUs")}</span>

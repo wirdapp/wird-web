@@ -56,11 +56,11 @@
 		"build:dev": "bunx --bun vite build --mode development",
 		"preview": "bunx --bun vite preview",
 		"test": "bunx --bun vitest",
-		"lint": "bunx --bun biome lint src/",
-		"lint:fix": "bunx --bun biome lint --write src/",
-		"format": "bunx --bun biome format --write src/",
-		"check": "bunx --bun biome check src/",
-		"check:fix": "bunx --bun biome check --write src/",
+		"lint": "bunx --bun biome lint src",
+		"lint:fix": "bunx --bun biome lint --write src",
+		"format": "bunx --bun biome format --write src",
+		"check": "bunx --bun biome check src --diagnostic-level=error",
+		"check:fix": "bunx --bun biome check --write src",
 		"typecheck": "bunx --bun tsc --noEmit"
 	},
 	"browserslist": {

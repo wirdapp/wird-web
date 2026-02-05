@@ -4,8 +4,7 @@ export default {
 	wirdLogo: "شعار وِرد",
 	getStarted: "ابدأ الآن",
 	welcome: "مرحبًا بكم في مسابقات ورد!",
-	siteDescription:
-		"ورد عبارة عن منصة غير ربحية ستساعد المعلمين في إنشاء مسابقات مخصصة لطلابهم.",
+	siteDescription: "ورد عبارة عن منصة غير ربحية ستساعد المعلمين في إنشاء مسابقات مخصصة لطلابهم.",
 	ourService: "خدماتنا",
 	contactUs: "تواصل معنا",
 	adminPanel: "لوحة التحكم",
@@ -39,15 +38,13 @@ export default {
 	},
 	GetStartedSection: {
 		title: "لنبدأ",
-		description:
-			"خطوة أولى نحو تحفيز طلابك مع مسابقاتنا الشخصية عبر الإنترنت على منصة ورد.",
+		description: "خطوة أولى نحو تحفيز طلابك مع مسابقاتنا الشخصية عبر الإنترنت على منصة ورد.",
 		iAmCreator: "انا مسؤول",
 		forParentsAndTeachers: "للوالدين والمعلمين",
 		iAmParticipant: "انا مستخدم",
 		forStudentsAndKids: "للطلاب والأطفال",
 		downloadNow: "حمل التطبيق الآن",
-		asStudentDownloadApp:
-			"كطالب، يمكنك تحميل تطبيق ورد والتسجيل في مسابقتك بسهولة.",
+		asStudentDownloadApp: "كطالب، يمكنك تحميل تطبيق ورد والتسجيل في مسابقتك بسهولة.",
 		getOnGooglePlay: "احصل على Google Play",
 		downloadOnAppStore: "حمل من App Store",
 		downloadOnAppGallery: "حمل من AppGallery",
@@ -73,20 +70,16 @@ export default {
 	EmailConfirmPage: {
 		loading: "جارٍ تأكيد بريدك الإلكتروني...",
 		confirmed: "تم تأكيد البريد الإلكتروني",
-		confirmedMessage:
-			"تم تأكيد بريدك الإلكتروني بنجاح. يمكنك الآن تسجيل الدخول إلى حسابك.",
+		confirmedMessage: "تم تأكيد بريدك الإلكتروني بنجاح. يمكنك الآن تسجيل الدخول إلى حسابك.",
 		invalidLink: "رابط غير صالح",
-		invalidLinkMessage:
-			"عذرًا، الرابط الذي اتبعته غير صالح. يرجى المحاولة مرة أخرى.",
+		invalidLinkMessage: "عذرًا، الرابط الذي اتبعته غير صالح. يرجى المحاولة مرة أخرى.",
 	},
 	ResetPasswordPage: {
 		title: "إعادة تعيين كلمة المرور",
 		invalidLink: "رابط غير صالح",
-		invalidLinkMessage:
-			"عذرًا، الرابط الذي اتبعته غير صالح. يرجى المحاولة مرة أخرى.",
+		invalidLinkMessage: "عذرًا، الرابط الذي اتبعته غير صالح. يرجى المحاولة مرة أخرى.",
 		success: "تم تغيير كلمة المرور بنجاح",
-		successMessage:
-			"يمكنك الآن تسجيل الدخول إلى حسابك باستخدام كلمة المرور الجديدة.",
+		successMessage: "يمكنك الآن تسجيل الدخول إلى حسابك باستخدام كلمة المرور الجديدة.",
 		resetPassword: "إعادة تعيين كلمة المرور",
 		newPassword: "كلمة المرور الجديدة",
 		confirmNewPassword: "تأكيد كلمة المرور الجديدة",
@@ -95,8 +88,7 @@ export default {
 	ForgotPasswordPage: {
 		title: "نسيت كلمة المرور",
 		emailSent: "تم إرسال بريد استعادة كلمة المرور",
-		emailSentMessage:
-			"يرجى فحص بريدك الإلكتروني واتباع الإرشادات لإعادة تعيين كلمة المرور.",
+		emailSentMessage: "يرجى فحص بريدك الإلكتروني واتباع الإرشادات لإعادة تعيين كلمة المرور.",
 		forgotPassword: "نسيت كلمة المرور",
 		forgotPasswordFormMessage:
 			"أدخل اسم المستخدم والبريد الإلكتروني الخاص بك لإعادة تعيين كلمة المرور.",
@@ -110,8 +102,7 @@ export default {
 		forgotUsername: "استعادة اسم المستخدم",
 		forgotUsernameFormMessage: "أدخل بريدك الإلكتروني لاستعادة اسم المستخدم.",
 		emailSent: "تم إرسال اسم المستخدم",
-		emailSentMessage:
-			"يرجى فحص بريدك الإلكتروني واتباع الإرشادات لاستعادة اسم المستخدم.",
+		emailSentMessage: "يرجى فحص بريدك الإلكتروني واتباع الإرشادات لاستعادة اسم المستخدم.",
 		email: "البريد الإلكتروني",
 		sendUsername: "إرسال اسم المستخدم",
 		forgotPassword: "نسيت كلمة المرور؟",
@@ -135,6 +126,5 @@ export default {
 	policy: "سياسة الخصوصية",
 	help: "المساعدة",
 	adminPanelHelp: "مساعدة لوحة التحكم",
-	adminPanelHelpText:
-		"شاهد قائمة التشغيل هذه لمعرفة كيفية استخدام لوحة التحكم.",
+	adminPanelHelpText: "شاهد قائمة التشغيل هذه لمعرفة كيفية استخدام لوحة التحكم.",
 } as const;

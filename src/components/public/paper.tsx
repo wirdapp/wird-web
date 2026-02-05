@@ -1,5 +1,5 @@
-import type React from "react";
 import { Card, CardContent } from "components/ui/card";
+import type React from "react";
 
 export const Paper = ({ children }: { children: React.ReactNode }) => {
 	return (

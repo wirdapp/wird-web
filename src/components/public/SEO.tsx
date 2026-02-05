@@ -27,9 +27,7 @@ export function SEO({
 
 			{/* Open Graph / Facebook */}
 			{ogTitle && <meta property="og:title" content={ogTitle} />}
-			{ogDescription && (
-				<meta property="og:description" content={ogDescription} />
-			)}
+			{ogDescription && <meta property="og:description" content={ogDescription} />}
 			{ogImage && <meta property="og:image" content={ogImage} />}
 			{ogUrl && <meta property="og:url" content={ogUrl} />}
 			<meta property="og:type" content="website" />
@@ -37,9 +35,7 @@ export function SEO({
 			{/* Twitter */}
 			<meta name="twitter:card" content={twitterCard} />
 			{ogTitle && <meta name="twitter:title" content={ogTitle} />}
-			{ogDescription && (
-				<meta name="twitter:description" content={ogDescription} />
-			)}
+			{ogDescription && <meta name="twitter:description" content={ogDescription} />}
 			{ogImage && <meta name="twitter:image" content={ogImage} />}
 		</>
 	);

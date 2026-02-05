@@ -1,9 +1,9 @@
-import { LayoutGrid, Lock, UserPlus, Users } from "lucide-react";
-import { useTranslation } from "react-i18next";
-import { Link } from "react-router";
 import { AppLinks } from "components/public/landing/app-links";
 import { Button } from "components/ui/button";
 import { Card, CardContent } from "components/ui/card";
+import { LayoutGrid, Lock, UserPlus, Users } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router";
 import { Section } from "./Section";
 
 export const GetStarted = () => {
@@ -42,9 +42,7 @@ export const GetStarted = () => {
 						<h3 className="text-lg text-gray-700 mb-4 font-bold">
 							{t("GetStartedSection.downloadNow")}
 						</h3>
-						<p className="mb-4">
-							{t("GetStartedSection.asStudentDownloadApp")}
-						</p>
+						<p className="mb-4">{t("GetStartedSection.asStudentDownloadApp")}</p>
 						<AppLinks />
 					</CardContent>
 				</Card>

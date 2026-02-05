@@ -1,8 +1,8 @@
+import { Footer } from "components/public/Footer";
+import { Header } from "components/public/Header";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Outlet, useSearchParams } from "react-router";
-import { Footer } from "components/public/Footer";
-import { Header } from "components/public/Header";
 
 export function PublicLayout() {
 	const [searchParams] = useSearchParams();
@@ -20,9 +20,7 @@ export function PublicLayout() {
 
 		// Apply font class based on locale
 		document.body.classList.remove("font-arabic", "font-english");
-		document.body.classList.add(
-			i18n.language === "ar" ? "font-arabic" : "font-english",
-		);
+		document.body.classList.add(i18n.language === "ar" ? "font-arabic" : "font-english");
 	}, [i18n.language, i18n.dir]);
 
 	return (

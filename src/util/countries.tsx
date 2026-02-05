@@ -16,8 +16,7 @@ export const allCountries = (lang = "en") =>
 		)
 		.filter(Boolean);
 
-export const getCountryName = (code: string, lang = "en") =>
-	countries.getName(code, lang) || code;
+export const getCountryName = (code: string, lang = "en") => countries.getName(code, lang) || code;
 
 export const getCountryFlagElement = (code: string, lang = "en", size = 40) => {
 	function Flag(props: React.ImgHTMLAttributes<HTMLImageElement>) {

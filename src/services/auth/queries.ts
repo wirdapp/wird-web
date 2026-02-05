@@ -45,8 +45,12 @@ export function useRequestPasswordReset() {
 
 export function useConfirmPasswordReset() {
 	return useMutation({
-		mutationFn: (data: { new_password1: string; new_password2: string; token: string; uid: string }) =>
-			AuthService.confirmPasswordReset(data),
+		mutationFn: (data: {
+			new_password1: string;
+			new_password2: string;
+			token: string;
+			uid: string;
+		}) => AuthService.confirmPasswordReset(data),
 	});
 }
 

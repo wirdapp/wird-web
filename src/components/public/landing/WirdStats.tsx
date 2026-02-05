@@ -1,6 +1,6 @@
+import { StatCard } from "components/public/landing/StatsCard";
 import { Globe, LayoutGrid, PenSquare, Users } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { StatCard } from "components/public/landing/StatsCard";
 import { useGeneralStats } from "services/contests/queries";
 import { getCountryFlagElement, getCountryName } from "util/countries";
 
@@ -13,9 +13,7 @@ export function WirdStats() {
 		return null;
 	}
 
-	const sortedCountries = [...stats.countries].sort(
-		(a, b) => b.country_count - a.country_count,
-	);
+	const sortedCountries = [...stats.countries].sort((a, b) => b.country_count - a.country_count);
 
 	return (
 		<div className="text-gray-500 px-6 lg:px-8 bg-[#fbf9f7] relative overflow-hidden">
@@ -25,9 +23,7 @@ export function WirdStats() {
 				className="h-[170%] w-auto absolute block-end-0 inline-end-0 opacity-10"
 			/>
 			<div className="max-w-5xl mx-auto w-full flex flex-col items-center justify-center py-8 relative">
-				<div className="text-2xl font-bold my-4 text-gray-500">
-					{t("wirdStats.title")}
-				</div>
+				<div className="text-2xl font-bold my-4 text-gray-500">{t("wirdStats.title")}</div>
 				<div className="flex flex-col md:flex-row gap-6 md:gap-8 text-center py-4 w-full">
 					<StatCard
 						title={t("wirdStats.registeredMembers")}

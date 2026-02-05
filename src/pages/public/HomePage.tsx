@@ -1,12 +1,12 @@
-import { useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import { useLocation } from "react-router";
 import { GetStarted } from "components/public/landing/GetStarted";
 import { HomeBanner } from "components/public/landing/HomeBanner";
 import { OurService } from "components/public/landing/OurService";
 import { VideoIntro } from "components/public/landing/VideoIntro";
 import { WirdStats } from "components/public/landing/WirdStats";
 import { SEO } from "components/public/SEO";
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router";
 
 export function HomePage() {
 	const { t, i18n } = useTranslation();
@@ -43,11 +43,7 @@ export function HomePage() {
 					<HomeBanner />
 					<GetStarted />
 					<WirdStats />
-					<VideoIntro
-						locale={locale}
-						title={t("introTitle")}
-						description={t("introText")}
-					/>
+					<VideoIntro locale={locale} title={t("introTitle")} description={t("introText")} />
 					<OurService />
 				</div>
 			</main>

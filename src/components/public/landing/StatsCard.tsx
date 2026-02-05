@@ -1,6 +1,6 @@
-import CountUp from "react-countup";
 import { Card, CardContent } from "components/ui/card";
 import { cn } from "lib/utils";
+import CountUp from "react-countup";
 
 export const StatCard = ({
 	title,
@@ -50,11 +50,7 @@ export const StatCard = ({
 	if (ghost) {
 		return (
 			<div
-				className={cn(
-					"flex flex-1",
-					small ? "gap-2 md:gap-3" : "gap-3 md:gap-4",
-					classNames?.root,
-				)}
+				className={cn("flex flex-1", small ? "gap-2 md:gap-3" : "gap-3 md:gap-4", classNames?.root)}
 			>
 				{content}
 			</div>
@@ -63,12 +59,7 @@ export const StatCard = ({
 
 	return (
 		<Card className={cn("flex-1", classNames?.root)}>
-			<CardContent
-				className={cn(
-					"flex",
-					small ? "gap-2 md:gap-3 p-4" : "gap-3 md:gap-4 p-6",
-				)}
-			>
+			<CardContent className={cn("flex", small ? "gap-2 md:gap-3 p-4" : "gap-3 md:gap-4 p-6")}>
 				{content}
 			</CardContent>
 		</Card>

@@ -1,21 +1,15 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { AxiosError } from "axios";
+import { SubmitButton } from "components/public/submit-button";
+import { Alert, AlertDescription, AlertTitle } from "components/ui/alert";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "components/ui/form";
+import { PasswordInput } from "components/ui/password-input";
 import { CheckCircle } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import * as z from "zod";
-import { SubmitButton } from "components/public/submit-button";
-import { Alert, AlertDescription, AlertTitle } from "components/ui/alert";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormMessage,
-} from "components/ui/form";
-import { PasswordInput } from "components/ui/password-input";
 import { useConfirmPasswordReset } from "services/auth/queries";
+import * as z from "zod";
 
 type Props = {
 	token: string;
@@ -79,9 +73,7 @@ export const ResetPasswordForm = ({ token, uid }: Props) => {
 		<Alert variant="success" className="max-w-md w-full">
 			<CheckCircle className="size-4" />
 			<AlertTitle>{t("ResetPasswordPage.success")}</AlertTitle>
-			<AlertDescription>
-				{t("ResetPasswordPage.successMessage")}
-			</AlertDescription>
+			<AlertDescription>{t("ResetPasswordPage.successMessage")}</AlertDescription>
 		</Alert>
 	) : (
 		<Form {...form}>
@@ -89,9 +81,7 @@ export const ResetPasswordForm = ({ token, uid }: Props) => {
 				<div className="text-lg md:text-2xl font-bold text-gray-700 mb-4">
 					{t("ResetPasswordPage.resetPassword")}
 				</div>
-				<div className="text-gray-500 mb-5">
-					{t("ResetPasswordPage.enterNewPassword")}:
-				</div>
+				<div className="text-gray-500 mb-5">{t("ResetPasswordPage.enterNewPassword")}:</div>
 				<div className="flex flex-col gap-4 w-full">
 					{form.formState.errors.root && (
 						<p className="text-sm font-medium text-destructive">
@@ -104,10 +94,7 @@ export const ResetPasswordForm = ({ token, uid }: Props) => {
 						render={({ field }) => (
 							<FormItem>
 								<FormControl>
-									<PasswordInput
-										placeholder={t("ResetPasswordPage.newPassword")}
-										{...field}
-									/>
+									<PasswordInput placeholder={t("ResetPasswordPage.newPassword")} {...field} />
 								</FormControl>
 								<FormMessage />
 							</FormItem>

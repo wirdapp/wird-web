@@ -1,8 +1,8 @@
-import { useTranslation } from "react-i18next";
-import { Link } from "react-router";
 import { Paper } from "components/public/paper";
 import { SEO } from "components/public/SEO";
 import { ForgotUsernameForm } from "components/public/user/forgot-username-form";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router";
 
 export function ForgotUsernamePage() {
 	const { t } = useTranslation();
