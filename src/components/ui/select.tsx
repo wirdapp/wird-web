@@ -82,7 +82,7 @@ const SelectContent = React.forwardRef<
 	if (isMobile) {
 		return (
 			<SelectPrimitive.Portal>
-				<SelectPrimitive.Backdrop className="fixed inset-0 z-50 bg-black/30 backdrop-blur-[2px] data-[open]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[open]:fade-in-0" />
+				<SelectPrimitive.Backdrop className="fixed inset-0 z-50 bg-black/30 backdrop-blur-[2px] data-[open]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[open]:fade-in-0 data-[open]:duration-300 data-[closed]:duration-200" />
 				<SelectPrimitive.Positioner className="!fixed !inset-x-0 !bottom-0 !top-auto !w-full !transform-none z-[51]">
 					<SelectPrimitive.Popup
 						ref={ref}
