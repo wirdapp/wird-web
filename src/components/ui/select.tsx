@@ -65,8 +65,11 @@ const SelectContent = React.forwardRef<
 	HTMLDivElement,
 	React.ComponentPropsWithoutRef<"div"> & {
 		position?: string;
+		align?: "start" | "center" | "end";
+		side?: "top" | "right" | "bottom" | "left" | "inline-start" | "inline-end";
+		sideOffset?: number;
 	}
->(({ className, children, position: _position, ...props }, ref) => {
+>(({ className, children, position: _position, align = "start", side = "bottom", sideOffset = 4, ...props }, ref) => {
 	const isMobile = useIsMobile();
 
 	const listContent =
@@ -102,7 +105,7 @@ const SelectContent = React.forwardRef<
 
 	return (
 		<SelectPrimitive.Portal>
-			<SelectPrimitive.Positioner className="z-[51]">
+			<SelectPrimitive.Positioner className="z-[51]" align={align} side={side} sideOffset={sideOffset} alignItemWithTrigger={false}>
 				<SelectPrimitive.Popup
 					ref={ref}
 					className={cn(
