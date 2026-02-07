@@ -38,7 +38,7 @@ const DialogContent = React.forwardRef<HTMLDivElement, React.ComponentPropsWitho
 					ref={ref}
 					className={cn(
 						isMobile
-							? "fixed inset-x-0 bottom-0 z-50 grid w-full max-h-[85vh] gap-5 overflow-y-auto rounded-t-2xl border-t bg-background p-6 pb-8 shadow-lg data-[open]:animate-in data-[closed]:animate-out data-[open]:slide-in-from-bottom data-[closed]:slide-out-to-bottom data-[open]:duration-300 data-[closed]:duration-200"
+							? "fixed inset-x-0 bottom-0 z-50 grid w-full min-h-[50vh] max-h-[85vh] gap-5 overflow-y-auto rounded-t-2xl border-t bg-background p-6 pb-8 shadow-lg data-[open]:animate-in data-[closed]:animate-out data-[open]:slide-in-from-bottom data-[closed]:slide-out-to-bottom data-[open]:duration-300 data-[closed]:duration-200"
 							: "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg max-h-[85vh] overflow-y-auto translate-x-[-50%] translate-y-[-50%] gap-5 border bg-background p-8 shadow-lg duration-150 data-[open]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[open]:fade-in-0 data-[closed]:zoom-out-[0.97] data-[open]:zoom-in-[0.97] sm:rounded-xl",
 						className,
 					)}
