@@ -14,6 +14,7 @@ interface UpdateUserInfoData {
 	last_name?: string;
 	phone_number?: string;
 	profile_photo?: string | unknown[];
+	timezone?: string;
 }
 
 const LAST_EMAIL_RESEND_KEY = "wj3TrwBaUsM5Sc6dpPMlGhxoNA0n7plv2";
