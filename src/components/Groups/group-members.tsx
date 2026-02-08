@@ -23,7 +23,7 @@ const MemberActions: React.FC<MemberActionsProps> = ({ groupId, member }) => {
 
 	const isSuperAdmin = currentUser?.role !== undefined && isAtLeastSuperAdmin(currentUser.role);
 
-	if (!isSuperAdmin || currentUser?.username === member.person_info.username) return null;
+	if (!isSuperAdmin || currentUser?.username === member.person.username) return null;
 
 	const removeMember = async () => {
 		try {
@@ -70,7 +70,7 @@ export const GroupMembers: React.FC<GroupMembersProps> = ({ group, members }) =>
 				{members.map((member) => (
 					<div key={member.id} className="flex items-center justify-between p-4">
 						<div className="flex flex-col">
-							<span className="font-medium">{getFullName(member.person_info)}</span>
+							<span className="font-medium">{getFullName(member.person)}</span>
 							<span className="text-sm text-muted-foreground">
 								{member.group_role === GroupRole.ADMIN && t("group-roles.admin")}
 								{member.group_role === GroupRole.MEMBER && t("group-roles.member")}

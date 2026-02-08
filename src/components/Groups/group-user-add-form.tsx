@@ -3,13 +3,12 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { useAddGroupMember } from "../../services/groups/queries";
 import type { GroupMember } from "../../types";
 import { GroupRole } from "../../types";
 import { Role } from "../../util/roles";
 import { useDashboardData } from "../../util/routes-data";
-import { MembersSelect } from "../contest-results/members-results/members-select";
+import { MultiMembersSelect } from "../shared/multi-members-select";
 
 interface GroupUserAddFormProps {
 	groupId: string;
@@ -35,7 +34,6 @@ export const GroupUserAddForm: React.FC<GroupUserAddFormProps> = ({
 	const { t } = useTranslation();
 	const [formErrors, setFormErrors] = React.useState<{ [key: string]: string[] }>({});
 	const [selectedMembers, setSelectedMembers] = React.useState<string[]>([]);
-	const isMobile = useIsMobile();
 	const addGroupMember = useAddGroupMember();
 
 	const fillErrors = (errors: ErrorObject[] | undefined) => {
@@ -101,20 +99,17 @@ export const GroupUserAddForm: React.FC<GroupUserAddFormProps> = ({
 				<PlusCircleIcon className="h-5 w-5" />
 				{role === GroupRole.ADMIN ? t("add-admins") : t("add-members")}
 			</div>
-			<div className={`flex gap-2 ${isMobile ? "flex-col" : "flex-row"}`}>
+			<div className="flex gap-2 flex-col sm:flex-row">
 				<div className="flex-1">
-					<MembersSelect
+					<MultiMembersSelect
 						placeholder={t("select-member")}
 						role={role === GroupRole.ADMIN ? Role.ADMIN : Role.MEMBER}
 						excludeUsernames={[
 							currentUser?.username ?? "",
-							...(groupMembers ?? []).map((m) => m.person_info.username),
+							...(groupMembers ?? []).map((m) => m.person.username),
 						]}
-						mode="multiple"
 						value={selectedMembers}
-						onChange={(value) => setSelectedMembers(value as string[])}
-						status={formErrors.contest_person ? "error" : undefined}
-						className="w-full"
+						onChange={(value) => setSelectedMembers(value)}
 					/>
 					{formErrors.contest_person && (
 						<p className="text-sm text-destructive mt-1">{formErrors.contest_person.join(", ")}</p>

@@ -240,7 +240,7 @@ export type Member = ContestPerson;
 /** Contest person in group context */
 export interface ContestPersonGroup {
 	id: UUID;
-	person_info: PersonInfo;
+	person: PersonInfo;
 	group_role: GroupRole;
 }
 
