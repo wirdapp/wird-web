@@ -71,4 +71,7 @@ export const loginWithGoogle = async (code: string): Promise<void> => {
 	const { AuthService } = await import("./auth.service");
 	const session = await AuthService.googleLogin(code);
 	saveSession(session);
+
+	const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+	AuthService.updateUserInfo({ timezone });
 };
