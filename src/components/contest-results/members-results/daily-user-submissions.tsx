@@ -2,51 +2,50 @@ import dayjs from "dayjs";
 import type React from "react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
-import { Label } from "@/components/ui/label";
 import { useCriteria } from "../../../services/contest-criteria/queries";
 import { useMemberDaySubmissions } from "../../../services/contest-results/queries";
 import { useDashboardData } from "../../../util/routes-data";
 import { DailySubmissionsTable } from "./daily-submissions-table";
+import { DateSlider } from "./date-slider";
 
 interface DailyUserSubmissionsProps {
-	onUpdated?: () => void;
 	userId?: string;
 }
 
-export const DailyUserSubmissions: React.FC<DailyUserSubmissionsProps> = ({
-	onUpdated,
-	userId,
-}) => {
+export const DailyUserSubmissions: React.FC<DailyUserSubmissionsProps> = ({ userId }) => {
 	const { t } = useTranslation();
 	const { currentContest } = useDashboardData();
 	const [selectedDate, setSelectedDate] = useState<string | null>(null);
 	const [dateValue, setDateValue] = useState<Date | undefined>(undefined);
 
 	const { data: criteriaData = [] } = useCriteria(currentContest?.id);
-	const {
-		data: submissionsData,
-		isLoading: loading,
-		refetch,
-	} = useMemberDaySubmissions(userId, selectedDate ?? undefined, currentContest?.id);
+	const { data: submissionsData, isLoading: loading } = useMemberDaySubmissions(
+		userId,
+		selectedDate ?? undefined,
+		currentContest?.id,
+	);
 
 	const submissions = (submissionsData as { points?: unknown[] } | undefined)?.points ?? [];
 
 	useEffect(() => {
-		setSelectedDate(null);
-		setDateValue(undefined);
-	}, []);
+		if (currentContest?.start_date) {
+			const startDate = dayjs(currentContest.start_date);
+			setSelectedDate(startDate.format("YYYY-MM-DD"));
+			setDateValue(startDate.toDate());
+		}
+	}, [currentContest?.start_date]);
 
-	const handleLoadSubmissions = (): void => {
-		if (dateValue) {
-			setSelectedDate(dayjs(dateValue).format("YYYY-MM-DD"));
+	const handleDatePickerChange = (date: Date | undefined): void => {
+		setDateValue(date);
+		if (date) {
+			setSelectedDate(dayjs(date).format("YYYY-MM-DD"));
 		}
 	};
 
-	const afterRecordUpdate = (): void => {
-		refetch();
-		onUpdated?.();
+	const handleSliderDateSelect = (date: string): void => {
+		setSelectedDate(date);
+		setDateValue(dayjs(date).toDate());
 	};
 
 	const fromDate = currentContest?.start_date
@@ -56,28 +55,30 @@ export const DailyUserSubmissions: React.FC<DailyUserSubmissionsProps> = ({
 
 	return (
 		<div>
-			<div className="flex flex-wrap items-end gap-4 mb-6">
-				<div className="flex flex-col gap-2">
-					<Label>{t("dailySubmissionsPopup.date")}</Label>
-					<DatePicker
-						value={dateValue}
-						onChange={setDateValue}
-						placeholder={t("dailySubmissionsPopup.date")}
-						title={t("dailySubmissionsPopup.date")}
-						fromDate={fromDate}
-						toDate={toDate}
-						className="w-[200px]"
+			{currentContest && userId && fromDate && toDate && (
+				<div className="sticky -top-px z-10 bg-background -mx-6 px-6 py-3">
+					<DateSlider
+						fromDate={dayjs(fromDate)}
+						toDate={dayjs(toDate)}
+						userId={userId}
+						contestId={String(currentContest.id)}
+						selectedDate={selectedDate}
+						onSelectDate={handleSliderDateSelect}
 					/>
 				</div>
-				<Button onClick={handleLoadSubmissions} disabled={!dateValue || loading}>
-					{loading ? t("loading") : t("dailySubmissionsPopup.load")}
-				</Button>
+			)}
+			<div className="mb-4">
+				<DatePicker
+					value={dateValue}
+					onChange={handleDatePickerChange}
+					placeholder={t("dailySubmissionsPopup.date")}
+					title={t("dailySubmissionsPopup.date")}
+					fromDate={fromDate}
+					toDate={toDate}
+					className="w-[180px] h-8 text-xs"
+				/>
 			</div>
-			<DailySubmissionsTable
-				submissions={submissions as never[]}
-				criteria={criteriaData}
-				onUpdated={afterRecordUpdate}
-			/>
+			<DailySubmissionsTable submissions={submissions as never[]} criteria={criteriaData} />
 		</div>
 	);
 };
