@@ -38,7 +38,7 @@ export function Nav({ items, locale }: Props) {
 					<SheetHeader>
 						<SheetTitle className="text-start">Menu</SheetTitle>
 					</SheetHeader>
-					<nav className="flex flex-col gap-4 mt-6">
+					<nav className="flex flex-col gap-4 mt-6 px-6 pb-6">
 						<Button
 							variant="outline"
 							onClick={() => changeLocale(locale === "en" ? "ar" : "en")}

@@ -1,3 +1,7 @@
+/**
+ * @deprecated This editable component is no longer used. Submission cards are now read-only.
+ * Kept for potential reuse in a future editing flow.
+ */
 import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import type React from "react";
 import { useEffect, useState } from "react";

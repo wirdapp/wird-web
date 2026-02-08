@@ -1,11 +1,16 @@
+import { ClipboardList } from "lucide-react";
 import type React from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Empty } from "@/components/ui/empty";
 import { Label } from "@/components/ui/label";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useMemberResults } from "../../../services/contest-results/queries";
 import { Role } from "../../../util/roles";
 import { getFullName, getInitials } from "../../../util/user-utils";
@@ -16,14 +21,13 @@ import { MembersSelect } from "./members-select";
 
 export const MembersResults: React.FC = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 	const userId = searchParams.get("userId");
+	const [sheetOpen, setSheetOpen] = useState(false);
+	const isMobile = useIsMobile();
+	const sheetSide = isMobile ? "bottom" : i18n.dir() === "rtl" ? "left" : "right";
 
-	const { data: result, isLoading: loading, refetch } = useMemberResults(userId ?? undefined);
-
-	const reload = async (): Promise<void> => {
-		await refetch();
-	};
+	const { data: result, isLoading: loading } = useMemberResults(userId ?? undefined);
 
 	const handleUserChange = (value: string | null): void => {
 		if (value) {
@@ -60,7 +64,7 @@ export const MembersResults: React.FC = () => {
 								</div>
 							</div>
 						) : (
-							<div className="flex items-center gap-4">
+							<div className="flex flex-wrap items-center gap-4">
 								<Avatar className="h-16 w-16 bg-yellow-400 text-white">
 									<AvatarFallback className="bg-yellow-400 text-white text-xl">
 										{getInitials(result?.person_data)}
@@ -70,6 +74,14 @@ export const MembersResults: React.FC = () => {
 									<h3 className="text-2xl font-semibold">{getFullName(result?.person_data)}</h3>
 									<span className="text-muted-foreground">{result?.person_data?.username}</span>
 								</div>
+								<Button
+									size="lg"
+									onClick={() => setSheetOpen(true)}
+									className="ms-auto max-md:w-full"
+								>
+									<ClipboardList className="h-4 w-4 me-2" />
+									{t("dailySubmissionsPopup.title")}
+								</Button>
 							</div>
 						)}
 
@@ -133,19 +145,17 @@ export const MembersResults: React.FC = () => {
 							</Card>
 						</div>
 
-						{/* Daily submissions */}
-						<Card className="border-none">
-							<CardHeader>
-								<CardTitle className="text-base">{t("dailySubmissionsPopup.title")}</CardTitle>
-							</CardHeader>
-							<CardContent>
-								{loading ? (
-									<Skeleton className="h-[200px] w-full" />
-								) : (
-									<DailyUserSubmissions userId={result?.person_data?.id} onUpdated={reload} />
-								)}
-							</CardContent>
-						</Card>
+						{/* Daily submissions sheet */}
+						<Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+							<SheetContent side={sheetSide} className={isMobile ? "h-[85vh]" : "sm:max-w-lg"}>
+								<SheetHeader>
+									<SheetTitle>{t("dailySubmissionsPopup.title")}</SheetTitle>
+								</SheetHeader>
+								<div className="overflow-y-auto flex-1 mt-4 px-6 pb-6">
+									<DailyUserSubmissions userId={result?.person_data?.id} />
+								</div>
+							</SheetContent>
+						</Sheet>
 					</div>
 				) : (
 					<Empty description="Select a person to see results" className="mt-24" />
