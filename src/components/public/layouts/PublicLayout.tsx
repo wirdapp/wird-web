@@ -1,5 +1,6 @@
 import { Footer } from "components/public/Footer";
 import { Header } from "components/public/Header";
+import { useChatwoot } from "hooks/useChatwoot";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Outlet, useSearchParams } from "react-router";
@@ -22,6 +23,8 @@ export function PublicLayout() {
 		document.body.classList.remove("font-arabic", "font-english");
 		document.body.classList.add(i18n.language === "ar" ? "font-arabic" : "font-english");
 	}, [i18n.language, i18n.dir, i18n]);
+
+	useChatwoot();
 
 	return (
 		<div className="public-theme flex flex-col min-h-screen bg-[#fbf9f7]">

@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ReactComponent as WirdLogo } from "assets/icons/Shared/wirdLogo.svg";
 import { useHandleError } from "hooks/handleError";
+import { useChatwoot } from "hooks/useChatwoot";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -24,6 +25,7 @@ import { AuthPageFooter } from "../shared/auth-page-footer";
 import { SocialLoginSection } from "../shared/social-login-buttons";
 
 function Login() {
+	useChatwoot();
 	const { t } = useTranslation();
 	const navigate = useNavigate();
 	const [loading, setLoading] = useState(false);

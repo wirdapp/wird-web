@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ReactComponent as WirdLogo } from "assets/icons/Shared/wirdLogo.svg";
 import { isAxiosError } from "axios";
+import { useChatwoot } from "hooks/useChatwoot";
 import { Upload as UploadIcon } from "lucide-react";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -48,6 +49,7 @@ interface SignupErrors {
 }
 
 function Signup() {
+	useChatwoot();
 	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
 	const { t } = useTranslation();
