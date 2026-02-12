@@ -1,5 +1,12 @@
 import { useEffect } from "react";
 
+declare global {
+	interface Window {
+		chatwootSDK?: { run: (config: { websiteToken: string; baseUrl: string }) => void };
+		$chatwoot?: unknown;
+	}
+}
+
 const BASE_URL = "https://chatwoot.oabuhamdan.com";
 
 export function useChatwoot() {
@@ -19,8 +26,8 @@ export function useChatwoot() {
 			script.remove();
 			document.querySelector(".woot-widget-holder")?.remove();
 			document.querySelector(".woot--bubble-holder")?.remove();
-			delete (window as any).chatwootSDK;
-			delete (window as any).$chatwoot;
+			delete window.chatwootSDK;
+			delete window.$chatwoot;
 		};
 	}, []);
 }
