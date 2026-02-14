@@ -3,6 +3,7 @@ import { X } from "lucide-react";
 import * as React from "react";
 
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useStableViewportHeight } from "@/hooks/use-stable-viewport-height";
 import { cn } from "@/lib/utils";
 
 const Dialog = DialogPrimitive.Root;
@@ -28,8 +29,9 @@ const DialogOverlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWitho
 DialogOverlay.displayName = "DialogOverlay";
 
 const DialogContent = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<"div">>(
-	({ className, children, ...props }, ref) => {
+	({ className, children, style, ...props }, ref) => {
 		const isMobile = useIsMobile();
+		const stableHeight = useStableViewportHeight();
 		const popupRef = React.useRef<HTMLDivElement>(null);
 
 		const mergedRef = React.useCallback(
@@ -52,6 +54,11 @@ const DialogContent = React.forwardRef<HTMLDivElement, React.ComponentPropsWitho
 			[isMobile],
 		);
 
+		const mobileHeightStyle =
+			isMobile && stableHeight
+				? { minHeight: stableHeight * 0.5, maxHeight: stableHeight * 0.85 }
+				: undefined;
+
 		return (
 			<DialogPortal>
 				<DialogOverlay />
@@ -59,9 +66,10 @@ const DialogContent = React.forwardRef<HTMLDivElement, React.ComponentPropsWitho
 					ref={mergedRef}
 					initialFocus={isMobile ? false : undefined}
 					onAnimationEnd={handleAnimationEnd}
+					style={{ ...style, ...mobileHeightStyle }}
 					className={cn(
 						isMobile
-							? "fixed inset-x-0 bottom-0 z-50 grid w-full min-h-[50vh] max-h-[85vh] gap-5 overflow-y-auto rounded-t-2xl border-t bg-background p-6 pb-8 shadow-lg data-[open]:animate-in data-[closed]:animate-out data-[open]:slide-in-from-bottom data-[closed]:slide-out-to-bottom data-[open]:duration-300 data-[closed]:duration-200"
+							? "fixed inset-x-0 bottom-0 z-50 grid w-full gap-5 overflow-y-auto rounded-t-2xl border-t bg-background p-6 pb-8 shadow-lg data-[open]:animate-in data-[closed]:animate-out data-[open]:slide-in-from-bottom data-[closed]:slide-out-to-bottom data-[open]:duration-300 data-[closed]:duration-200"
 							: "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg max-h-[85vh] overflow-y-auto translate-x-[-50%] translate-y-[-50%] gap-5 border bg-background p-8 shadow-lg duration-150 data-[open]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[open]:fade-in-0 data-[closed]:zoom-out-[0.97] data-[open]:zoom-in-[0.97] sm:rounded-xl",
 						className,
 					)}
