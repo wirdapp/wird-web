@@ -45,7 +45,10 @@ export const ManageAnnouncements: React.FC = () => {
 
 	const formSchema = z.object({
 		title: z.string().min(1, t("requiredField")),
-		body: z.string().min(1, t("requiredField")),
+		body: z
+			.string()
+			.min(1, t("requiredField"))
+			.max(500, t("maxCharsLimit", { max: 500 })),
 	});
 
 	type FormValues = z.infer<typeof formSchema>;
@@ -142,7 +145,10 @@ export const ManageAnnouncements: React.FC = () => {
 						<DialogTitle>{t("make-an-announcement")}</DialogTitle>
 					</DialogHeader>
 					<Form {...form}>
-						<form onSubmit={form.handleSubmit(onFormFinish)} className="space-y-4">
+						<form
+							onSubmit={form.handleSubmit(onFormFinish)}
+							className="max-w-full space-y-4 overflow-hidden px-1"
+						>
 							<FormField
 								control={form.control}
 								name="title"
@@ -170,7 +176,9 @@ export const ManageAnnouncements: React.FC = () => {
 											<Textarea
 												placeholder={t("notification-body-placeholder")}
 												rows={5}
+												maxLength={500}
 												disabled={createNotification.isPending}
+												className="overflow-x-auto"
 												{...field}
 											/>
 										</FormControl>
