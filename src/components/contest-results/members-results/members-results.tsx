@@ -43,7 +43,7 @@ export const MembersResults: React.FC = () => {
 					<Label>{t("selectMember")}</Label>
 					<MembersSelect
 						placeholder={t("selectMember")}
-						role={Role.MEMBER}
+						roles={[Role.MEMBER, Role.ADMIN]}
 						value={userId ?? undefined}
 						onValueChange={handleUserChange}
 					/>
