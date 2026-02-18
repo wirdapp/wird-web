@@ -21,7 +21,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useRemoveUserFromContest } from "../../services/members/queries";
 import type { ContestPerson } from "../../types";
-import { isAtLeastSuperAdmin, isMember, isOwner, Role } from "../../util/roles";
+import { isAdmin, isAtLeastSuperAdmin, isMember, isOwner, Role } from "../../util/roles";
 import { useDashboardData } from "../../util/routes-data";
 import { getFullName, getInitials } from "../../util/user-utils";
 import ChangeRoleDropdown from "./ChangeRoleDropdown";
@@ -84,7 +84,7 @@ const UserListItem: React.FC<UserListItemProps> = ({ student, onChange }) => {
 
 				<div className="flex flex-wrap gap-2 mt-2 md:mt-0">
 					{canEdit && <ChangeRoleDropdown student={student} onChange={onChange} />}
-					{isMember(student.contest_role) && (
+					{(isMember(student.contest_role) || isAdmin(student.contest_role)) && (
 						<Button
 							variant="outline"
 							size="sm"

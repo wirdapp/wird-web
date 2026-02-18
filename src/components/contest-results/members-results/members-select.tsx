@@ -1,5 +1,5 @@
 import type React from "react";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import {
 	Select,
 	SelectContent,
@@ -9,20 +9,14 @@ import {
 } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
-import { MembersService } from "../../../services/members/members.service";
+import { useMembers } from "../../../services/members/queries";
 import type { ContestPerson, Role } from "../../../types";
 import { getFullName } from "../../../util/user-utils";
-
-interface MemberOption {
-	value: string;
-	label: string | null;
-	username: string;
-}
 
 type ValueFieldFunction = (member: ContestPerson) => string;
 
 interface MembersSelectProps {
-	role?: Role;
+	roles?: Role[];
 	valueField?: string | ValueFieldFunction;
 	excludeUsernames?: string[];
 	value?: string | string[];
@@ -36,7 +30,7 @@ interface MembersSelectProps {
 }
 
 export const MembersSelect: React.FC<MembersSelectProps> = ({
-	role,
+	roles,
 	valueField = "id",
 	excludeUsernames,
 	value,
@@ -48,26 +42,18 @@ export const MembersSelect: React.FC<MembersSelectProps> = ({
 	mode: _mode,
 	status: _status,
 }) => {
-	const [members, setMembers] = useState<MemberOption[]>([]);
-	const [loading, setLoading] = useState<boolean>(false);
+	const { data, isLoading: loading } = useMembers();
 
-	useEffect(() => {
-		setLoading(true);
-		MembersService.getUsers({ role })
-			.then((res) => {
-				const membersList = Array.isArray(res) ? res : res.results;
-				setMembers(
-					membersList.map((member) => ({
-						value: typeof valueField === "function" ? valueField(member) : member.id,
-						label: getFullName(member.person_info),
-						username: member.person_info.username,
-					})),
-				);
-			})
-			.finally(() => {
-				setLoading(false);
-			});
-	}, [role, valueField]);
+	const members = useMemo(() => {
+		if (!data) return [];
+		return data.results
+			.filter((member) => !roles || roles.includes(member.contest_role))
+			.map((member) => ({
+				value: typeof valueField === "function" ? valueField(member) : member.id,
+				label: getFullName(member.person_info),
+				username: member.person_info.username,
+			}));
+	}, [data, valueField, roles]);
 
 	const filteredMembers = useMemo(
 		() => members.filter((member) => !excludeUsernames?.includes(member.username)),
