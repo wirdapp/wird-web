@@ -643,6 +643,8 @@ export interface AllNotification {
 	title: string;
 	body: string;
 	created_at: string;
+	sent_at: string | null;
+	is_sent: boolean;
 	contest: UUID;
 }
 

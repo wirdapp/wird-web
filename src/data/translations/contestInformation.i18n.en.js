@@ -20,6 +20,8 @@ const contestInformationI18nEn = {
 	"delete-all-notifications": "Delete All Notifications",
 	"confirm-delete-all-notifications":
 		"Are you sure you want to delete all notifications? This action cannot be undone.",
+	"notifications-deleted-successfully": "All notifications deleted successfully",
+	sent: "Sent",
 	"not-sent-yet": "Not sent yet",
 	"success-to-add-new-announcement-msg": "New announcement added successfully",
 	"fail-to-add-new-announcement-msg": "Failed to add new announcement",

@@ -35,3 +35,17 @@ export function useCreateNotification() {
 		},
 	});
 }
+
+export function useDeleteAllNotifications() {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: ({ contestId }: { contestId: string }) =>
+			NotificationsService.deleteAllNotifications(contestId),
+		onSuccess: (_, { contestId }) => {
+			queryClient.invalidateQueries({
+				queryKey: notificationKeys.list(contestId),
+			});
+		},
+	});
+}

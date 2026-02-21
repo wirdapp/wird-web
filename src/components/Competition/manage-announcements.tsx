@@ -26,7 +26,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
-import { useCreateNotification, useNotifications } from "../../services/notifications/queries";
+import {
+	useCreateNotification,
+	useDeleteAllNotifications,
+	useNotifications,
+} from "../../services/notifications/queries";
 import { isAtLeastSuperAdmin } from "../../util/roles";
 import { useDashboardData } from "../../util/routes-data";
 
@@ -41,6 +45,7 @@ export const ManageAnnouncements: React.FC = () => {
 	const { t } = useTranslation();
 	const [announcementFormVisible, setAnnouncementFormVisible] = useState<boolean>(false);
 	const createNotification = useCreateNotification();
+	const deleteAllNotifications = useDeleteAllNotifications();
 	const { data: notifications = [], isFetching } = useNotifications(currentContest?.id);
 
 	const formSchema = z.object({
@@ -99,9 +104,33 @@ export const ManageAnnouncements: React.FC = () => {
 					<h2 className="text-base font-bold">{t("active-announcements")}</h2>
 
 					{canManageAnnouncements && (
-						<Button variant="outline" onClick={() => setAnnouncementFormVisible(true)}>
-							{t("new-announcement")}
-						</Button>
+						<div className="flex gap-2">
+							{notifications.length > 0 && (
+								<Button
+									variant="destructive"
+									onClick={() => {
+										if (!currentContest) return;
+										deleteAllNotifications.mutate(
+											{ contestId: currentContest.id },
+											{
+												onSuccess: () => {
+													toast.success(t("notifications-deleted-successfully"));
+												},
+												onError: () => {
+													toast.error(t("something-went-wrong"));
+												},
+											},
+										);
+									}}
+									disabled={deleteAllNotifications.isPending}
+								>
+									{deleteAllNotifications.isPending ? "..." : t("delete-all-notifications")}
+								</Button>
+							)}
+							<Button variant="outline" onClick={() => setAnnouncementFormVisible(true)}>
+								{t("new-announcement")}
+							</Button>
+						</div>
 					)}
 				</div>
 				{notifications.length === 0 ? (
@@ -122,11 +151,18 @@ export const ManageAnnouncements: React.FC = () => {
 									} ${index === notifications.length - 1 ? "rounded-b-lg" : ""}`}
 								>
 									<div className="flex flex-col gap-1">
-										<span className="text-[10px] text-muted-foreground">
-											{notification.created_at
-												? dayjs(notification.created_at).format("DD MMM YYYY HH:mm")
-												: t("not-sent-yet")}
-										</span>
+										<div className="flex items-center gap-2">
+											{notification.sent_at && (
+												<span className="text-[10px] text-muted-foreground">
+													{dayjs(notification.sent_at).format("DD MMM YYYY HH:mm")}
+												</span>
+											)}
+											<span
+												className={`text-[10px] font-medium ${notification.is_sent ? "text-green-600" : "text-amber-500"}`}
+											>
+												{notification.is_sent ? t("sent") : t("not-sent-yet")}
+											</span>
+										</div>
 										<span className="font-semibold">{notification.title}</span>
 										<span>{notification.body}</span>
 									</div>
