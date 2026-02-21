@@ -17,6 +17,10 @@ class NotificationsServiceClass extends BaseService {
 		);
 		return data;
 	}
+
+	async deleteAllNotifications(contestId: string): Promise<void> {
+		await this.axios.delete(`/notifications/${contestId}/all/`);
+	}
 }
 
 export const NotificationsService = new NotificationsServiceClass();

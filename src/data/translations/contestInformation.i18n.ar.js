@@ -20,6 +20,8 @@ const contestInformationI18nAr = {
 	"delete-all-notifications": "حذف جميع الإشعارات",
 	"confirm-delete-all-notifications":
 		"هل أنت متأكد من حذف جميع الإشعارات؟ لا يمكن التراجع عن هذا الإجراء.",
+	"notifications-deleted-successfully": "تم حذف جميع الإشعارات بنجاح",
+	sent: "تم الإرسال",
 	"not-sent-yet": "لم يتم الإرسال بعد",
 	"success-to-add-new-announcement-msg": "تم إضافة إعلان جديد بنجاح",
 	"fail-to-add-new-announcement-msg": " لم يتم إضافة إعلان جديد",
