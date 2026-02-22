@@ -1,86 +1,116 @@
-# Wird Dashboard
+# Wird
 
-#### Workflow:
-1. use fill *username* and *password* in the form.
-2. click *login* button.
-3. by clicking the button, it goes to the method in the auth.py.
-4. it will check if the user is authenticated or not.
-5. if not it will perform the login method.
-  - this involves storing the user info in the cookies.
-6. if the user is authenticated it will redirect to the home page.
+Public-facing pages and admin dashboard for the Wird app — a platform for managing Quran reading contests, groups, leaderboards, and participants.
 
+## Tech Stack
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+- **Runtime:** [Bun](https://bun.sh)
+- **Build:** [Vite](https://vitejs.dev) + TypeScript
+- **Framework:** React 19, React Router v7
+- **Data Fetching:** TanStack Query v5
+- **UI:** Tailwind CSS v4, shadcn/ui, Radix UI, Base UI
+- **Forms:** React Hook Form + Zod
+- **Animations:** Motion (Framer Motion)
+- **i18n:** i18next (Arabic default, English supported, RTL)
+- **HTTP:** Axios with token refresh interceptors
+- **Linting/Formatting:** Biome
+- **Testing:** Vitest
 
-## Available Scripts
+## Getting Started
 
-In the project directory, you can run:
+### Prerequisites
 
-### `npm start`
+- [Bun](https://bun.sh) v1.3+
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Install & Run
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```bash
+bun install       # Install dependencies
+bun dev           # Start dev server at http://localhost:3000
+```
 
-### `npm test`
+### Scripts
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+bun dev            # Start dev server
+bun run build      # Production build (output: build/)
+bun run build:dev  # Development build
+bun run preview    # Preview production build
+bun test           # Run tests (Vitest)
+bun run lint       # Lint with Biome
+bun run lint:fix   # Lint and auto-fix
+bun run format     # Format with Biome
+bun run check      # Run all Biome checks
+bun run check:fix  # Run all Biome checks and auto-fix
+bun run typecheck  # TypeScript type checking
+```
 
-### `npm run build`
+## Project Structure
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```
+src/
+├── pages/               # Route-level page components
+│   └── public/          # Public pages (landing, help, policy, password reset)
+├── components/
+│   ├── public/          # Public-facing components (header, footer, landing, SEO)
+│   ├── Competition/     # Contest management
+│   ├── contest-results/ # Contest results display
+│   ├── ContestCriteria/ # Contest criteria configuration
+│   ├── Groups/          # Group management
+│   ├── leaderboard/     # Leaderboard views
+│   ├── users/           # User management
+│   ├── Home/            # Dashboard home
+│   ├── layout/          # Dashboard layout (sidebar, navbar)
+│   ├── shared/          # Shared components (modals, etc.)
+│   ├── providers/       # App-wide context providers
+│   └── ui/              # shadcn/ui components
+├── services/            # API layer (one folder per domain: service + queries)
+├── ui/                  # Reusable UI utilities (animated-page, error-boundary)
+├── hooks/               # Custom React hooks
+├── types/               # TypeScript type definitions
+├── util/                # Utilities (axios config, roles, helpers)
+├── lib/                 # Shared library utilities
+├── styles/              # Global styles and theme
+├── data/                # Static data and i18n translations
+├── assets/              # Images and static assets
+└── router.tsx           # Route definitions
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Architecture
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### API Layer
 
-### `npm run eject`
+Services are organized by domain under `src/services/`. Each domain has:
+- `*.service.ts` — Axios API calls
+- `queries.ts` — TanStack Query hooks (queries & mutations)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Centralized Axios instance with auth interceptors and automatic token refresh in `src/util/axios.ts`.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Path Aliases
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Configured in both `vite.config.ts` and `tsconfig.json`:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```
+@/*  →  src/*
+components/*  →  src/components/*
+services/*    →  src/services/*
+ui/*          →  src/ui/*
+hooks/*       →  src/hooks/*
+util/*        →  src/util/*
+types/*       →  src/types/*
+lib/*         →  src/lib/*
+styles/*      →  src/styles/*
+data/*        →  src/data/*
+assets/*      →  src/assets/*
+```
 
-## Learn More
+### Authentication
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Session management in `src/services/auth/session.ts` with role-based access control via `src/util/roles.ts`.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Internationalization
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-
-
-
-npm i --save @fortawesome/fontawesome-svg-core
-
-npm install react-icons --save
+- Default language: Arabic (`ar`)
+- Supported: `["ar", "en"]`
+- Language persisted in `localStorage` (`lang` key)
+- Full RTL support for Arabic
