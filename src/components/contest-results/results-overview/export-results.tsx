@@ -159,7 +159,7 @@ export const ExportResults: React.FC = () => {
 						<Select
 							value={selectedGroupId}
 							onValueChange={(val) => {
-								setSelectedGroupId(val);
+								setSelectedGroupId(val ?? "");
 								setSelectedMemberIds([]);
 							}}
 							items={groupSelectItems}
