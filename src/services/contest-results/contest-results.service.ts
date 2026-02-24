@@ -1,5 +1,6 @@
 import type {
 	DailySubmissionSummary,
+	ExportResultsResponse,
 	LeaderboardEntry,
 	MemberResult,
 	PointRecord,
@@ -46,6 +47,26 @@ class ContestResultsServiceClass extends BaseService {
 		const res = await this.axios.patch<PointRecord>(
 			`/admin_panel/${cid}/point_records/${userId}/${date}/${recordId}/`,
 			data,
+		);
+		return res.data;
+	}
+
+	async exportResults(params: {
+		startDate?: string;
+		endDate?: string;
+		memberIds?: string[];
+		groupId?: string;
+		contestId?: string;
+	}): Promise<ExportResultsResponse> {
+		const { startDate, endDate, memberIds, groupId, contestId } = params;
+		const cid = this.getContestId(contestId);
+		const queryParams = new URLSearchParams();
+		if (startDate) queryParams.set("start_date", startDate);
+		if (endDate) queryParams.set("end_date", endDate);
+		if (memberIds?.length) queryParams.set("member_ids", memberIds.join(","));
+		if (groupId) queryParams.set("group_id", groupId);
+		const res = await this.axios.get<ExportResultsResponse>(
+			`/admin_panel/${cid}/export/results/?${queryParams.toString()}`,
 		);
 		return res.data;
 	}

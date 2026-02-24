@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/combobox";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
+import { GroupsService } from "../../services/groups/groups.service";
 import { MembersService } from "../../services/members/members.service";
 import { createNormalizedFilter } from "../../util/normalize-text";
 import type { Role } from "../../util/roles";
@@ -26,6 +27,7 @@ interface MemberOption {
 
 interface MultiMembersSelectProps {
 	role?: Role;
+	groupId?: string;
 	excludeUsernames?: string[];
 	value: string[];
 	onChange: (ids: string[]) => void;
@@ -36,6 +38,7 @@ interface MultiMembersSelectProps {
 
 export const MultiMembersSelect: React.FC<MultiMembersSelectProps> = ({
 	role,
+	groupId,
 	excludeUsernames,
 	value,
 	onChange,
@@ -52,21 +55,29 @@ export const MultiMembersSelect: React.FC<MultiMembersSelectProps> = ({
 
 	useEffect(() => {
 		setLoading(true);
-		MembersService.getUsers({ role, page_size: 1000 })
-			.then((res) => {
-				const membersList = Array.isArray(res) ? res : res.results;
-				setMembers(
-					membersList.map((member) => ({
-						value: member.id,
-						label: getFullName(member.person_info) ?? member.person_info.username,
-						username: member.person_info.username,
-					})),
-				);
-			})
-			.finally(() => {
-				setLoading(false);
-			});
-	}, [role]);
+
+		const fetchMembers = async () => {
+			const res = await MembersService.getUsers({ role, page_size: 1000 });
+			const membersList = Array.isArray(res) ? res : res.results;
+			let options: MemberOption[] = membersList.map((member) => ({
+				value: member.id,
+				label: getFullName(member.person_info) ?? member.person_info.username,
+				username: member.person_info.username,
+			}));
+
+			if (groupId) {
+				const groupMembers = await GroupsService.getGroupMembers({ groupId });
+				const groupUsernames = new Set(groupMembers.map((gm) => gm.person.username));
+				options = options.filter((m) => groupUsernames.has(m.username));
+			}
+
+			return options;
+		};
+
+		fetchMembers()
+			.then(setMembers)
+			.finally(() => setLoading(false));
+	}, [role, groupId]);
 
 	const filteredMembers = useMemo(
 		() => members.filter((member) => !excludeUsernames?.includes(member.username)),
