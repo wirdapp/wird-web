@@ -1,7 +1,9 @@
+import { Download } from "lucide-react";
 import { AnimatePresence } from "motion/react";
 import type React from "react";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
+import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useGroup, useGroupLeaderboard, useGroupMembers } from "../../services/groups/queries";
@@ -49,6 +51,14 @@ export const GroupDetailPage: React.FC = () => {
 						<GroupAnnouncement group={groupWithAnnouncements} />
 					</TabsContent>
 					<TabsContent value="leaderboard">
+						<div className="flex justify-end mb-3">
+							<Link to={`/dashboard/results/export?groupId=${groupId}`}>
+								<Button variant="outline" size="sm">
+									<Download data-icon="inline-start" />
+									{t("exportGroupResults")}
+								</Button>
+							</Link>
+						</div>
 						{leaderboardLoading ? (
 							<div className="flex justify-center py-8">
 								<Spinner />

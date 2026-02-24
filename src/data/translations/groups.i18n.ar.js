@@ -59,6 +59,7 @@ const groupsI18nAr = {
 	"add-admins": "إضافة مسؤولين",
 	"no-announcements": "لا يوجد إعلانات",
 	"no-members": "لا يوجد أعضاء",
+	exportGroupResults: "تصدير النتائج",
 };
 
 export default groupsI18nAr;

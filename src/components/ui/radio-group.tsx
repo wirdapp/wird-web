@@ -18,13 +18,13 @@ const RadioGroupItem = React.forwardRef<HTMLElement, Omit<Radio.Root.Props, "ref
 			<Radio.Root
 				ref={ref}
 				className={cn(
-					"aspect-square h-5 w-5 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-ring data-disabled:cursor-not-allowed data-disabled:opacity-50",
+					"flex items-center justify-center aspect-square h-5 w-5 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-ring data-disabled:cursor-not-allowed data-disabled:opacity-50",
 					className,
 				)}
 				{...props}
 			>
 				<Radio.Indicator className="flex items-center justify-center">
-					<Circle className="h-4 w-4 fill-primary" />
+					<Circle className="h-2.5 w-2.5 fill-primary" />
 				</Radio.Indicator>
 			</Radio.Root>
 		);

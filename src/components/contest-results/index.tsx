@@ -7,6 +7,7 @@ import { ContestStatus } from "../../services/contests/utils";
 import { AnimatedPage } from "../../ui/animated-page";
 import { useDashboardData } from "../../util/routes-data";
 import { MembersResults } from "./members-results/members-results";
+import { ExportResults } from "./results-overview/export-results";
 import { ResultsOverview } from "./results-overview/results-overview";
 
 export const ContestResults: React.FC = () => {
@@ -28,12 +29,16 @@ export const ContestResults: React.FC = () => {
 					<TabsList>
 						<TabsTrigger value="overview">{t("results-overview")}</TabsTrigger>
 						<TabsTrigger value="members">{t("results-members")}</TabsTrigger>
+						<TabsTrigger value="export">{t("exportToExcel")}</TabsTrigger>
 					</TabsList>
 					<TabsContent value="overview" className="flex-1">
 						<ResultsOverview />
 					</TabsContent>
 					<TabsContent value="members" className="flex-1">
 						<MembersResults />
+					</TabsContent>
+					<TabsContent value="export" className="flex-1">
+						<ExportResults />
 					</TabsContent>
 				</Tabs>
 			)}

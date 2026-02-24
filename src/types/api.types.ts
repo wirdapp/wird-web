@@ -633,6 +633,34 @@ export interface DailySubmissionSummary {
 	top_three_by_day?: TopThreeUser[];
 }
 
+/** Export results criterion info */
+export interface ExportCriterionInfo {
+	id: UUID;
+	label: string;
+	section_label: string;
+	max_points: number;
+}
+
+/** Export results member data */
+export interface ExportMemberData {
+	id: UUID;
+	name: string;
+	username: string;
+	total_points: number;
+	total_submissions: number;
+	daily_points: Record<string, number>;
+	criterion_daily_points: Record<string, Record<string, number>>;
+}
+
+/** Export results response from bulk endpoint */
+export interface ExportResultsResponse {
+	contest_name: string;
+	date_range: { start: string; end: string };
+	dates: string[];
+	criteria: ExportCriterionInfo[];
+	members: ExportMemberData[];
+}
+
 // ============================================================================
 // NOTIFICATION TYPES
 // ============================================================================

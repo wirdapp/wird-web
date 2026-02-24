@@ -60,6 +60,7 @@ const groupsI18nEn = {
 	"add-members": "Add Members",
 	"no-announcements": "No announcements",
 	"no-members": "No members",
+	exportGroupResults: "Export Results",
 };
 
 export default groupsI18nEn;
