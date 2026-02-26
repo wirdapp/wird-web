@@ -138,8 +138,8 @@ export const CriteriaFormPopup: React.FC<CriteriaFormPopupProps> = ({
 					...values,
 					section: section.id,
 					order_in_section: index,
-				// biome-ignore lint/suspicious/noExplicitAny: form values shape differs from API type
-			} as any);
+					// biome-ignore lint/suspicious/noExplicitAny: form values shape differs from API type
+				} as any);
 				toast.success(t("criteria-added"));
 			}
 			handleClose();

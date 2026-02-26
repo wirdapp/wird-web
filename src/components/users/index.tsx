@@ -124,7 +124,9 @@ export default function Students(): React.ReactElement {
 								className="flex flex-col gap-3 w-full"
 							>
 								{students?.map?.((student: ContestPerson) => {
-									return <UserListItem key={student.id} student={student} onChange={onStudentChange} />;
+									return (
+										<UserListItem key={student.id} student={student} onChange={onStudentChange} />
+									);
 								})}
 							</MotionDiv>
 						)}

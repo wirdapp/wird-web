@@ -1,4 +1,3 @@
-import { isAxiosError } from "axios";
 import {
 	closestCenter,
 	DndContext,
@@ -19,6 +18,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { TrashIcon } from "@heroicons/react/20/solid";
 import { EyeSlashIcon, PencilSquareIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { Bars2Icon } from "@heroicons/react/24/solid";
+import { isAxiosError } from "axios";
 import type React from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -84,9 +84,7 @@ function SortableCriterionItem({
 						)}
 					</div>
 					<div className="flex items-center text-sm text-muted-foreground">
-						<span className="whitespace-nowrap">
-							{t("points", { count: item.points })}
-						</span>
+						<span className="whitespace-nowrap">{t("points", { count: item.points })}</span>
 						<Separator orientation="vertical" className="mx-2 h-4" />
 						<span className="truncate">{item.description}</span>
 					</div>
