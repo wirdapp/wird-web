@@ -20,7 +20,7 @@ export const DailyUserSubmissions: React.FC<DailyUserSubmissionsProps> = ({ user
 	const [dateValue, setDateValue] = useState<Date | undefined>(undefined);
 
 	const { data: criteriaData = [] } = useCriteria(currentContest?.id);
-	const { data: submissionsData, isLoading: loading } = useMemberDaySubmissions(
+	const { data: submissionsData } = useMemberDaySubmissions(
 		userId,
 		selectedDate ?? undefined,
 		currentContest?.id,
