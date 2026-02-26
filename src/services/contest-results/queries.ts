@@ -4,6 +4,7 @@ import type {
 	LeaderboardEntry,
 	MemberResult,
 	PointRecord,
+	PointRecordCreateData,
 	PointRecordUpdateData,
 } from "../../types";
 import { getCurrentContestId } from "../contests/utils";
@@ -88,6 +89,40 @@ export function useMemberDaySubmissions(
 			}),
 		enabled: !!cid && !!userId && !!date,
 		...options,
+	});
+}
+
+export function useCreatePointRecord() {
+	const queryClient = useQueryClient();
+	const contestId = getCurrentContestId();
+
+	return useMutation({
+		mutationFn: ({
+			userId,
+			date,
+			data,
+		}: {
+			userId: string;
+			date: string;
+			data: PointRecordCreateData;
+		}) =>
+			ContestResultsService.createPointRecord({
+				userId,
+				date,
+				contestId,
+				data,
+			}),
+		onSuccess: (_, { userId, date }) => {
+			queryClient.invalidateQueries({
+				queryKey: contestResultsKeys.memberDaySubmissions(contestId, userId, date),
+			});
+			queryClient.invalidateQueries({
+				queryKey: contestResultsKeys.memberResults(contestId, userId),
+			});
+			queryClient.invalidateQueries({
+				queryKey: contestResultsKeys.leaderboard(contestId),
+			});
+		},
 	});
 }
 

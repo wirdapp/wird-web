@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { ContestResultsService } from "../../../services/contest-results/contest-results.service";
 import { contestResultsKeys } from "../../../services/contest-results/queries";
@@ -115,36 +114,18 @@ export function DateSlider({
 						? data.length > 0
 						: !!(data as { points?: unknown[] } | undefined)?.points?.length;
 
-					if (!hasSubmissions) {
-						return (
-							<TooltipProvider key={dateStr}>
-								<Tooltip>
-									<TooltipTrigger
-										render={
-											<div className="w-12 h-14 rounded-md flex flex-col items-center justify-center text-xs text-muted-foreground/40 cursor-default" />
-										}
-									>
-										<span className="text-base font-semibold leading-tight">{day.format("D")}</span>
-										<span className="text-[10px] leading-tight">{day.format("MMM")}</span>
-									</TooltipTrigger>
-									<TooltipContent side="bottom">
-										{t("dailySubmissionsPopup.noSubmissions")}
-									</TooltipContent>
-								</Tooltip>
-							</TooltipProvider>
-						);
-					}
-
 					return (
 						<button
 							type="button"
 							key={dateStr}
 							onClick={() => onSelectDate(dateStr)}
 							className={cn(
-								"w-12 h-14 rounded-md flex flex-col items-center justify-center text-xs transition-colors",
+								"w-12 h-14 rounded-md flex flex-col items-center justify-center text-xs transition-colors cursor-pointer",
 								isSelected
 									? "bg-primary text-primary-foreground"
-									: "text-primary hover:bg-muted cursor-pointer",
+									: hasSubmissions
+										? "text-primary hover:bg-muted"
+										: "text-muted-foreground hover:bg-muted",
 							)}
 						>
 							<span className="text-base font-semibold leading-tight">{day.format("D")}</span>

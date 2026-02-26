@@ -560,6 +560,24 @@ export interface PointRecordUpdateData {
 	reviewed_by_admin?: boolean;
 }
 
+/** Point record create payload */
+export interface PointRecordCreateData {
+	resourcetype:
+		| "NumberPointRecord"
+		| "CheckboxPointRecord"
+		| "RadioPointRecord"
+		| "MultiCheckboxPointRecord"
+		| "UserInputPointRecord";
+	contest_criterion: UUID;
+	point_total?: number;
+	// Type-specific answer fields
+	number?: number;
+	checked?: boolean;
+	choice?: string;
+	choices?: string[];
+	user_input?: string;
+}
+
 // ============================================================================
 // RESULTS TYPES
 // ============================================================================

@@ -4,6 +4,7 @@ import type {
 	LeaderboardEntry,
 	MemberResult,
 	PointRecord,
+	PointRecordCreateData,
 	PointRecordUpdateData,
 } from "../../types";
 import { BaseService } from "../base.service";
@@ -31,6 +32,21 @@ class ContestResultsServiceClass extends BaseService {
 		const cid = this.getContestId(contestId);
 		const res = await this.axios.get<PointRecord[]>(
 			`/admin_panel/${cid}/point_records/${userId}/${date}/`,
+		);
+		return res.data;
+	}
+
+	async createPointRecord(params: {
+		userId: string;
+		date: string;
+		contestId?: string;
+		data: PointRecordCreateData;
+	}): Promise<PointRecord> {
+		const { userId, date, contestId, data } = params;
+		const cid = this.getContestId(contestId);
+		const res = await this.axios.post<PointRecord>(
+			`/admin_panel/${cid}/point_records/${userId}/${date}/`,
+			data,
 		);
 		return res.data;
 	}

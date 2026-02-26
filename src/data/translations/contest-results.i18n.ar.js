@@ -37,6 +37,7 @@ const contestResultsI18nAr = {
 		nextDays: "الأيام التالية",
 		editAnswer: "تعديل الإجابة",
 		cancel: "إلغاء",
+		addSubmission: "إضافة مشاركة",
 	},
 	"no-results": "لا يوجد نتائج",
 	failedToSave: "فشل في الحفظ",
