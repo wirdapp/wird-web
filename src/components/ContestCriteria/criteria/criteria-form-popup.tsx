@@ -15,7 +15,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { FieldTypes } from "../../../services/contest-criteria/consts";
-import type { Section, UUID } from "../../../types";
+import type { CriterionCreateData, Section, UUID } from "../../../types";
 import { CriteriaAdvancedFields } from "./criteria-advanced-fields";
 import { CriteriaBasicFields } from "./criteria-basic-fields";
 import { CriteriaTypeFields } from "./criteria-type-fields";
@@ -138,7 +138,7 @@ export const CriteriaFormPopup: React.FC<CriteriaFormPopupProps> = ({
 					...values,
 					section: section.id,
 					order_in_section: index,
-				} as any);
+				} as CriterionCreateData);
 				toast.success(t("criteria-added"));
 			}
 			handleClose();

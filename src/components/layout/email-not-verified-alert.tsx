@@ -36,6 +36,7 @@ export const EmailNotVerifiedAlert: React.FC = () => {
 			<AlertDescription className="text-yellow-700">
 				<div className="flex flex-col gap-2">
 					<div
+						// biome-ignore lint/security/noDangerouslySetInnerHtml: trusted i18n string
 						dangerouslySetInnerHTML={{
 							__html: t("emailNotVerifiedDescription", {
 								email: currentUser?.email ?? "",

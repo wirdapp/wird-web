@@ -268,8 +268,8 @@ const EditCompetitionForm: React.FC<EditCompetitionFormProps> = ({ contest }) =>
 								<Alert variant="destructive">
 									<AlertTitle>{t("contest-isn't-edited-successfully")}</AlertTitle>
 									<AlertDescription>
-										{messages.map((msg, index) => (
-											<div key={index}>{msg}</div>
+										{messages.map((msg) => (
+											<div key={msg}>{msg}</div>
 										))}
 									</AlertDescription>
 								</Alert>

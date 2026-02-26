@@ -354,11 +354,14 @@ export interface BaseCriterion {
 	label: string;
 	description: string;
 	max_points: number;
+	points: number;
 	order_in_section: number;
 	section: UUID;
 	section_info?: SectionInfo;
 	contest: UUID;
 	resourcetype: CriterionResourceType;
+	visible: boolean;
+	archived: boolean;
 }
 
 /** Number criterion - numeric input with min/max bounds */

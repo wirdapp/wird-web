@@ -32,7 +32,7 @@ export default function Tabs(props: TabsProps) {
 									type="button"
 									className={toggleState === index ? "tabs active-tabs" : "tabs"}
 									onClick={() => toggleTab(index)}
-									key={index}
+									key={label}
 								>
 									{" "}
 									{label}
@@ -48,6 +48,7 @@ export default function Tabs(props: TabsProps) {
 										(toggleState === index ? "content  active-content" : "content") +
 										(props.contentClass ? props.contentClass : "")
 									}
+									// biome-ignore lint/suspicious/noArrayIndexKey: tab content panels indexed by position
 									key={index}
 								>
 									{React.cloneElement(content, { reset: reset } as Record<string, unknown>)}

@@ -126,6 +126,7 @@ export const CreateContestPopup: React.FC<CreateContestPopupProps> = ({ visible,
 								title={t("emailNotVerified")}
 								extra={
 									<span
+										// biome-ignore lint/security/noDangerouslySetInnerHtml: trusted i18n string
 										dangerouslySetInnerHTML={{
 											__html: t("emailNotVerifiedDescription", {
 												email: currentUser?.email,

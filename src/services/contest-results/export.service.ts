@@ -17,6 +17,7 @@ const NUMBER_ALIGNMENT = {
 
 // biome-ignore lint/suspicious/noExplicitAny: ExcelJS workbook type from dynamic import
 function styleHeaderRow(row: any) {
+	// biome-ignore lint/suspicious/noExplicitAny: ExcelJS workbook type from dynamic import
 	row.eachCell((cell: any) => {
 		cell.fill = HEADER_FILL;
 		cell.font = HEADER_FONT;

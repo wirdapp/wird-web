@@ -21,7 +21,7 @@ function NumberAndAbbreviationOfNames(props: NumberAndAbbreviationOfNamesProps) 
 		<div className="flex flex-row items-center gap-0 ms-auto">
 			<div className="flex -space-x-2 rtl:space-x-reverse">
 				{displayUsers.map((user, i) => (
-					<Tooltip key={i}>
+					<Tooltip key={user.id}>
 						<TooltipTrigger asChild>
 							<Avatar className="h-9 w-9 border-2 border-background">
 								<AvatarFallback className={avatarStyles[i]}>
