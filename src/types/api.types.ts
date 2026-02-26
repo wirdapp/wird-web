@@ -354,11 +354,14 @@ export interface BaseCriterion {
 	label: string;
 	description: string;
 	max_points: number;
+	points: number;
 	order_in_section: number;
 	section: UUID;
 	section_info?: SectionInfo;
 	contest: UUID;
 	resourcetype: CriterionResourceType;
+	visible: boolean;
+	archived: boolean;
 }
 
 /** Number criterion - numeric input with min/max bounds */
@@ -558,6 +561,24 @@ export interface PointRecordUpdateData {
 	choices?: string[];
 	user_input?: string;
 	reviewed_by_admin?: boolean;
+}
+
+/** Point record create payload */
+export interface PointRecordCreateData {
+	resourcetype:
+		| "NumberPointRecord"
+		| "CheckboxPointRecord"
+		| "RadioPointRecord"
+		| "MultiCheckboxPointRecord"
+		| "UserInputPointRecord";
+	contest_criterion: UUID;
+	point_total?: number;
+	// Type-specific answer fields
+	number?: number;
+	checked?: boolean;
+	choice?: string;
+	choices?: string[];
+	user_input?: string;
 }
 
 // ============================================================================

@@ -20,7 +20,7 @@ export const DailyUserSubmissions: React.FC<DailyUserSubmissionsProps> = ({ user
 	const [dateValue, setDateValue] = useState<Date | undefined>(undefined);
 
 	const { data: criteriaData = [] } = useCriteria(currentContest?.id);
-	const { data: submissionsData, isLoading: loading } = useMemberDaySubmissions(
+	const { data: submissionsData } = useMemberDaySubmissions(
 		userId,
 		selectedDate ?? undefined,
 		currentContest?.id,
@@ -78,7 +78,12 @@ export const DailyUserSubmissions: React.FC<DailyUserSubmissionsProps> = ({ user
 					className="w-[180px] h-8 text-xs"
 				/>
 			</div>
-			<DailySubmissionsTable submissions={submissions as never[]} criteria={criteriaData} />
+			<DailySubmissionsTable
+				submissions={submissions as never[]}
+				criteria={criteriaData}
+				userId={userId}
+				date={selectedDate}
+			/>
 		</div>
 	);
 };

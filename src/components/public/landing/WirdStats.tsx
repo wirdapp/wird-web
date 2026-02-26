@@ -78,6 +78,7 @@ export function WirdStats() {
 								small
 								title={
 									<span
+										// biome-ignore lint/security/noDangerouslySetInnerHtml: trusted i18n string
 										dangerouslySetInnerHTML={{
 											__html: t("wirdStats.inCountries", {
 												count: sortedCountries.length - 3,
@@ -87,6 +88,7 @@ export function WirdStats() {
 								}
 								value={
 									<span
+										// biome-ignore lint/security/noDangerouslySetInnerHtml: trusted i18n string
 										dangerouslySetInnerHTML={{
 											__html: t("wirdStats.contestsCount", {
 												count: sortedCountries

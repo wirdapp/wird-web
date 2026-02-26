@@ -123,8 +123,10 @@ export default function Students(): React.ReactElement {
 								transition={{ duration: 0.3 }}
 								className="flex flex-col gap-3 w-full"
 							>
-								{students?.map?.((student: ContestPerson, idx: number) => {
-									return <UserListItem key={idx} student={student} onChange={onStudentChange} />;
+								{students?.map?.((student: ContestPerson) => {
+									return (
+										<UserListItem key={student.id} student={student} onChange={onStudentChange} />
+									);
 								})}
 							</MotionDiv>
 						)}

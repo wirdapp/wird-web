@@ -46,9 +46,9 @@ export function Nav({ items, locale }: Props) {
 						>
 							{locale === "en" ? "عربي" : "English"}
 						</Button>
-						{items.map((item, index) => (
+						{items.map((item) => (
 							<Link
-								key={index}
+								key={item.href}
 								to={item.href}
 								className={cn(
 									"text-sm px-4 py-2 rounded-md hover:bg-accent transition-colors",
@@ -72,8 +72,8 @@ export function Nav({ items, locale }: Props) {
 				>
 					{locale === "en" ? "عربي" : "English"}
 				</Button>
-				{items.map((item, index) => (
-					<Link key={index} to={item.href}>
+				{items.map((item) => (
+					<Link key={item.href} to={item.href}>
 						<Button
 							variant={item.className?.includes("border") ? "outline" : "ghost"}
 							size="sm"

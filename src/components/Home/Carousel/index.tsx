@@ -10,8 +10,8 @@ export default function CarouselStatistics(): React.ReactElement {
 	return (
 		<Carousel className="w-full">
 			<CarouselContent>
-				{[1, 2, 3].map((_, index) => (
-					<CarouselItem key={index}>
+				{["slide-1", "slide-2", "slide-3"].map((id, index) => (
+					<CarouselItem key={id}>
 						<div className="relative">
 							<img className="block w-full" src={CarouselPry} alt={`Slide ${index + 1}`} />
 							<div className="mx-auto mt-20 justify-center items-start flex pb-16 flex-col">

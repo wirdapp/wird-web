@@ -7,7 +7,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 import SeeMore from "../../../assets/icons/Home/SeeMore.svg";
 import type { ContestPerson, LeaderboardEntry } from "../../../types";
-import { getFullName, getInitials, getLeaderboardFullName } from "../../../util/user-utils";
+import { getLeaderboardFullName } from "../../../util/user-utils";
 import NumberAndAbbreviationOfNames from "../../shared/NumberAndAbbreviationOfNames";
 
 interface TopRanksProps {
@@ -89,7 +89,7 @@ function TopRanks({
 									{(topMembers ?? []).map((topMember, i) => (
 										<Link
 											to={`/dashboard/results/members?userId=${topMember.id}`}
-											key={i}
+											key={topMember.id}
 											className={cn(
 												"flex flex-row items-center py-[10px] px-4 gap-2 rounded-[14px] bg-transparent transition-all text-[#444] hover:bg-white hover:text-black no-underline",
 												"max-[1400px]:mt-[0.3125rem]",

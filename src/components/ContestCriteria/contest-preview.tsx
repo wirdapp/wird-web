@@ -17,7 +17,7 @@ export const ContestPreview: React.FC = () => {
 			<AnimatePresence>
 				{sections.map((section) => {
 					const sectionCriteria = criteriaItems.filter(
-						(c) => c.section_info?.id === section.id && (c as any).visible,
+						(c) => c.section_info?.id === section.id && c.visible,
 					);
 
 					return (
@@ -38,13 +38,13 @@ export const ContestPreview: React.FC = () => {
 										<div className="flex justify-between items-center mb-2">
 											<span className="font-semibold">{c.label}</span>
 											<span className="text-muted-foreground italic text-sm">
-												({t("points", { count: (c as any).points })})
+												({t("points", { count: c.points })})
 											</span>
 										</div>
 										{c.description && (
 											<p className="text-sm text-muted-foreground mb-2">{c.description}</p>
 										)}
-										<CriterionField criterion={c as any} />
+										<CriterionField criterion={c as never} />
 									</div>
 								))}
 							</div>

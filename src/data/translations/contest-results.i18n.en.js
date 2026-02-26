@@ -37,6 +37,7 @@ const contestResultsI18nEn = {
 		nextDays: "Next days",
 		editAnswer: "Edit answer",
 		cancel: "Cancel",
+		addSubmission: "Add submission",
 	},
 	"no-results": "No results",
 	failedToSave: "Failed to save",

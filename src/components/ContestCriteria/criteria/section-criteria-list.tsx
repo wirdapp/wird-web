@@ -18,6 +18,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { TrashIcon } from "@heroicons/react/20/solid";
 import { EyeSlashIcon, PencilSquareIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { Bars2Icon } from "@heroicons/react/24/solid";
+import { isAxiosError } from "axios";
 import type React from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -54,7 +55,7 @@ function SortableCriterionItem({
 		transition,
 		opacity: isDragging ? 0.5 : 1,
 	};
-	const Icon = FieldTypesIcons[(item as any).resourcetype] ?? FieldTypesIcons[FieldTypes.Text];
+	const Icon = FieldTypesIcons[item.resourcetype] ?? FieldTypesIcons[FieldTypes.Text];
 
 	return (
 		<div
@@ -63,7 +64,7 @@ function SortableCriterionItem({
 			{...attributes}
 			className={cn(
 				"flex items-center justify-between p-3 border-b last:border-b-0",
-				(item as any).archived && "opacity-50",
+				item.archived && "opacity-50",
 			)}
 		>
 			<div className="flex items-center gap-3 flex-1 min-w-0">
@@ -71,7 +72,7 @@ function SortableCriterionItem({
 				<div className="flex-1 min-w-0">
 					<div className="flex items-center gap-2">
 						<span className="font-medium truncate">{item.label}</span>
-						{!(item as any).visible && (
+						{!item.visible && (
 							<TooltipProvider>
 								<Tooltip>
 									<TooltipTrigger>
@@ -83,9 +84,7 @@ function SortableCriterionItem({
 						)}
 					</div>
 					<div className="flex items-center text-sm text-muted-foreground">
-						<span className="whitespace-nowrap">
-							{t("points", { count: (item as any).points })}
-						</span>
+						<span className="whitespace-nowrap">{t("points", { count: item.points })}</span>
 						<Separator orientation="vertical" className="mx-2 h-4" />
 						<span className="truncate">{item.description}</span>
 					</div>
@@ -136,10 +135,10 @@ export const SectionCriteriaList: React.FC<SectionCriteriaListProps> = ({ sectio
 		try {
 			await actions.remove(id);
 			toast.success(t("criteria-deleted"));
-		} catch (e: any) {
+		} catch (e: unknown) {
 			console.error(e);
 			let errorMessage = t("criteria-delete-failed");
-			if (e.response?.data?.detail) {
+			if (isAxiosError(e) && e.response?.data?.detail) {
 				if (e.response?.data?.detail.includes("cannot edit contest after its start date")) {
 					errorMessage = t("cannot-edit-contest-after-start");
 				} else {

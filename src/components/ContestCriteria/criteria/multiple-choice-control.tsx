@@ -23,6 +23,7 @@ export const MultipleChoiceControl: React.FC<MultipleChoiceControlProps> = ({
 		<div className="space-y-2">
 			<ol className="list-decimal ps-10 space-y-2">
 				{value?.map((item, index) => (
+					// biome-ignore lint/suspicious/noArrayIndexKey: stable ordered list of editable inputs
 					<li key={index}>
 						<Input
 							value={item}

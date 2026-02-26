@@ -3,6 +3,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { TrashIcon } from "@heroicons/react/20/solid";
 import { CheckIcon, ChevronDownIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Bars2Icon } from "@heroicons/react/24/solid";
+import { isAxiosError } from "axios";
 import type React from "react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -27,7 +28,7 @@ interface SectionListItemProps {
 	index: number;
 }
 
-export const SectionListItem: React.FC<SectionListItemProps> = ({ section, index }) => {
+export const SectionListItem: React.FC<SectionListItemProps> = ({ section }) => {
 	const { t } = useTranslation();
 	const [expanded, setExpanded] = useState<string | undefined>(section.id);
 	const [sectionLabel, setSectionLabel] = useState(section.label);
@@ -72,9 +73,10 @@ export const SectionListItem: React.FC<SectionListItemProps> = ({ section, index
 		try {
 			await actions.remove(section.id);
 			toast.success(t("section-deleted"));
-		} catch (e: any) {
+		} catch (e: unknown) {
 			console.error(e);
-			toast.error(e?.response?.data?.detail ?? t("section-delete-failed"));
+			const detail = isAxiosError(e) ? e.response?.data?.detail : undefined;
+			toast.error(detail ?? t("section-delete-failed"));
 		}
 	};
 
