@@ -231,13 +231,12 @@ const AddSubmissionCard: React.FC<{
 	const answerFieldKey = criterionTypeToAnswerField[resourcetype];
 	const criterionType = pointRecordToCriterionType[pointRecordType] ?? criterion.resourcetype;
 	const Icon = FieldTypesIcons[criterionType] ?? FieldTypesIcons[FieldTypes.Text];
-	const canEditPoints =
-		isAtLeastSuperAdmin(currentUser?.role) && criterionType === FieldTypes.Text;
+	const canEditPoints = isAtLeastSuperAdmin(currentUser?.role) && criterionType === FieldTypes.Text;
 
 	const [expanded, setExpanded] = useState(false);
-	const [answerValue, setAnswerValue] = useState<
-		string | number | boolean | string[] | undefined
-	>(undefined);
+	const [answerValue, setAnswerValue] = useState<string | number | boolean | string[] | undefined>(
+		undefined,
+	);
 	const [pointsValue, setPointsValue] = useState<number | undefined>(undefined);
 	const [fieldError, setFieldError] = useState<string | null>(null);
 
