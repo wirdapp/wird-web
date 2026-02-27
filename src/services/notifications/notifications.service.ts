@@ -1,9 +1,9 @@
-import type { Notification, NotificationCreateData } from "../../types";
+import type { Notification, NotificationCreateData, NotificationUpdateData } from "../../types";
 import { BaseService } from "../base.service";
 
 class NotificationsServiceClass extends BaseService {
 	async getNotifications(contestId: string): Promise<Notification[]> {
-		const { data } = await this.axios.get<Notification[]>(`/notifications/${contestId}/all/`);
+		const { data } = await this.axios.get<Notification[]>(`/notifications/${contestId}/`);
 		return data;
 	}
 
@@ -12,14 +12,26 @@ class NotificationsServiceClass extends BaseService {
 		notificationData: NotificationCreateData,
 	): Promise<Notification> {
 		const { data } = await this.axios.post<Notification>(
-			`/notifications/${contestId}/all/`,
+			`/notifications/${contestId}/`,
 			notificationData,
 		);
 		return data;
 	}
 
-	async deleteAllNotifications(contestId: string): Promise<void> {
-		await this.axios.delete(`/notifications/${contestId}/all/`);
+	async deleteNotification(contestId: string, notificationId: string): Promise<void> {
+		await this.axios.delete(`/notifications/${contestId}/${notificationId}/`);
+	}
+
+	async updateNotification(
+		contestId: string,
+		notificationId: string,
+		notificationData: NotificationUpdateData,
+	): Promise<Notification> {
+		const { data } = await this.axios.put<Notification>(
+			`/notifications/${contestId}/${notificationId}/`,
+			notificationData,
+		);
+		return data;
 	}
 }
 

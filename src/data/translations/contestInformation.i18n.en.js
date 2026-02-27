@@ -17,10 +17,11 @@ const contestInformationI18nEn = {
 	"notification-title-placeholder": "Enter notification title",
 	"notification-body": "Body",
 	"notification-body-placeholder": "Enter notification body",
-	"delete-all-notifications": "Delete All Notifications",
-	"confirm-delete-all-notifications":
-		"Are you sure you want to delete all notifications? This action cannot be undone.",
-	"notifications-deleted-successfully": "All notifications deleted successfully",
+	"delete-notification": "Delete Notification",
+	"delete-notification-confirm":
+		"Are you sure you want to delete this notification? This action cannot be undone.",
+	"notification-deleted-successfully": "Notification deleted successfully",
+	"edit-announcement": "Edit Notification",
 	sent: "Sent",
 	"not-sent-yet": "Not sent yet",
 	"success-to-add-new-announcement-msg": "New announcement added successfully",

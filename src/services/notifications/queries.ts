@@ -1,5 +1,5 @@
 import { type UseQueryOptions, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { Notification, NotificationCreateData } from "../../types";
+import type { Notification, NotificationCreateData, NotificationUpdateData } from "../../types";
 import { NotificationsService } from "./notifications.service";
 
 export const notificationKeys = {
@@ -36,12 +36,30 @@ export function useCreateNotification() {
 	});
 }
 
-export function useDeleteAllNotifications() {
+export function useDeleteNotification() {
 	const queryClient = useQueryClient();
 
 	return useMutation({
-		mutationFn: ({ contestId }: { contestId: string }) =>
-			NotificationsService.deleteAllNotifications(contestId),
+		mutationFn: ({ contestId, notificationId }: { contestId: string; notificationId: string }) =>
+			NotificationsService.deleteNotification(contestId, notificationId),
+		onSuccess: (_, { contestId }) => {
+			queryClient.invalidateQueries({
+				queryKey: notificationKeys.list(contestId),
+			});
+		},
+	});
+}
+
+export function useUpdateNotification() {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: ({
+			contestId,
+			notificationId,
+			...notificationData
+		}: NotificationUpdateData & { contestId: string; notificationId: string }) =>
+			NotificationsService.updateNotification(contestId, notificationId, notificationData),
 		onSuccess: (_, { contestId }) => {
 			queryClient.invalidateQueries({
 				queryKey: notificationKeys.list(contestId),

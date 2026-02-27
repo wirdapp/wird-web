@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import dayjs from "dayjs";
+import { Pencil, Trash2 } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -7,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import {
 	Dialog,
 	DialogContent,
@@ -28,9 +30,11 @@ import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import {
 	useCreateNotification,
-	useDeleteAllNotifications,
+	useDeleteNotification,
 	useNotifications,
+	useUpdateNotification,
 } from "../../services/notifications/queries";
+import type { AllNotification } from "../../types";
 import { isAtLeastSuperAdmin } from "../../util/roles";
 import { useDashboardData } from "../../util/routes-data";
 
@@ -44,8 +48,10 @@ export const ManageAnnouncements: React.FC = () => {
 	const { currentContest, currentUser } = useDashboardData();
 	const { t } = useTranslation();
 	const [announcementFormVisible, setAnnouncementFormVisible] = useState<boolean>(false);
+	const [editingNotification, setEditingNotification] = useState<AllNotification | null>(null);
 	const createNotification = useCreateNotification();
-	const deleteAllNotifications = useDeleteAllNotifications();
+	const deleteNotification = useDeleteNotification();
+	const updateNotification = useUpdateNotification();
 	const { data: notifications = [], isFetching } = useNotifications(currentContest?.id);
 
 	const formSchema = z.object({
@@ -66,16 +72,60 @@ export const ManageAnnouncements: React.FC = () => {
 		},
 	});
 
+	const isEditing = editingNotification !== null;
+	const isMutating = createNotification.isPending || updateNotification.isPending;
+
+	const openCreateDialog = () => {
+		setEditingNotification(null);
+		form.reset({ title: "", body: "" });
+		setAnnouncementFormVisible(true);
+	};
+
+	const openEditDialog = (notification: AllNotification) => {
+		setEditingNotification(notification);
+		form.reset({ title: notification.title, body: notification.body });
+		setAnnouncementFormVisible(true);
+	};
+
+	const closeDialog = () => {
+		setAnnouncementFormVisible(false);
+		setEditingNotification(null);
+	};
+
+	const handleDelete = async (notificationId: string) => {
+		if (!currentContest) return;
+		await deleteNotification.mutateAsync(
+			{ contestId: currentContest.id, notificationId },
+			{
+				onSuccess: () => {
+					toast.success(t("notification-deleted-successfully"));
+				},
+				onError: () => {
+					toast.error(t("something-went-wrong"));
+				},
+			},
+		);
+	};
+
 	const onFormFinish = async (values: FormValues): Promise<void> => {
 		if (!currentContest) return;
 
 		try {
-			await createNotification.mutateAsync({
-				contestId: currentContest.id,
-				title: values.title.trim(),
-				body: values.body.trim(),
-			});
-			setAnnouncementFormVisible(false);
+			if (isEditing) {
+				await updateNotification.mutateAsync({
+					contestId: currentContest.id,
+					notificationId: editingNotification.id,
+					title: values.title.trim(),
+					body: values.body.trim(),
+				});
+			} else {
+				await createNotification.mutateAsync({
+					contestId: currentContest.id,
+					title: values.title.trim(),
+					body: values.body.trim(),
+				});
+			}
+			closeDialog();
 			form.reset();
 		} catch (err) {
 			console.log(err);
@@ -104,33 +154,9 @@ export const ManageAnnouncements: React.FC = () => {
 					<h2 className="text-base font-bold">{t("active-announcements")}</h2>
 
 					{canManageAnnouncements && (
-						<div className="flex gap-2">
-							{notifications.length > 0 && (
-								<Button
-									variant="destructive"
-									onClick={() => {
-										if (!currentContest) return;
-										deleteAllNotifications.mutate(
-											{ contestId: currentContest.id },
-											{
-												onSuccess: () => {
-													toast.success(t("notifications-deleted-successfully"));
-												},
-												onError: () => {
-													toast.error(t("something-went-wrong"));
-												},
-											},
-										);
-									}}
-									disabled={deleteAllNotifications.isPending}
-								>
-									{deleteAllNotifications.isPending ? "..." : t("delete-all-notifications")}
-								</Button>
-							)}
-							<Button variant="outline" onClick={() => setAnnouncementFormVisible(true)}>
-								{t("new-announcement")}
-							</Button>
-						</div>
+						<Button variant="outline" onClick={openCreateDialog}>
+							{t("new-announcement")}
+						</Button>
 					)}
 				</div>
 				{notifications.length === 0 ? (
@@ -166,19 +192,42 @@ export const ManageAnnouncements: React.FC = () => {
 										<span className="font-semibold">{notification.title}</span>
 										<span>{notification.body}</span>
 									</div>
+									{canManageAnnouncements && (
+										<div className="flex items-center gap-1">
+											<Button
+												variant="ghost"
+												size="icon"
+												onClick={() => openEditDialog(notification)}
+											>
+												<Pencil className="h-4 w-4" />
+											</Button>
+											<ConfirmDialog
+												trigger={
+													<Button variant="ghost" size="icon">
+														<Trash2 className="h-4 w-4 text-destructive" />
+													</Button>
+												}
+												title={t("delete-notification")}
+												description={t("delete-notification-confirm")}
+												confirmText={t("delete")}
+												cancelText={t("cancel")}
+												variant="destructive"
+												onConfirm={() => handleDelete(notification.id)}
+											/>
+										</div>
+									)}
 								</li>
 							))}
 						</ul>
 					</div>
 				)}
 			</div>
-			<Dialog
-				open={announcementFormVisible}
-				onOpenChange={(open) => !open && setAnnouncementFormVisible(false)}
-			>
+			<Dialog open={announcementFormVisible} onOpenChange={(open) => !open && closeDialog()}>
 				<DialogContent>
 					<DialogHeader>
-						<DialogTitle>{t("make-an-announcement")}</DialogTitle>
+						<DialogTitle>
+							{isEditing ? t("edit-announcement") : t("make-an-announcement")}
+						</DialogTitle>
 					</DialogHeader>
 					<Form {...form}>
 						<form
@@ -194,7 +243,7 @@ export const ManageAnnouncements: React.FC = () => {
 										<FormControl>
 											<Input
 												placeholder={t("notification-title-placeholder")}
-												disabled={createNotification.isPending}
+												disabled={isMutating}
 												{...field}
 											/>
 										</FormControl>
@@ -213,7 +262,7 @@ export const ManageAnnouncements: React.FC = () => {
 												placeholder={t("notification-body-placeholder")}
 												rows={5}
 												maxLength={500}
-												disabled={createNotification.isPending}
+												disabled={isMutating}
 												className="overflow-x-auto"
 												{...field}
 											/>
@@ -223,16 +272,11 @@ export const ManageAnnouncements: React.FC = () => {
 								)}
 							/>
 							<DialogFooter>
-								<Button
-									type="button"
-									variant="outline"
-									onClick={() => setAnnouncementFormVisible(false)}
-									disabled={createNotification.isPending}
-								>
+								<Button type="button" variant="outline" onClick={closeDialog} disabled={isMutating}>
 									{t("cancel")}
 								</Button>
-								<Button type="submit" disabled={createNotification.isPending}>
-									{createNotification.isPending ? "..." : t("add")}
+								<Button type="submit" disabled={isMutating}>
+									{isMutating ? "..." : isEditing ? t("save") : t("add")}
 								</Button>
 							</DialogFooter>
 						</form>
