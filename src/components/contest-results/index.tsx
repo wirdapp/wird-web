@@ -5,6 +5,7 @@ import { Empty } from "@/components/ui/empty";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ContestStatus } from "../../services/contests/utils";
 import { AnimatedPage } from "../../ui/animated-page";
+import { isAtLeastSuperAdmin } from "../../util/roles";
 import { useDashboardData } from "../../util/routes-data";
 import { MembersResults } from "./members-results/members-results";
 import { ExportResults } from "./results-overview/export-results";
@@ -14,7 +15,7 @@ export const ContestResults: React.FC = () => {
 	const { t } = useTranslation();
 	const { tab: tabParam } = useParams<{ tab: string }>();
 	const navigate = useNavigate();
-	const { currentContest } = useDashboardData();
+	const { currentContest, currentUser } = useDashboardData();
 
 	const onTabChange = (tab: string): void => {
 		navigate(`../results/${tab}`);
@@ -29,7 +30,9 @@ export const ContestResults: React.FC = () => {
 					<TabsList>
 						<TabsTrigger value="overview">{t("results-overview")}</TabsTrigger>
 						<TabsTrigger value="members">{t("results-members")}</TabsTrigger>
-						<TabsTrigger value="export">{t("exportToExcel")}</TabsTrigger>
+						{isAtLeastSuperAdmin(currentUser?.role) && (
+							<TabsTrigger value="export">{t("exportToExcel")}</TabsTrigger>
+						)}
 					</TabsList>
 					<TabsContent value="overview" className="flex-1">
 						<ResultsOverview />
@@ -37,9 +40,11 @@ export const ContestResults: React.FC = () => {
 					<TabsContent value="members" className="flex-1">
 						<MembersResults />
 					</TabsContent>
-					<TabsContent value="export" className="flex-1">
-						<ExportResults />
-					</TabsContent>
+					{isAtLeastSuperAdmin(currentUser?.role) && (
+						<TabsContent value="export" className="flex-1">
+							<ExportResults />
+						</TabsContent>
+					)}
 				</Tabs>
 			)}
 		</AnimatedPage>
