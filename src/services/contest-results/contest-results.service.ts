@@ -77,11 +77,11 @@ class ContestResultsServiceClass extends BaseService {
 	async createExportJob(params: {
 		data: CreateExportJobData;
 		contestId?: string;
-	}): Promise<ExportJob> {
+	}): Promise<{ message?: string; data: ExportJob }> {
 		const { data, contestId } = params;
 		const cid = this.getContestId(contestId);
 		const res = await this.axios.post(`/admin_panel/${cid}/export_results/`, data);
-		return res.data.data;
+		return { message: res.data.message, data: res.data.data };
 	}
 
 	async getExportJob(params: { jobId: string; contestId?: string }): Promise<ExportJob> {

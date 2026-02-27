@@ -141,9 +141,9 @@ export const ExportJobDialog: React.FC<ExportJobDialogProps> = ({
 				}
 			}
 
-			const job = await createExportJob.mutateAsync(data);
-			toast.success(t("exportCreated"));
-			onJobCreated(job.id);
+			const result = await createExportJob.mutateAsync(data);
+			toast.success(result.message || t("exportCreated"));
+			onJobCreated(result.data.id);
 			onOpenChange(false);
 		} catch {
 			toast.error(t("exportError"));
