@@ -172,9 +172,9 @@ function ExportJobItem({
 
 	return (
 		<div
-			className={`flex items-center justify-between rounded-lg border p-4 transition-all duration-500 ${showHighlight ? "ring-2 ring-blue-400 bg-blue-50/50" : ""}`}
+			className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-lg border p-4 transition-all duration-500 ${showHighlight ? "ring-2 ring-blue-400 bg-blue-50/50" : ""}`}
 		>
-			<div className="flex flex-col gap-1">
+			<div className="flex flex-col gap-1 min-w-0">
 				<span className="text-sm font-medium">{getExportName(currentJob, groupsMap, t)}</span>
 				{currentJob.status === "completed" && (
 					<span
@@ -185,7 +185,7 @@ function ExportJobItem({
 					</span>
 				)}
 			</div>
-			<div className="flex items-center gap-2">
+			<div className="flex items-center gap-2 self-end sm:self-auto">
 				{(currentJob.status === "pending" || currentJob.status === "processing") && (
 					<span className="flex items-center gap-1.5 text-xs text-muted-foreground">
 						<Loader2 className="h-4 w-4 animate-spin" />
