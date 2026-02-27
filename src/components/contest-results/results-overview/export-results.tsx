@@ -1,6 +1,8 @@
 import { Plus } from "lucide-react";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { useExportJobs } from "../../../services/contest-results/queries";
@@ -10,11 +12,24 @@ import { ExportJobList } from "./export-job-list";
 export const ExportResults: React.FC = () => {
 	const { t } = useTranslation();
 	const { data: jobs, isLoading } = useExportJobs();
-	const [dialogOpen, setDialogOpen] = useState(false);
-	const sessionJobIds = useRef(new Set<string>());
+	const [searchParams, setSearchParams] = useSearchParams();
+	const [dialogOpen, setDialogOpen] = useState(!!searchParams.get("groupId"));
+
+	const handleDialogOpenChange = (open: boolean) => {
+		setDialogOpen(open);
+		if (!open && searchParams.has("groupId")) {
+			searchParams.delete("groupId");
+			setSearchParams(searchParams, { replace: true });
+		}
+	};
+	const [highlightedJobId, setHighlightedJobId] = useState<string | null>(null);
 
 	const handleJobCreated = (jobId: string) => {
-		sessionJobIds.current.add(jobId);
+		const alreadyExists = jobs?.some((j) => j.id === jobId);
+		if (alreadyExists) {
+			toast.info(t("existingExportFound"));
+		}
+		setHighlightedJobId(jobId);
 	};
 
 	return (
@@ -32,12 +47,17 @@ export const ExportResults: React.FC = () => {
 					<Spinner />
 				</div>
 			) : (
-				<ExportJobList jobs={jobs ?? []} sessionJobIds={sessionJobIds.current} />
+				<ExportJobList
+					jobs={jobs ?? []}
+					highlightedJobId={highlightedJobId}
+					onHighlightClear={() => setHighlightedJobId(null)}
+					onNewExport={() => setDialogOpen(true)}
+				/>
 			)}
 
 			<ExportJobDialog
 				open={dialogOpen}
-				onOpenChange={setDialogOpen}
+				onOpenChange={handleDialogOpenChange}
 				onJobCreated={handleJobCreated}
 			/>
 		</div>

@@ -59,8 +59,10 @@ const DialogContent = React.forwardRef<HTMLDivElement, React.ComponentPropsWitho
 				? { minHeight: stableHeight * 0.5, maxHeight: stableHeight * 0.85 }
 				: undefined;
 
+		const portalContainer = document.getElementById("portal-root");
+
 		return (
-			<DialogPortal>
+			<DialogPortal container={portalContainer}>
 				<DialogOverlay />
 				<DialogPrimitive.Popup
 					ref={mergedRef}

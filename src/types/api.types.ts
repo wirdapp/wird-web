@@ -676,8 +676,7 @@ export interface ExportJob {
 	id: string;
 	group_id: string | null;
 	member_ids: string[] | null;
-	members_from: number | null;
-	members_to: number | null;
+	all_members: boolean;
 	start_date: string;
 	end_date: string;
 	serialized_data: ExportSerializedData | null;
@@ -695,8 +694,7 @@ export interface CreateExportJobData {
 	end_date: string;
 	group_id?: string;
 	member_ids?: string[];
-	members_from?: number;
-	members_to?: number;
+	all_members?: boolean;
 }
 
 // ============================================================================

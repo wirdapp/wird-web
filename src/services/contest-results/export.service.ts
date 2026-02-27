@@ -69,6 +69,48 @@ function buildSummarySheet(workbook: any, data: ExportSerializedData) {
 	}
 }
 
+export async function generateCsvExport(data: ExportSerializedData): Promise<void> {
+	const { saveAs } = await import("file-saver");
+
+	const headers = ["Member", ...data.dates, "Total"];
+	const rows: string[][] = [headers];
+
+	for (const member of data.members) {
+		const total = data.dates.reduce((sum, date) => sum + (member.points_by_date[date] ?? 0), 0);
+		rows.push([
+			`"${member.name.replace(/"/g, '""')}"`,
+			...data.dates.map((date) => String(member.points_by_date[date] ?? 0)),
+			String(total),
+		]);
+	}
+
+	const csv = rows.map((row) => row.join(",")).join("\n");
+	const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+	const startDate = data.dates[0] ?? "export";
+	const endDate = data.dates[data.dates.length - 1] ?? "";
+	saveAs(blob, `results_${startDate}_to_${endDate}.csv`);
+}
+
+export async function generateJsonExport(data: ExportSerializedData): Promise<void> {
+	const { saveAs } = await import("file-saver");
+
+	const result = data.members.map((member) => {
+		const total = data.dates.reduce((sum, date) => sum + (member.points_by_date[date] ?? 0), 0);
+		return {
+			name: member.name,
+			member_id: member.member_id,
+			points_by_date: member.points_by_date,
+			total,
+		};
+	});
+
+	const json = JSON.stringify({ dates: data.dates, members: result }, null, 2);
+	const blob = new Blob([json], { type: "application/json;charset=utf-8" });
+	const startDate = data.dates[0] ?? "export";
+	const endDate = data.dates[data.dates.length - 1] ?? "";
+	saveAs(blob, `results_${startDate}_to_${endDate}.json`);
+}
+
 export async function generateExcelExport(data: ExportSerializedData): Promise<void> {
 	const ExcelJS = await import("exceljs");
 	const { saveAs } = await import("file-saver");

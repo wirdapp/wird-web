@@ -191,6 +191,20 @@ export function useExportJob(jobId: string | null, contestId?: string) {
 	});
 }
 
+export function useDeleteExportJob() {
+	const queryClient = useQueryClient();
+	const contestId = getCurrentContestId();
+
+	return useMutation({
+		mutationFn: (jobId: string) => ContestResultsService.deleteExportJob({ jobId, contestId }),
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: contestResultsKeys.exportJobs(contestId),
+			});
+		},
+	});
+}
+
 export function useCreateExportJob() {
 	const queryClient = useQueryClient();
 	const contestId = getCurrentContestId();

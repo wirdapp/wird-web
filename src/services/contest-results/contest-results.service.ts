@@ -80,8 +80,8 @@ class ContestResultsServiceClass extends BaseService {
 	}): Promise<ExportJob> {
 		const { data, contestId } = params;
 		const cid = this.getContestId(contestId);
-		const res = await this.axios.post<ExportJob>(`/admin_panel/${cid}/export_results/`, data);
-		return res.data;
+		const res = await this.axios.post(`/admin_panel/${cid}/export_results/`, data);
+		return res.data.data;
 	}
 
 	async getExportJob(params: { jobId: string; contestId?: string }): Promise<ExportJob> {
@@ -89,6 +89,12 @@ class ContestResultsServiceClass extends BaseService {
 		const cid = this.getContestId(contestId);
 		const res = await this.axios.get<ExportJob>(`/admin_panel/${cid}/export_results/${jobId}/`);
 		return res.data;
+	}
+
+	async deleteExportJob(params: { jobId: string; contestId?: string }): Promise<void> {
+		const { jobId, contestId } = params;
+		const cid = this.getContestId(contestId);
+		await this.axios.delete(`/admin_panel/${cid}/export_results/${jobId}/`);
 	}
 
 	async leaderboard(params: { contestId?: string } = {}): Promise<LeaderboardEntry[]> {

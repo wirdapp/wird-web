@@ -27,6 +27,7 @@ export const MainLayout = () => {
 				</Helmet>
 				<Outlet />
 				<Toaster position={direction === "rtl" ? "bottom-left" : "bottom-right"} />
+				<div id="portal-root" dir={direction} />
 			</TooltipProvider>
 		</DirectionProvider>
 	);

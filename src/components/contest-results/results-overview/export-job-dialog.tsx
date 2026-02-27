@@ -15,6 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Segmented } from "@/components/ui/segmented";
 import {
 	Select,
 	SelectContent,
@@ -24,12 +25,12 @@ import {
 } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
 import { useGroups } from "@/services/groups/queries";
-import { useMembers } from "@/services/members/queries";
 import { useDashboardData } from "@/util/routes-data";
 import { useCreateExportJob } from "../../../services/contest-results/queries";
 import { Role } from "../../../util/roles";
 
-type MemberFilterMode = "members" | "group" | "range";
+type MemberFilterMode = "all" | "specific" | "group";
+type GroupMemberMode = "all" | "specific";
 
 const MAX_MEMBERS = 250;
 const MAX_DAYS = 31;
@@ -69,15 +70,12 @@ export const ExportJobDialog: React.FC<ExportJobDialogProps> = ({
 	const [searchParams] = useSearchParams();
 	const groupIdParam = searchParams.get("groupId");
 
-	const [filterMode, setFilterMode] = useState<MemberFilterMode>(
-		groupIdParam ? "group" : "members",
-	);
+	const [filterMode, setFilterMode] = useState<MemberFilterMode>(groupIdParam ? "group" : "all");
 	const [selectedGroupId, setSelectedGroupId] = useState<string>(groupIdParam ?? "");
 	const [startDate, setStartDate] = useState(contestStartStr);
 	const [endDate, setEndDate] = useState(defaultEndStr);
 	const [selectedMemberIds, setSelectedMemberIds] = useState<string[]>([]);
-	const [rankFrom, setRankFrom] = useState<string>("");
-	const [rankTo, setRankTo] = useState<string>("");
+	const [groupMemberMode, setGroupMemberMode] = useState<GroupMemberMode>("all");
 
 	const dateOutOfBounds =
 		(startDate && contestStartStr && startDate < contestStartStr) ||
@@ -86,21 +84,29 @@ export const ExportJobDialog: React.FC<ExportJobDialogProps> = ({
 	const dateRangeExceedsMax =
 		startDate && endDate && dayjs(endDate).diff(dayjs(startDate), "day") > MAX_DAYS;
 
-	const maxMembersExceeded =
-		(filterMode === "members" || (filterMode === "group" && selectedMemberIds.length > 0)) &&
-		selectedMemberIds.length > MAX_MEMBERS;
+	const hasSpecificMembers =
+		filterMode === "specific" || (filterMode === "group" && groupMemberMode === "specific");
 
-	const membersRequired = filterMode === "members" && selectedMemberIds.length === 0;
+	const maxMembersExceeded = hasSpecificMembers && selectedMemberIds.length > MAX_MEMBERS;
+
+	const membersRequired = filterMode === "specific" && selectedMemberIds.length === 0;
+
 	const groupRequired = filterMode === "group" && !selectedGroupId;
-	const rankRequired =
-		filterMode === "range" && (!rankFrom || !rankTo || Number(rankFrom) > Number(rankTo));
+
+	const groupMembersRequired =
+		filterMode === "group" && groupMemberMode === "specific" && selectedMemberIds.length === 0;
+
+	const filterModeItems = [
+		{ value: "all", label: t("exportAllMembers") },
+		{ value: "specific", label: t("specificMembers") },
+		{ value: "group", label: t("exportByGroup") },
+	];
 
 	const handleFilterModeChange = (value: string) => {
 		setFilterMode(value as MemberFilterMode);
 		setSelectedMemberIds([]);
 		setSelectedGroupId(groupIdParam && value === "group" ? groupIdParam : "");
-		setRankFrom("");
-		setRankTo("");
+		setGroupMemberMode("all");
 	};
 
 	const canSubmit =
@@ -110,8 +116,8 @@ export const ExportJobDialog: React.FC<ExportJobDialogProps> = ({
 		!dateRangeExceedsMax &&
 		!maxMembersExceeded &&
 		!groupRequired &&
-		!rankRequired &&
 		!membersRequired &&
+		!groupMembersRequired &&
 		!createExportJob.isPending;
 
 	const handleSubmit = async () => {
@@ -125,17 +131,15 @@ export const ExportJobDialog: React.FC<ExportJobDialogProps> = ({
 				end_date: endDate,
 			};
 
-			if (filterMode === "members") {
+			if (filterMode === "all") {
+				data.all_members = true;
+			} else if (filterMode === "specific") {
 				data.member_ids = selectedMemberIds;
 			} else if (filterMode === "group") {
-				if (selectedMemberIds.length > 0) {
+				data.group_id = selectedGroupId;
+				if (groupMemberMode === "specific") {
 					data.member_ids = selectedMemberIds;
-				} else {
-					data.group_id = selectedGroupId;
 				}
-			} else if (filterMode === "range" && rankFrom && rankTo) {
-				data.members_from = Number(rankFrom);
-				data.members_to = Number(rankTo);
 			}
 
 			const job = await createExportJob.mutateAsync(data);
@@ -187,50 +191,20 @@ export const ExportJobDialog: React.FC<ExportJobDialogProps> = ({
 
 					<div className="flex flex-col gap-3">
 						<Label>{t("exportMembers")}</Label>
-						<RadioGroup
+						<Segmented
+							items={filterModeItems}
 							value={filterMode}
 							onValueChange={handleFilterModeChange}
-							className="flex flex-row flex-wrap gap-4"
-						>
-							<div className="flex items-center gap-2">
-								<RadioGroupItem
-									value="members"
-									id="filter-members"
-									disabled={createExportJob.isPending}
-								/>
-								<Label htmlFor="filter-members" className="cursor-pointer font-normal">
-									{t("exportByMembers")}
-								</Label>
-							</div>
-							<div className="flex items-center gap-2">
-								<RadioGroupItem
-									value="group"
-									id="filter-group"
-									disabled={createExportJob.isPending}
-								/>
-								<Label htmlFor="filter-group" className="cursor-pointer font-normal">
-									{t("exportByGroup")}
-								</Label>
-							</div>
-							<div className="flex items-center gap-2">
-								<RadioGroupItem
-									value="range"
-									id="filter-range"
-									disabled={createExportJob.isPending}
-								/>
-								<Label htmlFor="filter-range" className="cursor-pointer font-normal">
-									{t("exportByRange")}
-								</Label>
-							</div>
-						</RadioGroup>
+							disabled={createExportJob.isPending}
+						/>
 
-						{filterMode === "members" && (
+						{filterMode === "specific" && (
 							<div className="flex flex-col gap-1">
 								<MultiMembersSelect
-									role={Role.MEMBER}
+									role={`${Role.ADMIN},${Role.MEMBER}`}
 									value={selectedMemberIds}
 									onChange={setSelectedMemberIds}
-									placeholder={t("exportMembers")}
+									placeholder={t("selectSpecificMembers")}
 									disabled={createExportJob.isPending}
 								/>
 								{maxMembersExceeded && (
@@ -245,21 +219,17 @@ export const ExportJobDialog: React.FC<ExportJobDialogProps> = ({
 								onGroupChange={(id) => {
 									setSelectedGroupId(id);
 									setSelectedMemberIds([]);
+									setGroupMemberMode("all");
+								}}
+								groupMemberMode={groupMemberMode}
+								onGroupMemberModeChange={(mode) => {
+									setGroupMemberMode(mode);
+									if (mode === "all") setSelectedMemberIds([]);
 								}}
 								selectedMemberIds={selectedMemberIds}
 								onMemberIdsChange={setSelectedMemberIds}
 								disabled={createExportJob.isPending}
 								maxMembersExceeded={!!maxMembersExceeded}
-							/>
-						)}
-
-						{filterMode === "range" && (
-							<MemberRangeFilterSection
-								rankFrom={rankFrom}
-								rankTo={rankTo}
-								onRankFromChange={setRankFrom}
-								onRankToChange={setRankTo}
-								disabled={createExportJob.isPending}
 							/>
 						)}
 					</div>
@@ -281,6 +251,8 @@ export const ExportJobDialog: React.FC<ExportJobDialogProps> = ({
 function GroupFilterSection({
 	selectedGroupId,
 	onGroupChange,
+	groupMemberMode,
+	onGroupMemberModeChange,
 	selectedMemberIds,
 	onMemberIdsChange,
 	disabled,
@@ -288,6 +260,8 @@ function GroupFilterSection({
 }: {
 	selectedGroupId: string;
 	onGroupChange: (id: string) => void;
+	groupMemberMode: GroupMemberMode;
+	onGroupMemberModeChange: (mode: GroupMemberMode) => void;
 	selectedMemberIds: string[];
 	onMemberIdsChange: (ids: string[]) => void;
 	disabled: boolean;
@@ -328,72 +302,43 @@ function GroupFilterSection({
 				{!selectedGroupId && <p className="text-sm text-destructive">{t("groupRequired")}</p>}
 			</div>
 			{selectedGroupId && (
-				<div className="flex flex-col gap-1">
-					<MultiMembersSelect
-						role={Role.MEMBER}
-						groupId={selectedGroupId}
-						value={selectedMemberIds}
-						onChange={onMemberIdsChange}
-						placeholder={t("allGroupMembers")}
-						disabled={disabled}
-					/>
-					{maxMembersExceeded && (
-						<p className="text-sm text-destructive">{t("maxMembersExceeded")}</p>
+				<>
+					<RadioGroup
+						value={groupMemberMode}
+						onValueChange={(val) => onGroupMemberModeChange(val as GroupMemberMode)}
+						className="flex flex-row gap-4"
+					>
+						<div className="flex items-center gap-2">
+							<RadioGroupItem value="all" id="group-member-all" disabled={disabled} />
+							<Label htmlFor="group-member-all" className="cursor-pointer font-normal">
+								{t("allGroupMembers")}
+							</Label>
+						</div>
+						<div className="flex items-center gap-2">
+							<RadioGroupItem value="specific" id="group-member-specific" disabled={disabled} />
+							<Label htmlFor="group-member-specific" className="cursor-pointer font-normal">
+								{t("specificMembers")}
+							</Label>
+						</div>
+					</RadioGroup>
+
+					{groupMemberMode === "specific" && (
+						<div className="flex flex-col gap-1">
+							<MultiMembersSelect
+								role={`${Role.ADMIN},${Role.MEMBER}`}
+								groupId={selectedGroupId}
+								value={selectedMemberIds}
+								onChange={onMemberIdsChange}
+								placeholder={t("selectSpecificMembers")}
+								disabled={disabled}
+							/>
+							{maxMembersExceeded && (
+								<p className="text-sm text-destructive">{t("maxMembersExceeded")}</p>
+							)}
+						</div>
 					)}
-				</div>
+				</>
 			)}
-		</div>
-	);
-}
-
-function MemberRangeFilterSection({
-	rankFrom,
-	rankTo,
-	onRankFromChange,
-	onRankToChange,
-	disabled,
-}: {
-	rankFrom: string;
-	rankTo: string;
-	onRankFromChange: (val: string) => void;
-	onRankToChange: (val: string) => void;
-	disabled: boolean;
-}) {
-	const { t } = useTranslation();
-	const { data: membersData } = useMembers({ page_size: 1, role: Role.MEMBER });
-	const totalMembers = membersData?.count ?? 0;
-
-	return (
-		<div className="flex flex-col gap-3">
-			{totalMembers > 0 && (
-				<p className="text-sm text-muted-foreground">
-					{t("totalMembers", { count: totalMembers })}
-				</p>
-			)}
-			<div className="grid grid-cols-2 gap-3">
-				<div className="flex flex-col gap-1">
-					<Label className="text-xs">{t("rangeFrom")}</Label>
-					<Input
-						type="number"
-						min={1}
-						max={totalMembers || undefined}
-						value={rankFrom}
-						onChange={(e) => onRankFromChange(e.target.value)}
-						disabled={disabled}
-					/>
-				</div>
-				<div className="flex flex-col gap-1">
-					<Label className="text-xs">{t("rangeTo")}</Label>
-					<Input
-						type="number"
-						min={rankFrom ? Number(rankFrom) : 1}
-						max={totalMembers || undefined}
-						value={rankTo}
-						onChange={(e) => onRankToChange(e.target.value)}
-						disabled={disabled}
-					/>
-				</div>
-			</div>
 		</div>
 	);
 }

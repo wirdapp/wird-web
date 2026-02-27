@@ -40,30 +40,36 @@ const AlertDialogOverlay = React.forwardRef<HTMLDivElement, React.ComponentProps
 AlertDialogOverlay.displayName = "AlertDialogOverlay";
 
 const AlertDialogContent = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<"div">>(
-	({ className, ...props }, ref) => (
-		<AlertDialogPortal>
-			<AlertDialogOverlay />
-			<DialogPrimitive.Popup
-				ref={ref}
-				className={cn(
-					"fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-150 data-[open]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[open]:fade-in-0 data-[closed]:zoom-out-[0.97] data-[open]:zoom-in-[0.97] sm:rounded-lg",
-					className,
-				)}
-				{...props}
-			/>
-		</AlertDialogPortal>
-	),
+	({ className, ...props }, ref) => {
+		const portalContainer = document.getElementById("portal-root");
+		return (
+			<AlertDialogPortal container={portalContainer}>
+				<AlertDialogOverlay />
+				<DialogPrimitive.Popup
+					ref={ref}
+					className={cn(
+						"fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-150 data-[open]:animate-in data-[closed]:animate-out data-[closed]:fade-out-0 data-[open]:fade-in-0 data-[closed]:zoom-out-[0.97] data-[open]:zoom-in-[0.97] sm:rounded-lg",
+						className,
+					)}
+					{...props}
+				/>
+			</AlertDialogPortal>
+		);
+	},
 );
 AlertDialogContent.displayName = "AlertDialogContent";
 
 const AlertDialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-	<div className={cn("flex flex-col space-y-2 text-center sm:text-left", className)} {...props} />
+	<div className={cn("flex flex-col space-y-2 text-center sm:text-start", className)} {...props} />
 );
 AlertDialogHeader.displayName = "AlertDialogHeader";
 
 const AlertDialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
 	<div
-		className={cn("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", className)}
+		className={cn(
+			"flex flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:space-x-2 rtl:space-x-reverse",
+			className,
+		)}
 		{...props}
 	/>
 );
