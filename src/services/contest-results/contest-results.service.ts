@@ -1,6 +1,7 @@
 import type {
+	CreateExportJobData,
 	DailySubmissionSummary,
-	ExportResultsResponse,
+	ExportJob,
 	LeaderboardEntry,
 	MemberResult,
 	PointRecord,
@@ -67,24 +68,33 @@ class ContestResultsServiceClass extends BaseService {
 		return res.data;
 	}
 
-	async exportResults(params: {
-		startDate?: string;
-		endDate?: string;
-		memberIds?: string[];
-		groupId?: string;
-		contestId?: string;
-	}): Promise<ExportResultsResponse> {
-		const { startDate, endDate, memberIds, groupId, contestId } = params;
-		const cid = this.getContestId(contestId);
-		const queryParams = new URLSearchParams();
-		if (startDate) queryParams.set("start_date", startDate);
-		if (endDate) queryParams.set("end_date", endDate);
-		if (memberIds?.length) queryParams.set("member_ids", memberIds.join(","));
-		if (groupId) queryParams.set("group_id", groupId);
-		const res = await this.axios.get<ExportResultsResponse>(
-			`/admin_panel/${cid}/export/results/?${queryParams.toString()}`,
-		);
+	async listExportJobs(params: { contestId?: string } = {}): Promise<ExportJob[]> {
+		const cid = this.getContestId(params.contestId);
+		const res = await this.axios.get<ExportJob[]>(`/admin_panel/${cid}/export_results/`);
 		return res.data;
+	}
+
+	async createExportJob(params: {
+		data: CreateExportJobData;
+		contestId?: string;
+	}): Promise<ExportJob> {
+		const { data, contestId } = params;
+		const cid = this.getContestId(contestId);
+		const res = await this.axios.post(`/admin_panel/${cid}/export_results/`, data);
+		return res.data.data;
+	}
+
+	async getExportJob(params: { jobId: string; contestId?: string }): Promise<ExportJob> {
+		const { jobId, contestId } = params;
+		const cid = this.getContestId(contestId);
+		const res = await this.axios.get<ExportJob>(`/admin_panel/${cid}/export_results/${jobId}/`);
+		return res.data;
+	}
+
+	async deleteExportJob(params: { jobId: string; contestId?: string }): Promise<void> {
+		const { jobId, contestId } = params;
+		const cid = this.getContestId(contestId);
+		await this.axios.delete(`/admin_panel/${cid}/export_results/${jobId}/`);
 	}
 
 	async leaderboard(params: { contestId?: string } = {}): Promise<LeaderboardEntry[]> {

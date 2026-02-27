@@ -1,4 +1,4 @@
-import type { ExportResultsResponse } from "../../types";
+import type { ExportSerializedData } from "../../types";
 
 const HEADER_FILL = {
 	type: "pattern" as const,
@@ -25,12 +25,10 @@ function styleHeaderRow(row: any) {
 }
 
 // biome-ignore lint/suspicious/noExplicitAny: ExcelJS workbook type from dynamic import
-function buildSummarySheet(workbook: any, data: ExportResultsResponse) {
-	const sheet = workbook.addWorksheet(
-		data.contest_name ? `${data.contest_name} - Summary` : "Summary",
-	);
+function buildSummarySheet(workbook: any, data: ExportSerializedData) {
+	const sheet = workbook.addWorksheet("Summary");
 
-	const headers = ["Member", ...data.dates, "Total Points", "Total Submissions"];
+	const headers = ["Member", ...data.dates, "Total"];
 	const headerRow = sheet.addRow(headers);
 	styleHeaderRow(headerRow);
 
@@ -39,14 +37,13 @@ function buildSummarySheet(workbook: any, data: ExportResultsResponse) {
 		sheet.getColumn(i).width = 12;
 	}
 	sheet.getColumn(data.dates.length + 2).width = 15;
-	sheet.getColumn(data.dates.length + 3).width = 15;
 
 	for (const member of data.members) {
+		const total = data.dates.reduce((sum, date) => sum + (member.points_by_date[date] ?? 0), 0);
 		const rowValues = [
 			member.name,
-			...data.dates.map((date) => member.daily_points[date] ?? 0),
-			member.total_points,
-			member.total_submissions,
+			...data.dates.map((date) => member.points_by_date[date] ?? 0),
+			total,
 		];
 		const row = sheet.addRow(rowValues);
 
@@ -56,12 +53,14 @@ function buildSummarySheet(workbook: any, data: ExportResultsResponse) {
 	}
 
 	const totalRowValues = [
-		"Contest Total",
+		"Total",
 		...data.dates.map((date) =>
-			data.members.reduce((sum, m) => sum + (m.daily_points[date] ?? 0), 0),
+			data.members.reduce((sum, m) => sum + (m.points_by_date[date] ?? 0), 0),
 		),
-		data.members.reduce((sum, m) => sum + m.total_points, 0),
-		data.members.reduce((sum, m) => sum + m.total_submissions, 0),
+		data.members.reduce(
+			(sum, m) => sum + data.dates.reduce((s, date) => s + (m.points_by_date[date] ?? 0), 0),
+			0,
+		),
 	];
 	const totalRow = sheet.addRow(totalRowValues);
 	totalRow.font = { bold: true };
@@ -70,49 +69,49 @@ function buildSummarySheet(workbook: any, data: ExportResultsResponse) {
 	}
 }
 
-// biome-ignore lint/suspicious/noExplicitAny: ExcelJS workbook type from dynamic import
-function buildDetailedSheet(workbook: any, data: ExportResultsResponse) {
-	const sheet = workbook.addWorksheet(
-		data.contest_name ? `${data.contest_name} - Details` : "Detailed Breakdown",
-	);
+export async function generateCsvExport(data: ExportSerializedData): Promise<void> {
+	const { saveAs } = await import("file-saver");
 
-	const headers = ["Member", "Criterion", ...data.dates, "Total"];
-	const headerRow = sheet.addRow(headers);
-	styleHeaderRow(headerRow);
-
-	sheet.getColumn(1).width = 25;
-	sheet.getColumn(2).width = 25;
-	for (let i = 3; i <= data.dates.length + 2; i++) {
-		sheet.getColumn(i).width = 12;
-	}
-	sheet.getColumn(data.dates.length + 3).width = 15;
+	const headers = ["Member", ...data.dates, "Total"];
+	const rows: string[][] = [headers];
 
 	for (const member of data.members) {
-		let isFirst = true;
-		for (const criterion of data.criteria) {
-			const dailyPoints = member.criterion_daily_points[criterion.id] ?? {};
-			const total = data.dates.reduce((sum, date) => sum + (dailyPoints[date] ?? 0), 0);
-			const rowValues = [
-				isFirst ? member.name : "",
-				`${criterion.section_label} - ${criterion.label}`,
-				...data.dates.map((date) => dailyPoints[date] ?? 0),
-				total,
-			];
-			const row = sheet.addRow(rowValues);
-
-			if (isFirst) {
-				row.getCell(1).font = { bold: true };
-				isFirst = false;
-			}
-
-			for (let i = 3; i <= rowValues.length; i++) {
-				row.getCell(i).alignment = NUMBER_ALIGNMENT;
-			}
-		}
+		const total = data.dates.reduce((sum, date) => sum + (member.points_by_date[date] ?? 0), 0);
+		rows.push([
+			`"${member.name.replace(/"/g, '""')}"`,
+			...data.dates.map((date) => String(member.points_by_date[date] ?? 0)),
+			String(total),
+		]);
 	}
+
+	const csv = rows.map((row) => row.join(",")).join("\n");
+	const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+	const startDate = data.dates[0] ?? "export";
+	const endDate = data.dates[data.dates.length - 1] ?? "";
+	saveAs(blob, `results_${startDate}_to_${endDate}.csv`);
 }
 
-export async function generateExcelExport(data: ExportResultsResponse): Promise<void> {
+export async function generateJsonExport(data: ExportSerializedData): Promise<void> {
+	const { saveAs } = await import("file-saver");
+
+	const result = data.members.map((member) => {
+		const total = data.dates.reduce((sum, date) => sum + (member.points_by_date[date] ?? 0), 0);
+		return {
+			name: member.name,
+			member_id: member.member_id,
+			points_by_date: member.points_by_date,
+			total,
+		};
+	});
+
+	const json = JSON.stringify({ dates: data.dates, members: result }, null, 2);
+	const blob = new Blob([json], { type: "application/json;charset=utf-8" });
+	const startDate = data.dates[0] ?? "export";
+	const endDate = data.dates[data.dates.length - 1] ?? "";
+	saveAs(blob, `results_${startDate}_to_${endDate}.json`);
+}
+
+export async function generateExcelExport(data: ExportSerializedData): Promise<void> {
 	const ExcelJS = await import("exceljs");
 	const { saveAs } = await import("file-saver");
 
@@ -120,12 +119,13 @@ export async function generateExcelExport(data: ExportResultsResponse): Promise<
 	const workbook = new WorkbookClass();
 
 	buildSummarySheet(workbook, data);
-	buildDetailedSheet(workbook, data);
 
 	const buffer = await workbook.xlsx.writeBuffer();
 	const blob = new Blob([buffer], {
 		type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
 	});
-	const filename = `${data.contest_name}_results_${data.date_range.start}_to_${data.date_range.end}.xlsx`;
+	const startDate = data.dates[0] ?? "export";
+	const endDate = data.dates[data.dates.length - 1] ?? "";
+	const filename = `results_${startDate}_to_${endDate}.xlsx`;
 	saveAs(blob, filename);
 }
