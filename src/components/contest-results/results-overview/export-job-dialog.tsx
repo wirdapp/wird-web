@@ -38,7 +38,7 @@ const MAX_DAYS = 31;
 interface ExportJobDialogProps {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
-	onJobCreated: (jobId: string) => void;
+	onJobCreated: (jobId: string, message?: string) => void;
 }
 
 export const ExportJobDialog: React.FC<ExportJobDialogProps> = ({
@@ -142,8 +142,10 @@ export const ExportJobDialog: React.FC<ExportJobDialogProps> = ({
 			}
 
 			const result = await createExportJob.mutateAsync(data);
-			toast.success(result.message || t("exportCreated"));
-			onJobCreated(result.data.id);
+			if (!result.message) {
+				toast.success(t("exportCreated"));
+			}
+			onJobCreated(result.data.id, result.message);
 			onOpenChange(false);
 		} catch {
 			toast.error(t("exportError"));
