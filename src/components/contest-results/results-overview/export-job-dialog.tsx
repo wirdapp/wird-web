@@ -1,9 +1,12 @@
+import { isAxiosError } from "axios";
 import dayjs from "dayjs";
+import { AlertTriangle, X } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router";
 import { toast } from "sonner";
 import { MultiMembersSelect } from "@/components/shared/multi-members-select";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -49,6 +52,7 @@ export const ExportJobDialog: React.FC<ExportJobDialogProps> = ({
 	const { t } = useTranslation();
 	const { currentContest } = useDashboardData();
 	const createExportJob = useCreateExportJob();
+	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
 	const contestStartStr = currentContest?.start_date
 		? dayjs(currentContest.start_date).format("YYYY-MM-DD")
@@ -123,6 +127,7 @@ export const ExportJobDialog: React.FC<ExportJobDialogProps> = ({
 	const handleSubmit = async () => {
 		if (!canSubmit || !currentContest) return;
 
+		setErrorMessage(null);
 		try {
 			const data: Parameters<typeof createExportJob.mutateAsync>[0] = {
 				contest: currentContest.id,
@@ -147,8 +152,12 @@ export const ExportJobDialog: React.FC<ExportJobDialogProps> = ({
 			}
 			onJobCreated(result.data.id, result.message);
 			onOpenChange(false);
-		} catch {
-			toast.error(t("exportError"));
+		} catch (error) {
+			const message =
+				isAxiosError(error) && error.response?.data?.message
+					? error.response.data.message
+					: t("exportError");
+			setErrorMessage(message);
 		}
 	};
 
@@ -235,6 +244,19 @@ export const ExportJobDialog: React.FC<ExportJobDialogProps> = ({
 						)}
 					</div>
 				</div>
+
+				{errorMessage && (
+					<Alert
+						variant="destructive"
+						className="flex items-center gap-3 [&>svg]:static [&>svg]:shrink-0 [&>svg~*]:ps-0 [&>svg+div]:translate-y-0"
+					>
+						<AlertTriangle className="h-4 w-4" />
+						<AlertDescription className="flex-1">{errorMessage}</AlertDescription>
+						<button type="button" onClick={() => setErrorMessage(null)} className="shrink-0">
+							<X className="h-4 w-4" />
+						</button>
+					</Alert>
+				)}
 
 				<DialogFooter>
 					<Button onClick={handleSubmit} disabled={!canSubmit}>
