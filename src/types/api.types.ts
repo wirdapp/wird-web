@@ -706,6 +706,12 @@ export interface NotificationCreateData {
 	body: string;
 }
 
+/** Notification update payload */
+export interface NotificationUpdateData {
+	title: string;
+	body: string;
+}
+
 /** User device for push notifications */
 export interface UserDevice {
 	id: UUID;
