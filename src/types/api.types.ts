@@ -654,32 +654,49 @@ export interface DailySubmissionSummary {
 	top_three_by_day?: TopThreeUser[];
 }
 
-/** Export results criterion info */
-export interface ExportCriterionInfo {
-	id: UUID;
-	label: string;
-	section_label: string;
-	max_points: number;
-}
-
-/** Export results member data */
-export interface ExportMemberData {
-	id: UUID;
+/** Serialized data from export job */
+export interface ExportSerializedMember {
 	name: string;
-	username: string;
-	total_points: number;
-	total_submissions: number;
-	daily_points: Record<string, number>;
-	criterion_daily_points: Record<string, Record<string, number>>;
+	member_id: string;
+	points_by_date: Record<string, number>;
 }
 
-/** Export results response from bulk endpoint */
-export interface ExportResultsResponse {
-	contest_name: string;
-	date_range: { start: string; end: string };
+export interface ExportSerializedData {
 	dates: string[];
-	criteria: ExportCriterionInfo[];
-	members: ExportMemberData[];
+	members: ExportSerializedMember[];
+}
+
+// ============================================================================
+// EXPORT JOB TYPES
+// ============================================================================
+
+export type ExportJobStatus = "pending" | "processing" | "completed" | "failed";
+
+export interface ExportJob {
+	id: string;
+	group_id: string | null;
+	member_ids: string[] | null;
+	members_from: number | null;
+	members_to: number | null;
+	start_date: string;
+	end_date: string;
+	serialized_data: ExportSerializedData | null;
+	status: ExportJobStatus;
+	created_at: string;
+	contest: string;
+	requester: string;
+	group: string | null;
+}
+
+export interface CreateExportJobData {
+	contest: string;
+	requester: string;
+	start_date: string;
+	end_date: string;
+	group_id?: string;
+	member_ids?: string[];
+	members_from?: number;
+	members_to?: number;
 }
 
 // ============================================================================

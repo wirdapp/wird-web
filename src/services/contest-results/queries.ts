@@ -1,5 +1,6 @@
 import { type UseQueryOptions, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type {
+	CreateExportJobData,
 	DailySubmissionSummary,
 	LeaderboardEntry,
 	MemberResult,
@@ -20,6 +21,10 @@ export const contestResultsKeys = {
 		[...contestResultsKeys.all, "memberResults", { contestId, userId }] as const,
 	memberDaySubmissions: (contestId: string | undefined, userId: string, date: string) =>
 		[...contestResultsKeys.all, "memberDaySubmissions", { contestId, userId, date }] as const,
+	exportJobs: (contestId: string | undefined) =>
+		[...contestResultsKeys.all, "exportJobs", { contestId }] as const,
+	exportJob: (contestId: string | undefined, jobId: string) =>
+		[...contestResultsKeys.all, "exportJob", { contestId, jobId }] as const,
 };
 
 export function useLeaderboard(
@@ -158,6 +163,44 @@ export function useUpdatePointRecord() {
 			});
 			queryClient.invalidateQueries({
 				queryKey: contestResultsKeys.leaderboard(contestId),
+			});
+		},
+	});
+}
+
+export function useExportJobs(contestId?: string) {
+	const cid = contestId ? String(contestId) : getCurrentContestId();
+	return useQuery({
+		queryKey: contestResultsKeys.exportJobs(cid),
+		queryFn: () => ContestResultsService.listExportJobs({ contestId: cid }),
+		enabled: !!cid,
+	});
+}
+
+export function useExportJob(jobId: string | null, contestId?: string) {
+	const cid = contestId ? String(contestId) : getCurrentContestId();
+	return useQuery({
+		queryKey: contestResultsKeys.exportJob(cid, jobId ?? ""),
+		queryFn: () => ContestResultsService.getExportJob({ jobId: jobId!, contestId: cid }),
+		enabled: !!cid && !!jobId,
+		refetchInterval: (query) => {
+			const status = query.state.data?.status;
+			if (status === "pending" || status === "processing") return 2000;
+			return false;
+		},
+	});
+}
+
+export function useCreateExportJob() {
+	const queryClient = useQueryClient();
+	const contestId = getCurrentContestId();
+
+	return useMutation({
+		mutationFn: (data: CreateExportJobData) =>
+			ContestResultsService.createExportJob({ data, contestId }),
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: contestResultsKeys.exportJobs(contestId),
 			});
 		},
 	});
