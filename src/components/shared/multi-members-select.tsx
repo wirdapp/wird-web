@@ -26,7 +26,7 @@ interface MemberOption {
 }
 
 interface MultiMembersSelectProps {
-	role?: Role;
+	role?: Role | string;
 	groupId?: string;
 	excludeUsernames?: string[];
 	value: string[];

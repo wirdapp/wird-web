@@ -126,7 +126,6 @@ export const ExportJobDialog: React.FC<ExportJobDialogProps> = ({
 		try {
 			const data: Parameters<typeof createExportJob.mutateAsync>[0] = {
 				contest: currentContest.id,
-				requester: "27b6dc08-4b1e-4fdf-b99b-2ae324abeb21",
 				start_date: startDate,
 				end_date: endDate,
 			};

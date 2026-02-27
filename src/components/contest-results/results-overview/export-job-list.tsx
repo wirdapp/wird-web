@@ -1,5 +1,15 @@
 import dayjs from "dayjs";
-import { AlertCircle, ChevronDown, Clock, Download, Loader2, Plus, Trash2 } from "lucide-react";
+import {
+	AlertCircle,
+	Clock,
+	Download,
+	FileJson,
+	FileSpreadsheet,
+	FileText,
+	Loader2,
+	Plus,
+	Trash2,
+} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
@@ -183,41 +193,28 @@ function ExportJobItem({
 					</span>
 				)}
 				{currentJob.status === "completed" && (
-					<div className="flex items-center">
-						<Button
-							variant="outline"
-							size="sm"
-							className="rounded-e-none border-e-0"
-							disabled={isExpired}
-							onClick={() => handleDownload("excel")}
-						>
-							<Download className="h-4 w-4" />
-							{t("downloadExcel")}
-						</Button>
-						<DropdownMenu>
-							<DropdownMenuTrigger asChild>
-								<Button
-									variant="outline"
-									size="sm"
-									className="rounded-s-none px-2"
-									disabled={isExpired}
-								>
-									<ChevronDown className="h-4 w-4" />
-								</Button>
-							</DropdownMenuTrigger>
-							<DropdownMenuContent align="end">
-								<DropdownMenuItem onClick={() => handleDownload("excel")}>
-									{t("downloadExcel")}
-								</DropdownMenuItem>
-								<DropdownMenuItem onClick={() => handleDownload("csv")}>
-									{t("downloadCsv")}
-								</DropdownMenuItem>
-								<DropdownMenuItem onClick={() => handleDownload("json")}>
-									{t("downloadJson")}
-								</DropdownMenuItem>
-							</DropdownMenuContent>
-						</DropdownMenu>
-					</div>
+					<DropdownMenu>
+						<DropdownMenuTrigger asChild>
+							<Button variant="outline" size="sm" disabled={isExpired}>
+								<Download className="h-4 w-4" />
+								{t("downloadExport")}
+							</Button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent align="end">
+							<DropdownMenuItem onClick={() => handleDownload("excel")}>
+								<FileSpreadsheet className="h-4 w-4" />
+								{t("downloadExcel")}
+							</DropdownMenuItem>
+							<DropdownMenuItem onClick={() => handleDownload("csv")}>
+								<FileText className="h-4 w-4" />
+								{t("downloadCsv")}
+							</DropdownMenuItem>
+							<DropdownMenuItem onClick={() => handleDownload("json")}>
+								<FileJson className="h-4 w-4" />
+								{t("downloadJson")}
+							</DropdownMenuItem>
+						</DropdownMenuContent>
+					</DropdownMenu>
 				)}
 				{currentJob.status === "failed" && (
 					<span className="flex items-center gap-1.5 text-xs text-destructive">

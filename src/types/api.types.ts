@@ -689,7 +689,6 @@ export interface ExportJob {
 
 export interface CreateExportJobData {
 	contest: string;
-	requester: string;
 	start_date: string;
 	end_date: string;
 	group_id?: string;
