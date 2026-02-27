@@ -1,3 +1,4 @@
+import { ReactComponent as WirdLogo } from "assets/icons/Shared/wirdLogo.svg";
 import { Check, ChevronsUpDown, Copy, LayoutGrid, PlusCircle, UserPlus } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -59,8 +60,8 @@ export function ContestSwitcher({ onCreateContest, onJoinContest }: ContestSwitc
 							size="lg"
 							className="bg-sidebar-accent hover:bg-sidebar-border data-[state=open]:bg-sidebar-border !h-auto py-5"
 						>
-							<div className="flex aspect-square size-8 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground">
-								<LayoutGrid className="size-4" />
+							<div className="flex aspect-square size-8 items-center justify-center px-1">
+								<WirdLogo className="size-8 shrink-0" />
 							</div>
 							<div className="grid flex-1 text-start leading-tight">
 								<span className="truncate font-semibold text-base">

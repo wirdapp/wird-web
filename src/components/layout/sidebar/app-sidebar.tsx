@@ -1,4 +1,3 @@
-import { ReactComponent as WirdLogo } from "assets/icons/Shared/wirdLogo.svg";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -23,9 +22,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 		<>
 			<Sidebar collapsible="icon" side={i18n.dir() === "rtl" ? "right" : "left"} {...props}>
 				<SidebarHeader>
-					<div className="flex justify-center py-2">
-						<WirdLogo className="h-10 w-10 shrink-0" />
-					</div>
 					<ContestSwitcher
 						onCreateContest={() => setCreateContestOpen(true)}
 						onJoinContest={() => setJoinContestOpen(true)}
